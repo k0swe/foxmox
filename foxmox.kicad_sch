@@ -11,14 +11,14 @@
 		(comment 1 "Transcribed by Chris Keller, K0SWE")
 	)
 	(lib_symbols
-		(symbol "Connector_Audio:AudioJack3"
+		(symbol "Connector_Audio:AudioPlug3"
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
 			(property "Reference" "J"
-				(at 0 8.89 0)
+				(at 1.27 6.35 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -27,8 +27,8 @@
 					)
 				)
 			)
-			(property "Value" "AudioJack3"
-				(at 0 6.35 0)
+			(property "Value" "AudioPlug3"
+				(at 1.27 -6.35 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
@@ -38,7 +38,7 @@
 				)
 			)
 			(property "Footprint" ""
-				(at 0 0 0)
+				(at 2.54 -1.27 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(hide yes)
@@ -49,7 +49,7 @@
 				)
 			)
 			(property "Datasheet" ""
-				(at 0 0 0)
+				(at 2.54 -1.27 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(hide yes)
@@ -70,7 +70,7 @@
 					)
 				)
 			)
-			(property "ki_keywords" "audio jack receptacle stereo headphones phones TRS connector"
+			(property "ki_keywords" "audio jack plug stereo headphones TRRS connector 2.5mm 3.5mm 6.35mm"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -81,7 +81,7 @@
 					)
 				)
 			)
-			(property "ki_fp_filters" "Jack*"
+			(property "ki_fp_filters" "Plug*"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -92,34 +92,20 @@
 					)
 				)
 			)
-			(symbol "AudioJack3_0_1"
+			(symbol "AudioPlug3_0_0"
+				(text "R"
+					(at -2.54 0 900)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(symbol "AudioPlug3_0_1"
 				(rectangle
-					(start -5.08 -5.08)
-					(end -6.35 -2.54)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type outline)
-					)
-				)
-				(polyline
-					(pts
-						(xy -1.905 -2.54) (xy -1.27 -3.175) (xy -0.635 -2.54) (xy -0.635 0) (xy 2.54 0)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-				(polyline
-					(pts
-						(xy 0 -2.54) (xy 0.635 -3.175) (xy 1.27 -2.54) (xy 2.54 -2.54)
-					)
+					(start -3.81 3.81)
+					(end -1.27 -3.81)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -129,8 +115,39 @@
 					)
 				)
 				(rectangle
-					(start 2.54 3.81)
-					(end -5.08 -5.08)
+					(start -1.27 -1.27)
+					(end -1.27 -1.27)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "AudioPlug3_1_0"
+				(text "T"
+					(at -8.89 0 0)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(text "S"
+					(at 3.81 0 0)
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(symbol "AudioPlug3_1_1"
+				(rectangle
+					(start -3.81 3.81)
+					(end 8.89 -3.81)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -141,20 +158,30 @@
 				)
 				(polyline
 					(pts
-						(xy 2.54 2.54) (xy -2.54 2.54) (xy -2.54 -2.54) (xy -3.175 -3.175) (xy -3.81 -2.54)
+						(xy -3.81 3.81) (xy -5.08 3.81) (xy -6.35 2.54) (xy -10.16 3.81) (xy -12.7 1.27) (xy -12.7 -1.27)
+						(xy -10.16 -3.81) (xy -6.35 -2.54) (xy -5.08 -3.81) (xy -3.81 -3.81) (xy -3.81 3.81)
 					)
 					(stroke
 						(width 0.254)
 						(type default)
 					)
 					(fill
-						(type none)
+						(type background)
 					)
 				)
-			)
-			(symbol "AudioJack3_1_1"
+				(rectangle
+					(start 12.7 5.08)
+					(end 8.89 -5.08)
+					(stroke
+						(width 0.254)
+						(type default)
+					)
+					(fill
+						(type background)
+					)
+				)
 				(pin passive line
-					(at 5.08 0 180)
+					(at 15.24 0 180)
 					(length 2.54)
 					(name ""
 						(effects
@@ -172,7 +199,7 @@
 					)
 				)
 				(pin passive line
-					(at 5.08 2.54 180)
+					(at 15.24 2.54 180)
 					(length 2.54)
 					(name ""
 						(effects
@@ -190,7 +217,7 @@
 					)
 				)
 				(pin passive line
-					(at 5.08 -2.54 180)
+					(at 15.24 -2.54 180)
 					(length 2.54)
 					(name ""
 						(effects
@@ -4883,6 +4910,92 @@
 		)
 	)
 	(symbol
+		(lib_id "Connector_Audio:AudioPlug3")
+		(at 48.26 49.53 0)
+		(mirror x)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "a87ac471-6a1a-413b-9135-b37d06230840")
+		(property "Reference" "P1"
+			(at 34.29 48.2599 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Value" "2.5mm plug"
+			(at 34.29 50.7999 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+			)
+		)
+		(property "Footprint" ""
+			(at 50.8 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 50.8 48.26 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Audio Jack, 3 Poles (Stereo / TRS)"
+			(at 48.26 49.53 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(pin "T"
+			(uuid "9e23cfb9-8d3c-489e-9717-ddde603b47d7")
+		)
+		(pin "S"
+			(uuid "2a984c38-7593-4db5-94bc-6e3df2f27557")
+		)
+		(pin "R"
+			(uuid "0f590f49-db19-45ab-8c1f-46836cf6c447")
+		)
+		(instances
+			(project "foxmox"
+				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
+					(reference "P1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:C_Small_US")
 		(at 134.62 72.39 90)
 		(unit 1)
@@ -5280,92 +5393,6 @@
 			(project "foxmox"
 				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
 					(reference "R4")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Connector_Audio:AudioJack3")
-		(at 58.42 49.53 0)
-		(mirror x)
-		(unit 1)
-		(body_style 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "dc7ac951-d086-419e-8a13-b2d9659e7186")
-		(property "Reference" "P1"
-			(at 50.8 47.6249 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "2.5mm plug"
-			(at 50.8 50.1649 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" ""
-			(at 58.42 49.53 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Datasheet" ""
-			(at 58.42 49.53 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Description" "Audio Jack, 3 Poles (Stereo / TRS)"
-			(at 58.42 49.53 0)
-			(hide yes)
-			(show_name no)
-			(do_not_autoplace no)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(pin "T"
-			(uuid "9c708ebe-91c7-431f-8b3d-0d9f1e759a35")
-		)
-		(pin "S"
-			(uuid "7618cdb6-feea-476a-b2b3-a352d733a485")
-		)
-		(pin "R"
-			(uuid "acf3e36d-53be-4e46-9493-f12a53dc7480")
-		)
-		(instances
-			(project "foxmox"
-				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
-					(reference "P1")
 					(unit 1)
 				)
 			)
