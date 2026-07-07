@@ -5,8 +5,9 @@
 	(uuid "8fe0f122-3453-49de-aa82-6d9b89dc8357")
 	(paper "A")
 	(title_block
-		(title "Low Power FoxMOX Controller V.2.6")
+		(title "Low Power FoxMOX Controller")
 		(date "2004-12-12")
+		(rev "V2.6")
 		(company "Designed by Larry Benko, W0QE")
 		(comment 1 "Transcribed by Chris Keller, K0SWE")
 	)
@@ -2603,6 +2604,12 @@
 		(uuid "ccc86141-5de8-44b4-b5d9-3f0217a80772")
 	)
 	(junction
+		(at 68.58 52.07)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "1262947e-f5ad-48ba-98fe-d8de9bf0d0a4")
+	)
+	(junction
 		(at 142.24 72.39)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2619,12 +2626,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "752a8e42-0a7e-4a9a-80f0-88eeb5d7a7b9")
-	)
-	(junction
-		(at 68.58 52.07)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "823a4a6e-d9f6-4f55-b8c8-09bf7f976626")
 	)
 	(junction
 		(at 80.01 80.01)
@@ -2707,6 +2708,16 @@
 			(type default)
 		)
 		(uuid "0c5ba9d9-7dfd-4cef-981c-35a87c8db21c")
+	)
+	(wire
+		(pts
+			(xy 63.5 46.99) (xy 142.24 46.99)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0ca57197-6ef4-4fb9-a72e-c45e295d3178")
 	)
 	(wire
 		(pts
@@ -2910,26 +2921,6 @@
 	)
 	(wire
 		(pts
-			(xy 63.5 49.53) (xy 82.55 49.53)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "5b8f8bd1-8e7e-439a-9614-d0708ea7f8ab")
-	)
-	(wire
-		(pts
-			(xy 63.5 52.07) (xy 68.58 52.07)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "603720d4-99cb-4c3e-9ca8-26c6de29c076")
-	)
-	(wire
-		(pts
 			(xy 48.26 93.98) (xy 48.26 99.06)
 		)
 		(stroke
@@ -2957,6 +2948,16 @@
 			(type default)
 		)
 		(uuid "650d489b-52a7-470b-96e1-2ed9e280e08f")
+	)
+	(wire
+		(pts
+			(xy 63.5 49.53) (xy 82.55 49.53)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "66d8bdc8-6aa3-45ba-bfb3-b80c47a6c068")
 	)
 	(wire
 		(pts
@@ -3100,6 +3101,16 @@
 	)
 	(wire
 		(pts
+			(xy 63.5 52.07) (xy 68.58 52.07)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a5a40905-b791-4a69-921e-e881aa27fb74")
+	)
+	(wire
+		(pts
 			(xy 125.73 133.35) (xy 125.73 135.89)
 		)
 		(stroke
@@ -3180,6 +3191,16 @@
 	)
 	(wire
 		(pts
+			(xy 107.95 91.44) (xy 115.57 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "b68b3e6d-bdf8-40fa-8f44-9d114a0ed294")
+	)
+	(wire
+		(pts
 			(xy 102.87 66.04) (xy 109.22 66.04)
 		)
 		(stroke
@@ -3197,16 +3218,6 @@
 			(type default)
 		)
 		(uuid "ba65e6aa-a938-451a-b559-bae556fe6848")
-	)
-	(wire
-		(pts
-			(xy 107.95 91.44) (xy 115.57 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "bf317ff3-f326-49b4-b681-3650bd463889")
 	)
 	(wire
 		(pts
@@ -3260,16 +3271,6 @@
 	)
 	(wire
 		(pts
-			(xy 123.19 91.44) (xy 134.62 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "c7bdee4b-a3eb-4766-bd31-5c6ca132ffd5")
-	)
-	(wire
-		(pts
 			(xy 107.95 125.73) (xy 107.95 118.11)
 		)
 		(stroke
@@ -3320,6 +3321,16 @@
 	)
 	(wire
 		(pts
+			(xy 123.19 91.44) (xy 134.62 91.44)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "dab1e3da-5d03-426f-b1aa-3372a584d933")
+	)
+	(wire
+		(pts
 			(xy 100.33 146.05) (xy 132.08 146.05)
 		)
 		(stroke
@@ -3347,16 +3358,6 @@
 			(type default)
 		)
 		(uuid "e3076702-69b0-458c-bd4b-e5979f5890fa")
-	)
-	(wire
-		(pts
-			(xy 63.5 46.99) (xy 142.24 46.99)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "e4363999-0ce4-4a6b-b738-f386044e4994")
 	)
 	(wire
 		(pts
@@ -3472,7 +3473,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_TO_SOT_THT:TO-92"
 			(at 144.78 88.9 0)
 			(hide yes)
 			(show_name no)
@@ -3557,7 +3558,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_THT:CP_Radial_D8.0mm_P5.00mm"
 			(at 48.26 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -3718,7 +3719,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Package_DIP:CERDIP-18_W7.62mm_SideBrazed"
 			(at 80.01 110.49 0)
 			(hide yes)
 			(show_name no)
@@ -3931,7 +3932,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Button_Switch_THT:SW_E-Switch_EG1271_SPDT"
 			(at 80.01 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -4016,7 +4017,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Potentiometer_THT:Potentiometer_Piher_PT-15-H01_Horizontal"
 			(at 123.19 72.39 0)
 			(hide yes)
 			(show_name no)
@@ -4134,7 +4135,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 			(at 39.37 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -4306,7 +4307,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal"
 			(at 119.634 90.424 90)
 			(hide yes)
 			(show_name no)
@@ -4702,7 +4703,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal"
 			(at 112.014 101.854 90)
 			(hide yes)
 			(show_name no)
@@ -4782,7 +4783,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Crystal:Crystal_HC52-6mm_Vertical"
 			(at 46.99 119.38 0)
 			(hide yes)
 			(show_name no)
@@ -4944,7 +4945,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "TerminalBlock:TerminalBlock_MaiXu_MX126-5.0-03P_1x03_P5.00mm"
 			(at 50.8 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -5027,7 +5028,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_THT:CP_Radial_D8.0mm_P5.00mm"
 			(at 134.62 72.39 0)
 			(hide yes)
 			(show_name no)
@@ -5109,7 +5110,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Capacitor_THT:C_Disc_D3.0mm_W1.6mm_P2.50mm"
 			(at 53.34 129.54 0)
 			(hide yes)
 			(show_name no)
@@ -5268,7 +5269,7 @@
 				)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal"
 			(at 113.284 65.024 90)
 			(hide yes)
 			(show_name no)
@@ -5350,7 +5351,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" ""
+		(property "Footprint" "Resistor_THT:R_Axial_DIN0207_L6.3mm_D2.5mm_P15.24mm_Horizontal"
 			(at 141.224 78.486 90)
 			(hide yes)
 			(show_name no)
