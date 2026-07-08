@@ -3850,7 +3850,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Diode_SMD:D_MiniMELF"
+		(property "Footprint" "Diode_THT:D_A-405_P10.16mm_Horizontal"
 			(at 33.655 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -4017,7 +4017,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Potentiometer_THT:Potentiometer_Piher_PT-15-H01_Horizontal"
+		(property "Footprint" "Potentiometer_THT:Potentiometer_Bourns_3266W_Vertical"
 			(at 123.19 72.39 0)
 			(hide yes)
 			(show_name no)
@@ -4945,7 +4945,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "TerminalBlock:TerminalBlock_MaiXu_MX126-5.0-03P_1x03_P5.00mm"
+		(property "Footprint" "TerminalBlock_CUI:TerminalBlock_CUI_TB007-508-03_1x03_P5.08mm_Horizontal"
 			(at 50.8 48.26 0)
 			(hide yes)
 			(show_name no)
