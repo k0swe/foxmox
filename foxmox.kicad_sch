@@ -3539,6 +3539,16 @@
 		)
 		(uuid "ff6d7263-9a54-4ca2-a210-2a6fc9679739")
 	)
+	(label "VDD"
+		(at 63.5 80.01 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "8aebb142-8305-4c35-9216-6d3ca8989a0f")
+	)
 	(symbol
 		(lib_id "Device:Q_NPN")
 		(at 139.7 91.44 0)
