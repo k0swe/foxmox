@@ -1,0 +1,4 @@
+(sym_lib_table
+	(version 7)
+	(lib (name "RDS5-16S-1065-D-67") (type "KiCad") (uri "${KIPRJMOD}/Libraries/RDS5_16S_1065_D_67/RDS5-16S-1065-D-67.kicad_sym") (options "") (descr ""))
+)

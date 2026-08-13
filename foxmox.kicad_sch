@@ -1851,37 +1851,237 @@
 			)
 			(embedded_fonts no)
 		)
-		(symbol "Switch:SW_Coded_SH-7080"
+		(symbol "Mechanical:MountingHole"
 			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "H"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MountingHole"
+				(at 0 3.175 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
 				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Mounting Hole without connection"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "mounting hole"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "MountingHole*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "MountingHole_0_1"
+				(circle
+					(center 0 0)
+					(radius 1.27)
+					(stroke
+						(width 1.27)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "MountingHole_1"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "H"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MountingHole"
+				(at 0 3.175 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Mounting Hole without connection"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "mounting hole"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "MountingHole*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "MountingHole_1_0_1"
+				(circle
+					(center 0 0)
+					(radius 1.27)
+					(stroke
+						(width 1.27)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
+		(symbol "RDS5-16S-1065-D-67:RDS5-16S-1065-D-67"
+			(pin_names
+				(offset 1.016)
 			)
 			(exclude_from_sim no)
 			(in_bom yes)
 			(on_board yes)
 			(in_pos_files yes)
 			(duplicate_pin_numbers_are_jumpers no)
-			(property "Reference" "SW1"
-				(at 0 12.7 0)
+			(property "Reference" "S"
+				(at -7.62 5.842 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left bottom)
 				)
 			)
-			(property "Value" "SW_Coded_SH-7080"
-				(at 0 10.16 0)
+			(property "Value" "RDS5-16S-1065-D-67"
+				(at -7.62 -12.7 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(effects
 					(font
 						(size 1.27 1.27)
 					)
+					(justify left bottom)
 				)
 			)
-			(property "Footprint" "Button_Switch_SMD:Nidec_Copal_SH-7040B"
-				(at -7.62 -11.43 0)
+			(property "Footprint" "RDS5-16S-1065-D-67:SW_RDS5-16S-1065-D-67"
+				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
 				(hide yes)
@@ -1889,10 +2089,10 @@
 					(font
 						(size 1.27 1.27)
 					)
-					(justify left)
+					(justify bottom)
 				)
 			)
-			(property "Datasheet" "https://www.nidec-copal-electronics.com/e/catalog/switch/sh-7000.pdf"
+			(property "Datasheet" ""
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1903,7 +2103,7 @@
 					)
 				)
 			)
-			(property "Description" "Rotary switch, 4-bit encoding, 16 positions, Gray code"
+			(property "Description" ""
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1914,7 +2114,7 @@
 					)
 				)
 			)
-			(property "ki_keywords" "rotary hex Gray"
+			(property "PARTREV" "1.0"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1923,9 +2123,10 @@
 					(font
 						(size 1.27 1.27)
 					)
+					(justify bottom)
 				)
 			)
-			(property "ki_fp_filters" "Nidec*Copal*SH*7040*"
+			(property "MANUFACTURER" "CUI Devices"
 				(at 0 0 0)
 				(show_name no)
 				(do_not_autoplace no)
@@ -1934,166 +2135,37 @@
 					(font
 						(size 1.27 1.27)
 					)
+					(justify bottom)
 				)
 			)
-			(symbol "SW_Coded_SH-7080_0_0"
-				(text "8"
-					(at -5.715 0 900)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
+			(property "MAXIMUM_PACKAGE_HEIGHT" "6.8mm"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
 					)
-				)
-				(text "9"
-					(at -5.2832 2.1844 675)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "7"
-					(at -5.2832 -2.1844 1125)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "A"
-					(at -4.0386 4.0386 450)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "6"
-					(at -4.0386 -4.0386 1350)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "B"
-					(at -2.1844 5.2832 225)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "5"
-					(at -2.1844 -5.2832 1575)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "C"
-					(at 0 5.715 0)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "4"
-					(at 0 -5.715 1800)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "D"
-					(at 2.1844 5.2832 3375)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "3"
-					(at 2.1844 -5.2832 2025)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "E"
-					(at 4.0386 4.0386 3150)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "2"
-					(at 4.0386 -4.0386 2250)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "F"
-					(at 5.2832 2.1844 2925)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "1"
-					(at 5.2832 -2.1844 2475)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(text "0"
-					(at 5.715 0 2700)
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
+					(justify bottom)
 				)
 			)
-			(symbol "SW_Coded_SH-7080_0_1"
-				(polyline
-					(pts
-						(xy -0.254 -2.54) (xy -0.254 2.032) (xy -0.762 1.524) (xy -1.27 1.524) (xy 0 2.794) (xy 1.27 1.524)
-						(xy 0.762 1.524) (xy 0.254 2.032) (xy 0.254 -2.54) (xy -0.254 -2.54) (xy -0.254 -2.54)
+			(property "STANDARD" "Manufacturer Recommendations"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
 					)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
+					(justify bottom)
 				)
-				(circle
-					(center 0 0)
-					(radius 3.81)
-					(stroke
-						(width 0)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
+			)
+			(symbol "RDS5-16S-1065-D-67_0_0"
 				(rectangle
-					(start 7.62 7.62)
-					(end -7.62 -7.62)
+					(start -7.62 -10.16)
+					(end 7.62 5.08)
 					(stroke
 						(width 0.254)
 						(type default)
@@ -2102,94 +2174,110 @@
 						(type background)
 					)
 				)
-			)
-			(symbol "SW_Coded_SH-7080_1_1"
 				(pin passive line
-					(at -10.16 2.54 0)
-					(length 2.54)
+					(at 12.7 2.54 180)
+					(length 5.08)
 					(name "1"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 					(number "1"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 				)
 				(pin passive line
-					(at -10.16 0 0)
-					(length 2.54)
+					(at 12.7 0 180)
+					(length 5.08)
 					(name "2"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 					(number "2"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 				)
 				(pin passive line
-					(at -10.16 -2.54 0)
-					(length 2.54)
+					(at 12.7 -2.54 180)
+					(length 5.08)
 					(name "4"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 					(number "4"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 				)
 				(pin passive line
-					(at -10.16 -5.08 0)
-					(length 2.54)
+					(at 12.7 -5.08 180)
+					(length 5.08)
 					(name "8"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 					(number "8"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
 				)
 				(pin passive line
-					(at -10.16 5.08 0)
-					(length 2.54)
+					(at -12.7 0 0)
+					(length 5.08)
 					(name "C"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
 							)
 						)
 					)
-					(number "C"
+					(number "C1"
 						(effects
 							(font
-								(size 1.27 1.27)
+								(size 1.016 1.016)
+							)
+						)
+					)
+				)
+				(pin passive line
+					(at -12.7 -2.54 0)
+					(length 5.08)
+					(name "C__1"
+						(effects
+							(font
+								(size 1.016 1.016)
+							)
+						)
+					)
+					(number "C2"
+						(effects
+							(font
+								(size 1.016 1.016)
 							)
 						)
 					)
@@ -2622,10 +2710,22 @@
 		(uuid "2b9e1fd1-1058-4d37-b537-28962d35891c")
 	)
 	(junction
+		(at 157.48 123.19)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "35f9d7f0-c711-45e5-9b2c-d73f909e3c84")
+	)
+	(junction
 		(at 48.26 80.01)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "752a8e42-0a7e-4a9a-80f0-88eeb5d7a7b9")
+	)
+	(junction
+		(at 157.48 146.05)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "9c86d210-54d1-4d2f-817f-9029d2ddf956")
 	)
 	(junction
 		(at 80.01 80.01)
@@ -2721,6 +2821,16 @@
 	)
 	(wire
 		(pts
+			(xy 157.48 143.51) (xy 157.48 146.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "0d0e94f8-9e81-4206-9d26-17fe49357e85")
+	)
+	(wire
+		(pts
 			(xy 142.24 72.39) (xy 137.16 72.39)
 		)
 		(stroke
@@ -2731,13 +2841,23 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 110.49) (xy 125.73 110.49)
+			(xy 113.03 120.65) (xy 129.54 120.65)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "1a8ae86f-0542-46d1-a7ab-ed3033c48941")
+		(uuid "1a712cb4-0588-4dee-970e-00956ffc0792")
+	)
+	(wire
+		(pts
+			(xy 157.48 120.65) (xy 157.48 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "1dc2386b-b351-4e43-bf6e-555aa570670d")
 	)
 	(wire
 		(pts
@@ -2758,16 +2878,6 @@
 			(type default)
 		)
 		(uuid "2561ab11-8096-41b4-bcbb-0b26ecbf700c")
-	)
-	(wire
-		(pts
-			(xy 132.08 123.19) (xy 110.49 123.19)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "2bd529c9-9161-4073-86fa-7142dbb85fb5")
 	)
 	(wire
 		(pts
@@ -2801,33 +2911,13 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 133.35) (xy 125.73 133.35)
+			(xy 157.48 123.19) (xy 157.48 125.73)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "35242b16-d0f9-4e83-a2fa-e0ba93726448")
-	)
-	(wire
-		(pts
-			(xy 132.08 140.97) (xy 105.41 140.97)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3b26968a-0251-4e49-a461-39695738b5ae")
-	)
-	(wire
-		(pts
-			(xy 132.08 143.51) (xy 102.87 143.51)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "3c819951-08ff-4f1c-9f59-38c5109ab142")
+		(uuid "39f87c30-a624-4965-95b2-b1d4e70f820d")
 	)
 	(wire
 		(pts
@@ -2871,13 +2961,13 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 118.11) (xy 115.57 118.11)
+			(xy 154.94 143.51) (xy 157.48 143.51)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "4ebb527b-fa85-4d1c-9d98-acd127730907")
+		(uuid "4dc3e61d-817e-4369-b2e0-8f7fe4f4c01b")
 	)
 	(wire
 		(pts
@@ -2911,13 +3001,13 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 125.73) (xy 107.95 125.73)
+			(xy 105.41 140.97) (xy 129.54 140.97)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "56830570-8e3d-4f2e-9781-f79985e7b6e9")
+		(uuid "5b906a24-cbba-4b0d-8f61-048227f944fd")
 	)
 	(wire
 		(pts
@@ -2928,16 +3018,6 @@
 			(type default)
 		)
 		(uuid "60fe4764-3b09-48fa-b701-82a44d36f80b")
-	)
-	(wire
-		(pts
-			(xy 132.08 148.59) (xy 97.79 148.59)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "64979152-c016-4540-9c60-60e39b494d66")
 	)
 	(wire
 		(pts
@@ -2961,13 +3041,13 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 115.57) (xy 129.54 110.49)
+			(xy 154.94 123.19) (xy 157.48 123.19)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "697222c9-e23d-4c4f-95ea-3cd0bba11f12")
+		(uuid "6ef12d34-aec9-4192-a6c9-3b63674a8a4c")
 	)
 	(wire
 		(pts
@@ -2981,13 +3061,23 @@
 	)
 	(wire
 		(pts
-			(xy 129.54 138.43) (xy 132.08 138.43)
+			(xy 102.87 143.51) (xy 129.54 143.51)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "6fab1e9a-cc9b-4de8-ac95-393ee7ea84fb")
+		(uuid "6f2da7bb-361e-481d-804e-cd24be9b31d0")
+	)
+	(wire
+		(pts
+			(xy 97.79 148.59) (xy 129.54 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "7100cf07-d8e7-4388-bf30-38c62899822e")
 	)
 	(wire
 		(pts
@@ -3051,16 +3141,6 @@
 	)
 	(wire
 		(pts
-			(xy 132.08 115.57) (xy 129.54 115.57)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "864e1734-e22e-437d-89fe-e2823aef7a3c")
-	)
-	(wire
-		(pts
 			(xy 39.37 132.08) (xy 39.37 135.89)
 		)
 		(stroke
@@ -3091,6 +3171,16 @@
 	)
 	(wire
 		(pts
+			(xy 110.49 123.19) (xy 129.54 123.19)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "a0179824-41c0-4b1b-9739-e40397fb7f07")
+	)
+	(wire
+		(pts
 			(xy 110.49 115.57) (xy 97.79 115.57)
 		)
 		(stroke
@@ -3111,23 +3201,13 @@
 	)
 	(wire
 		(pts
-			(xy 125.73 133.35) (xy 125.73 135.89)
+			(xy 154.94 120.65) (xy 157.48 120.65)
 		)
 		(stroke
 			(width 0)
 			(type default)
 		)
-		(uuid "a6ef206c-cf49-4195-aec7-a76fd76857cb")
-	)
-	(wire
-		(pts
-			(xy 125.73 110.49) (xy 125.73 113.03)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "a7089659-3be5-48a6-8ae7-298189171fde")
+		(uuid "a6a42c5b-1006-45e0-a408-64c89db27421")
 	)
 	(wire
 		(pts
@@ -3138,16 +3218,6 @@
 			(type default)
 		)
 		(uuid "af147b49-e9b0-4846-82fa-3d00b7f5a25d")
-	)
-	(wire
-		(pts
-			(xy 132.08 120.65) (xy 113.03 120.65)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "afd69e08-c1f8-4839-9957-2567e6abf93c")
 	)
 	(wire
 		(pts
@@ -3281,6 +3351,16 @@
 	)
 	(wire
 		(pts
+			(xy 157.48 146.05) (xy 157.48 148.59)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "c961521d-2bcd-41ad-8971-8cd57449cecf")
+	)
+	(wire
+		(pts
 			(xy 107.95 97.79) (xy 97.79 97.79)
 		)
 		(stroke
@@ -3321,6 +3401,26 @@
 	)
 	(wire
 		(pts
+			(xy 115.57 118.11) (xy 129.54 118.11)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d6192dbe-cd2f-45a7-9d02-d5ce93acc805")
+	)
+	(wire
+		(pts
+			(xy 154.94 146.05) (xy 157.48 146.05)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da8e516e-9cc9-4eda-93b4-f792b1a0a906")
+	)
+	(wire
+		(pts
 			(xy 123.19 91.44) (xy 134.62 91.44)
 		)
 		(stroke
@@ -3331,7 +3431,7 @@
 	)
 	(wire
 		(pts
-			(xy 100.33 146.05) (xy 132.08 146.05)
+			(xy 100.33 146.05) (xy 129.54 146.05)
 		)
 		(stroke
 			(width 0)
@@ -3358,6 +3458,16 @@
 			(type default)
 		)
 		(uuid "e3076702-69b0-458c-bd4b-e5979f5890fa")
+	)
+	(wire
+		(pts
+			(xy 107.95 125.73) (xy 129.54 125.73)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "e7d6c704-29ac-4a59-8380-734221045ee7")
 	)
 	(wire
 		(pts
@@ -3398,16 +3508,6 @@
 			(type default)
 		)
 		(uuid "efe1ebd9-db9c-42f3-be84-16bd71185a87")
-	)
-	(wire
-		(pts
-			(xy 129.54 138.43) (xy 129.54 133.35)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "f406ca4e-9069-4c13-abfa-4657507ef6e3")
 	)
 	(wire
 		(pts
@@ -3932,7 +4032,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Button_Switch_THT:SW_E-Switch_EG1271_SPDT"
+		(property "Footprint" "Button_Switch_THT:SW_CK_JS202011CQN_DPDT_Straight"
 			(at 80.01 68.58 0)
 			(hide yes)
 			(show_name no)
@@ -4184,8 +4284,9 @@
 		)
 	)
 	(symbol
-		(lib_id "Switch:SW_Coded_SH-7080")
+		(lib_id "RDS5-16S-1065-D-67:RDS5-16S-1065-D-67")
 		(at 142.24 120.65 0)
+		(mirror y)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4193,32 +4294,29 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "520cb83c-1ba5-4ff4-be75-11629d9a80e6")
 		(property "Reference" "S1"
-			(at 151.13 119.3799 0)
+			(at 142.24 110.49 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Value" "SW Hex-4"
-			(at 151.13 121.9199 0)
+			(at 142.24 113.03 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:Nidec_Copal_SH-7040B"
-			(at 134.62 132.08 0)
+		(property "Footprint" "RDS5_16S_1065_D_67:SW_RDS5-16S-1065-D-67"
+			(at 142.24 120.65 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4226,10 +4324,10 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify bottom)
 			)
 		)
-		(property "Datasheet" "https://www.nidec-copal-electronics.com/e/catalog/switch/sh-7000.pdf"
+		(property "Datasheet" ""
 			(at 142.24 120.65 0)
 			(hide yes)
 			(show_name no)
@@ -4251,10 +4349,58 @@
 				)
 			)
 		)
+		(property "PARTREV" "1.0"
+			(at 142.24 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
+		(property "MANUFACTURER" "CUI Devices"
+			(at 142.24 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
+		(property "MAXIMUM_PACKAGE_HEIGHT" "6.8mm"
+			(at 142.24 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
+		(property "STANDARD" "Manufacturer Recommendations"
+			(at 142.24 120.65 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
 		(pin "8"
 			(uuid "c8714b94-4b08-4dff-82de-1e666fa01f82")
 		)
-		(pin "C"
+		(pin "C2"
 			(uuid "575bcbe2-62c7-4a2e-b330-061371400e48")
 		)
 		(pin "2"
@@ -4266,10 +4412,91 @@
 		(pin "1"
 			(uuid "f890f688-27ac-488a-af86-241a61893c93")
 		)
+		(pin "C1"
+			(uuid "3da53833-b8b0-4f89-9bcd-679d734e54da")
+		)
 		(instances
 			(project "foxmox"
 				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
 					(reference "S1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 264.16 167.64 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5583d18a-98cc-46bb-a02d-41c601f0b9b8")
+		(property "Reference" "H4"
+			(at 266.7 166.3699 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 266.7 168.9099 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.5mm"
+			(at 264.16 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 264.16 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 264.16 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "foxmox"
+				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
+					(reference "H4")
 					(unit 1)
 				)
 			)
@@ -4357,7 +4584,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDREF")
-		(at 125.73 113.03 0)
+		(at 157.48 125.73 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4368,7 +4595,7 @@
 		(fields_autoplaced yes)
 		(uuid "610af72b-813e-4ab1-9cd8-57c4e7aec819")
 		(property "Reference" "#PWR09"
-			(at 125.73 119.38 0)
+			(at 157.48 132.08 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4379,7 +4606,7 @@
 			)
 		)
 		(property "Value" "GNDREF"
-			(at 125.73 118.11 0)
+			(at 157.48 130.81 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4390,7 +4617,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 125.73 113.03 0)
+			(at 157.48 125.73 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4401,7 +4628,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 125.73 113.03 0)
+			(at 157.48 125.73 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4412,7 +4639,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GNDREF\" , reference supply ground"
-			(at 125.73 113.03 0)
+			(at 157.48 125.73 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4515,7 +4742,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDREF")
-		(at 125.73 135.89 0)
+		(at 157.48 148.59 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4526,7 +4753,7 @@
 		(fields_autoplaced yes)
 		(uuid "699e089d-c5eb-423a-8d98-beba369930ee")
 		(property "Reference" "#PWR010"
-			(at 125.73 142.24 0)
+			(at 157.48 154.94 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4537,7 +4764,7 @@
 			)
 		)
 		(property "Value" "GNDREF"
-			(at 125.73 140.97 0)
+			(at 157.48 153.67 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4548,7 +4775,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 125.73 135.89 0)
+			(at 157.48 148.59 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4559,7 +4786,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 125.73 135.89 0)
+			(at 157.48 148.59 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4570,7 +4797,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GNDREF\" , reference supply ground"
-			(at 125.73 135.89 0)
+			(at 157.48 148.59 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4783,7 +5010,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Crystal:Crystal_HC52-6mm_Vertical"
+		(property "Footprint" "Crystal:Crystal_HC49-4H_Vertical"
 			(at 46.99 119.38 0)
 			(hide yes)
 			(show_name no)
@@ -5159,6 +5386,85 @@
 		)
 	)
 	(symbol
+		(lib_name "MountingHole_1")
+		(lib_id "Mechanical:MountingHole")
+		(at 259.08 162.56 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "ba9f85de-09e0-4f2a-b552-bd7e6e3c0fe3")
+		(property "Reference" "H1"
+			(at 261.62 161.2899 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 261.62 163.8299 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.5mm"
+			(at 259.08 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 259.08 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 259.08 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "foxmox"
+				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
+					(reference "H1")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GNDREF")
 		(at 48.26 99.06 0)
 		(unit 1)
@@ -5400,6 +5706,84 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 264.16 162.56 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "da3ac315-0aa5-4f9f-bbee-c379649c6d96")
+		(property "Reference" "H2"
+			(at 266.7 161.2899 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 266.7 163.8299 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.5mm"
+			(at 264.16 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 264.16 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 264.16 162.56 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "foxmox"
+				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
+					(reference "H2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GNDREF")
 		(at 39.37 135.89 0)
 		(unit 1)
@@ -5479,8 +5863,9 @@
 		)
 	)
 	(symbol
-		(lib_id "Switch:SW_Coded_SH-7080")
+		(lib_id "RDS5-16S-1065-D-67:RDS5-16S-1065-D-67")
 		(at 142.24 143.51 0)
+		(mirror y)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5488,32 +5873,29 @@
 		(on_board yes)
 		(in_pos_files yes)
 		(dnp no)
-		(fields_autoplaced yes)
 		(uuid "e516dca8-c5ed-448f-87c8-e448308b4817")
 		(property "Reference" "S2"
-			(at 151.13 142.2399 0)
+			(at 142.24 133.35 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
 		(property "Value" "SW Hex-4"
-			(at 151.13 144.7799 0)
+			(at 142.24 135.89 0)
 			(show_name no)
 			(do_not_autoplace no)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
 			)
 		)
-		(property "Footprint" "Button_Switch_SMD:Nidec_Copal_SH-7040B"
-			(at 134.62 154.94 0)
+		(property "Footprint" "RDS5_16S_1065_D_67:SW_RDS5-16S-1065-D-67"
+			(at 142.24 143.51 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5521,10 +5903,10 @@
 				(font
 					(size 1.27 1.27)
 				)
-				(justify left)
+				(justify bottom)
 			)
 		)
-		(property "Datasheet" "https://www.nidec-copal-electronics.com/e/catalog/switch/sh-7000.pdf"
+		(property "Datasheet" ""
 			(at 142.24 143.51 0)
 			(hide yes)
 			(show_name no)
@@ -5546,10 +5928,58 @@
 				)
 			)
 		)
+		(property "PARTREV" "1.0"
+			(at 142.24 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
+		(property "MANUFACTURER" "CUI Devices"
+			(at 142.24 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
+		(property "MAXIMUM_PACKAGE_HEIGHT" "6.8mm"
+			(at 142.24 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
+		(property "STANDARD" "Manufacturer Recommendations"
+			(at 142.24 143.51 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify bottom)
+			)
+		)
 		(pin "8"
 			(uuid "0306d3c5-ee4e-429a-8658-66faf801964d")
 		)
-		(pin "C"
+		(pin "C1"
 			(uuid "ab7721d2-2eef-4649-b801-d59bacf62066")
 		)
 		(pin "2"
@@ -5561,10 +5991,91 @@
 		(pin "1"
 			(uuid "ca06227c-6825-4663-bace-6f30911266b3")
 		)
+		(pin "C2"
+			(uuid "d4214dc9-5428-4076-9ef2-0d11e0a033fe")
+		)
 		(instances
 			(project "foxmox"
 				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
 					(reference "S2")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 259.08 167.64 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "eb3773c5-6ccc-4bfc-9d55-dd37d036e5f4")
+		(property "Reference" "H3"
+			(at 261.62 166.3699 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 261.62 168.9099 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2.5mm"
+			(at 259.08 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 259.08 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 259.08 167.64 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "foxmox"
+				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
+					(reference "H3")
 					(unit 1)
 				)
 			)

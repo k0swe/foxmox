@@ -1,0 +1,4 @@
+(fp_lib_table
+	(version 7)
+	(lib (name "RDS5_16S_1065_D_67") (type "KiCad") (uri "${KIPRJMOD}/Libraries/RDS5_16S_1065_D_67") (options "") (descr ""))
+)
