@@ -1962,6 +1962,105 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "Mechanical:MountingHole"
+			(pin_names
+				(offset 1.016)
+			)
+			(exclude_from_sim no)
+			(in_bom no)
+			(on_board yes)
+			(in_pos_files yes)
+			(duplicate_pin_numbers_are_jumpers no)
+			(property "Reference" "H"
+				(at 0 5.08 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "MountingHole"
+				(at 0 3.175 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Description" "Mounting Hole without connection"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_keywords" "mounting hole"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "ki_fp_filters" "MountingHole*"
+				(at 0 0 0)
+				(show_name no)
+				(do_not_autoplace no)
+				(hide yes)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(symbol "MountingHole_0_1"
+				(circle
+					(center 0 0)
+					(radius 1.27)
+					(stroke
+						(width 1.27)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "Mechanical:MountingHole_Pad"
 			(pin_numbers
 				(hide yes)
@@ -2752,13 +2851,13 @@
 		(uuid "35f9d7f0-c711-45e5-9b2c-d73f909e3c84")
 	)
 	(junction
-		(at 259.08 160.02)
+		(at 252.73 160.02)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "3bf92ae6-72d2-4b26-8162-8e91d5a36a13")
 	)
 	(junction
-		(at 259.08 167.64)
+		(at 252.73 167.64)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "56597d77-dd66-45b3-8a53-17bfe6fd073d")
@@ -2776,7 +2875,7 @@
 		(uuid "9c86d210-54d1-4d2f-817f-9029d2ddf956")
 	)
 	(junction
-		(at 254 167.64)
+		(at 247.65 167.64)
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "9fcb9839-c07c-415b-b3c3-4a7d29339bbf")
@@ -2901,7 +3000,7 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 160.02) (xy 264.16 160.02)
+			(xy 252.73 160.02) (xy 257.81 160.02)
 		)
 		(stroke
 			(width 0)
@@ -2981,7 +3080,7 @@
 	)
 	(wire
 		(pts
-			(xy 254 160.02) (xy 254 167.64)
+			(xy 247.65 160.02) (xy 247.65 167.64)
 		)
 		(stroke
 			(width 0)
@@ -3061,7 +3160,7 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 167.64) (xy 264.16 167.64)
+			(xy 252.73 167.64) (xy 257.81 167.64)
 		)
 		(stroke
 			(width 0)
@@ -3161,7 +3260,7 @@
 	)
 	(wire
 		(pts
-			(xy 259.08 160.02) (xy 254 160.02)
+			(xy 252.73 160.02) (xy 247.65 160.02)
 		)
 		(stroke
 			(width 0)
@@ -3251,7 +3350,7 @@
 	)
 	(wire
 		(pts
-			(xy 254 167.64) (xy 259.08 167.64)
+			(xy 247.65 167.64) (xy 252.73 167.64)
 		)
 		(stroke
 			(width 0)
@@ -3788,7 +3887,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm"
+		(property "Footprint" "Capacitor_THT:C_Disc_D7.5mm_W5.0mm_P7.50mm"
 			(at 48.26 91.44 0)
 			(hide yes)
 			(show_name no)
@@ -3917,7 +4016,7 @@
 	)
 	(symbol
 		(lib_id "power:GNDREF")
-		(at 254 167.64 0)
+		(at 247.65 167.64 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -3928,7 +4027,7 @@
 		(fields_autoplaced yes)
 		(uuid "17659efc-5874-4d4f-b869-1dd8c5b580c1")
 		(property "Reference" "#PWR011"
-			(at 254 173.99 0)
+			(at 247.65 173.99 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3939,7 +4038,7 @@
 			)
 		)
 		(property "Value" "GNDREF"
-			(at 254 172.72 0)
+			(at 247.65 172.72 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3950,7 +4049,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 254 167.64 0)
+			(at 247.65 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3961,7 +4060,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 254 167.64 0)
+			(at 247.65 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -3972,7 +4071,7 @@
 			)
 		)
 		(property "Description" "Power symbol creates a global label with name \"GNDREF\" , reference supply ground"
-			(at 254 167.64 0)
+			(at 247.65 167.64 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4634,8 +4733,8 @@
 		)
 	)
 	(symbol
-		(lib_id "Mechanical:MountingHole_Pad")
-		(at 264.16 165.1 0)
+		(lib_id "Mechanical:MountingHole")
+		(at 262.89 156.21 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -4644,9 +4743,9 @@
 		(in_pos_files yes)
 		(dnp no)
 		(fields_autoplaced yes)
-		(uuid "5583d18a-98cc-46bb-a02d-41c601f0b9b8")
-		(property "Reference" "H4"
-			(at 266.7 163.8299 0)
+		(uuid "53024f27-12e4-4d23-af39-89c0a4f9908a")
+		(property "Reference" "H5"
+			(at 265.43 154.9399 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4658,7 +4757,85 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 266.7 166.3699 0)
+			(at 265.43 157.4799 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2mm"
+			(at 262.89 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 262.89 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 262.89 156.21 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "foxmox"
+				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
+					(reference "H5")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "Mechanical:MountingHole_Pad")
+		(at 257.81 165.1 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5583d18a-98cc-46bb-a02d-41c601f0b9b8")
+		(property "Reference" "H4"
+			(at 260.35 163.8299 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 260.35 166.3699 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4670,7 +4847,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.5mm_Pad"
-			(at 264.16 165.1 0)
+			(at 257.81 165.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4681,7 +4858,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 264.16 165.1 0)
+			(at 257.81 165.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -4692,7 +4869,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 264.16 165.1 0)
+			(at 257.81 165.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5350,6 +5527,84 @@
 		)
 	)
 	(symbol
+		(lib_id "Mechanical:MountingHole")
+		(at 262.89 163.83 0)
+		(unit 1)
+		(body_style 1)
+		(exclude_from_sim no)
+		(in_bom no)
+		(on_board yes)
+		(in_pos_files yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "99935ea8-5050-4c37-a1f9-2e3613198ebc")
+		(property "Reference" "H6"
+			(at 265.43 162.5599 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "MountingHole"
+			(at 265.43 165.0999 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "MountingHole:MountingHole_2mm"
+			(at 262.89 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 262.89 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Mounting Hole without connection"
+			(at 262.89 163.83 0)
+			(hide yes)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(instances
+			(project "foxmox"
+				(path "/8fe0f122-3453-49de-aa82-6d9b89dc8357"
+					(reference "H6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Connector_Audio:AudioPlug3")
 		(at 48.26 49.53 0)
 		(mirror x)
@@ -5384,7 +5639,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "TerminalBlock_CUI:TerminalBlock_CUI_TB007-508-03_1x03_P5.08mm_Horizontal"
+		(property "Footprint" "TerminalBlock:TerminalBlock_Xinya_XY308-2.54-3P_1x03_P2.54mm_Horizontal"
 			(at 50.8 48.26 0)
 			(hide yes)
 			(show_name no)
@@ -5467,7 +5722,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Capacitor_THT:C_Disc_D4.3mm_W1.9mm_P5.00mm"
+		(property "Footprint" "Capacitor_THT:C_Disc_D7.5mm_W5.0mm_P7.50mm"
 			(at 134.62 72.39 0)
 			(hide yes)
 			(show_name no)
@@ -5599,7 +5854,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 259.08 157.48 0)
+		(at 252.73 157.48 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -5610,7 +5865,7 @@
 		(fields_autoplaced yes)
 		(uuid "ba9f85de-09e0-4f2a-b552-bd7e6e3c0fe3")
 		(property "Reference" "H1"
-			(at 261.62 156.2099 0)
+			(at 255.27 156.2099 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5622,7 +5877,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 261.62 158.7499 0)
+			(at 255.27 158.7499 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5634,7 +5889,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.5mm_Pad"
-			(at 259.08 157.48 0)
+			(at 252.73 157.48 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5645,7 +5900,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 259.08 157.48 0)
+			(at 252.73 157.48 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -5656,7 +5911,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 259.08 157.48 0)
+			(at 252.73 157.48 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6000,7 +6255,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 264.16 157.48 0)
+		(at 257.81 157.48 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6011,7 +6266,7 @@
 		(fields_autoplaced yes)
 		(uuid "da3ac315-0aa5-4f9f-bbee-c379649c6d96")
 		(property "Reference" "H2"
-			(at 266.7 156.2099 0)
+			(at 260.35 156.2099 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6023,7 +6278,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 266.7 158.7499 0)
+			(at 260.35 158.7499 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6035,7 +6290,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.5mm_Pad"
-			(at 264.16 157.48 0)
+			(at 257.81 157.48 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6046,7 +6301,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 264.16 157.48 0)
+			(at 257.81 157.48 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6057,7 +6312,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 264.16 157.48 0)
+			(at 257.81 157.48 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6301,7 +6556,7 @@
 	)
 	(symbol
 		(lib_id "Mechanical:MountingHole_Pad")
-		(at 259.08 165.1 0)
+		(at 252.73 165.1 0)
 		(unit 1)
 		(body_style 1)
 		(exclude_from_sim no)
@@ -6312,7 +6567,7 @@
 		(fields_autoplaced yes)
 		(uuid "eb3773c5-6ccc-4bfc-9d55-dd37d036e5f4")
 		(property "Reference" "H3"
-			(at 261.62 163.8299 0)
+			(at 255.27 163.8299 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6324,7 +6579,7 @@
 			)
 		)
 		(property "Value" "MountingHole"
-			(at 261.62 166.3699 0)
+			(at 255.27 166.3699 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6336,7 +6591,7 @@
 			)
 		)
 		(property "Footprint" "MountingHole:MountingHole_2.5mm_Pad"
-			(at 259.08 165.1 0)
+			(at 252.73 165.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6347,7 +6602,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 259.08 165.1 0)
+			(at 252.73 165.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
@@ -6358,7 +6613,7 @@
 			)
 		)
 		(property "Description" "Mounting Hole with connection"
-			(at 259.08 165.1 0)
+			(at 252.73 165.1 0)
 			(hide yes)
 			(show_name no)
 			(do_not_autoplace no)
