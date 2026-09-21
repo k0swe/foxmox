@@ -506,53 +506,55 @@ morse_silence_wait:
         MOVF      saved_w, W          ; 0x1A0
         RETURN                        ; 0x1A1
 
-morse_i:
-        DW        0x21BA    ; 0x1A2: call 0x1BA
-        DW        0x29A5    ; 0x1A3: goto 0x1A5
+morse_s_sequence:
+        CALL      send_dot                ; 0x1A2
+        GOTO      morse_i_sequence        ; 0x1A3
 
-morse_a:
-        DW        0x21BD    ; 0x1A4: call 0x1BD
+morse_d_sequence:
+        CALL      send_dash               ; 0x1A4
 
-morse_s:
-        DW        0x21BA    ; 0x1A5: call 0x1BA
+morse_i_sequence:
+        CALL      send_dot                ; 0x1A5
 
-morse_h:
-        DW        0x21BA    ; 0x1A6: call 0x1BA
-        DW        0x0008    ; 0x1A7: return
+morse_e_sequence:
+        CALL      send_dot                ; 0x1A6
+        RETURN                            ; 0x1A7
 
-morse_m:
-        DW        0x21BA    ; 0x1A8: call 0x1BA
-        DW        0x29AB    ; 0x1A9: goto 0x1AB
+morse_w_sequence:
+        CALL      send_dot                ; 0x1A8
+        GOTO      morse_m_sequence        ; 0x1A9
 
-morse_t:
-        DW        0x21BD    ; 0x1AA: call 0x1BD
+morse_o_sequence:
+        CALL      send_dash               ; 0x1AA
 
-morse_o:
-        DW        0x21BD    ; 0x1AB: call 0x1BD
-        DW        0x21BD    ; 0x1AC: call 0x1BD
-        DW        0x0008    ; 0x1AD: return
+morse_m_sequence:
+        CALL      send_dash               ; 0x1AB
+morse_t_sequence:
+        CALL      send_dash               ; 0x1AC
+        RETURN                            ; 0x1AD
 
-morse_g:
-        DW        0x21BA    ; 0x1AE: call 0x1BA
-        DW        0x29B1    ; 0x1AF: goto 0x1B1
+morse_r_sequence:
+        CALL      send_dot                ; 0x1AE
+        GOTO      morse_n_sequence        ; 0x1AF
 
-morse_n:
-        DW        0x21BD    ; 0x1B0: call 0x1BD
+morse_g_sequence:
+        CALL      send_dash               ; 0x1B0
 
-morse_d:
-        DW        0x21BD    ; 0x1B1: call 0x1BD
-        DW        0x21BA    ; 0x1B2: call 0x1BA
-        DW        0x0008    ; 0x1B3: return
+morse_n_sequence:
+        CALL      send_dash               ; 0x1B1
+        CALL      send_dot                ; 0x1B2
+        RETURN                            ; 0x1B3
 
-morse_u:
-        DW        0x21BA    ; 0x1B4: call 0x1BA
-        DW        0x29B7    ; 0x1B5: goto 0x1B7
+morse_u_sequence:
+        CALL      send_dot                ; 0x1B4
+        GOTO      morse_u_tail            ; 0x1B5
 
-morse_v:
-        DW        0x21BD    ; 0x1B6: call 0x1BD
-        DW        0x21BA    ; 0x1B7: call 0x1BA
-        DW        0x21BD    ; 0x1B8: call 0x1BD
-        DW        0x0008    ; 0x1B9: return
+morse_k_sequence:
+        CALL      send_dash               ; 0x1B6
+morse_u_tail:
+        CALL      send_dot                ; 0x1B7
+        CALL      send_dash               ; 0x1B8
+        RETURN                            ; 0x1B9
 
 ; Element builders. A dot is one tone unit plus one silence unit; a dash is
 ; three tone units plus one silence unit.
@@ -571,98 +573,99 @@ send_dash:
 send_character_space:
         CALL      morse_silence_unit  ; 0x1C2
         CALL      morse_silence_unit  ; 0x1C3
+finish_character_space:
         CALL      morse_silence_unit  ; 0x1C4
         CALL      morse_silence_unit  ; 0x1C5
         RETURN                        ; 0x1C6
 
-morse_z:
-        DW        0x21B0    ; 0x1C7: call 0x1B0
-        DW        0x29C4    ; 0x1C8: goto 0x1C4
+send_morse_g:
+        CALL      morse_g_sequence        ; 0x1C7
+        GOTO      finish_character_space  ; 0x1C8
 
-morse_f:
-        DW        0x21A2    ; 0x1C9: call 0x1A2
-        DW        0x21A6    ; 0x1CA: call 0x1A6
-        DW        0x29C4    ; 0x1CB: goto 0x1C4
+send_morse_h:
+        CALL      morse_s_sequence        ; 0x1C9
+        CALL      morse_e_sequence        ; 0x1CA
+        GOTO      finish_character_space  ; 0x1CB
 
-morse_e:
-        DW        0x21A5    ; 0x1CC: call 0x1A5
-        DW        0x29C4    ; 0x1CD: goto 0x1C4
+send_morse_i:
+        CALL      morse_i_sequence        ; 0x1CC
+        GOTO      finish_character_space  ; 0x1CD
 
-morse_q:
-        DW        0x21A8    ; 0x1CE: call 0x1A8
-        DW        0x21AC    ; 0x1CF: call 0x1AC
-        DW        0x29C4    ; 0x1D0: goto 0x1C4
+send_morse_j:
+        CALL      morse_w_sequence        ; 0x1CE
+        CALL      morse_t_sequence        ; 0x1CF
+        GOTO      finish_character_space  ; 0x1D0
 
-morse_j:
-        DW        0x21B6    ; 0x1D1: call 0x1B6
-        DW        0x29C4    ; 0x1D2: goto 0x1C4
+send_morse_k:
+        CALL      morse_k_sequence        ; 0x1D1
+        GOTO      finish_character_space  ; 0x1D2
 
-morse_b:
-        DW        0x21AE    ; 0x1D3: call 0x1AE
-        DW        0x21A6    ; 0x1D4: call 0x1A6
-        DW        0x29C4    ; 0x1D5: goto 0x1C4
+send_morse_l:
+        CALL      morse_r_sequence        ; 0x1D3
+        CALL      morse_e_sequence        ; 0x1D4
+        GOTO      finish_character_space  ; 0x1D5
 
-morse_m_alias:
-        DW        0x21AB    ; 0x1D6: call 0x1AB
-        DW        0x29C4    ; 0x1D7: goto 0x1C4
+send_morse_m:
+        CALL      morse_m_sequence        ; 0x1D6
+        GOTO      finish_character_space  ; 0x1D7
 
-morse_n_alias:
-        DW        0x21B1    ; 0x1D8: call 0x1B1
-        DW        0x29C4    ; 0x1D9: goto 0x1C4
+send_morse_n:
+        CALL      morse_n_sequence        ; 0x1D8
+        GOTO      finish_character_space  ; 0x1D9
 
-morse_o_alias:
-        DW        0x21AA    ; 0x1DA: call 0x1AA
-        DW        0x29C4    ; 0x1DB: goto 0x1C4
+send_morse_o:
+        CALL      morse_o_sequence        ; 0x1DA
+        GOTO      finish_character_space  ; 0x1DB
 
-morse_p:
-        DW        0x21A8    ; 0x1DC: call 0x1A8
-        DW        0x21A6    ; 0x1DD: call 0x1A6
-        DW        0x29C4    ; 0x1DE: goto 0x1C4
+send_morse_p:
+        CALL      morse_w_sequence        ; 0x1DC
+        CALL      morse_e_sequence        ; 0x1DD
+        GOTO      finish_character_space  ; 0x1DE
 
-morse_x:
-        DW        0x21B0    ; 0x1DF: call 0x1B0
-        DW        0x21AC    ; 0x1E0: call 0x1AC
-        DW        0x29C4    ; 0x1E1: goto 0x1C4
+send_morse_q:
+        CALL      morse_g_sequence        ; 0x1DF
+        CALL      morse_t_sequence        ; 0x1E0
+        GOTO      finish_character_space  ; 0x1E1
 
-morse_t_alias:
-        DW        0x21AE    ; 0x1E2: call 0x1AE
-        DW        0x29C4    ; 0x1E3: goto 0x1C4
+send_morse_r:
+        CALL      morse_r_sequence        ; 0x1E2
+        GOTO      finish_character_space  ; 0x1E3
 
-morse_i_alias:
-        DW        0x21A2    ; 0x1E4: call 0x1A2
-        DW        0x29C4    ; 0x1E5: goto 0x1C4
+send_morse_s:
+        CALL      morse_s_sequence        ; 0x1E4
+        GOTO      finish_character_space  ; 0x1E5
 
-morse_l:
-        DW        0x21AC    ; 0x1E6: call 0x1AC
-        DW        0x29C4    ; 0x1E7: goto 0x1C4
+send_morse_t:
+        CALL      morse_t_sequence        ; 0x1E6
+        GOTO      finish_character_space  ; 0x1E7
 
-morse_u_alias:
-        DW        0x21B4    ; 0x1E8: call 0x1B4
-        DW        0x29C4    ; 0x1E9: goto 0x1C4
+send_morse_u:
+        CALL      morse_u_sequence        ; 0x1E8
+        GOTO      finish_character_space  ; 0x1E9
 
-morse_v_alias:
-        DW        0x21A2    ; 0x1EA: call 0x1A2
-        DW        0x21AC    ; 0x1EB: call 0x1AC
-        DW        0x29C4    ; 0x1EC: goto 0x1C4
+send_morse_v:
+        CALL      morse_s_sequence        ; 0x1EA
+        CALL      morse_t_sequence        ; 0x1EB
+        GOTO      finish_character_space  ; 0x1EC
 
-morse_w:
-        DW        0x21A8    ; 0x1ED: call 0x1A8
-        DW        0x29C4    ; 0x1EE: goto 0x1C4
+send_morse_w:
+        CALL      morse_w_sequence        ; 0x1ED
+        GOTO      finish_character_space  ; 0x1EE
 
-morse_x_alias:
-        DW        0x21A4    ; 0x1EF: call 0x1A4
-        DW        0x21AC    ; 0x1F0: call 0x1AC
-        DW        0x29C4    ; 0x1F1: goto 0x1C4
+send_morse_x:
+        CALL      morse_d_sequence        ; 0x1EF
+        CALL      morse_t_sequence        ; 0x1F0
+        GOTO      finish_character_space  ; 0x1F1
 
-morse_y:
-        DW        0x21B6    ; 0x1F2: call 0x1B6
-        DW        0x21AC    ; 0x1F3: call 0x1AC
-        DW        0x29C4    ; 0x1F4: goto 0x1C4
+send_morse_y:
+        CALL      morse_k_sequence        ; 0x1F2
+        CALL      morse_t_sequence        ; 0x1F3
+        GOTO      finish_character_space  ; 0x1F4
 
-morse_z_alias:
-        DW        0x21B0    ; 0x1F5: call 0x1B0
-        DW        0x21A6    ; 0x1F6: call 0x1A6
-        DW        0x29C4    ; 0x1F7: goto 0x1C4
+send_morse_z:
+        CALL      morse_g_sequence        ; 0x1F5
+        CALL      morse_e_sequence        ; 0x1F6
+        GOTO      finish_character_space  ; 0x1F7
 
 message_moe:
         DW        0x3071    ; 0x1F8: movlw 0x71

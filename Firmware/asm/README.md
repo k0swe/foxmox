@@ -20,6 +20,7 @@ Mnemonic conversions completed so far:
 - `read_switches` (`0x13E–0x147`)
 - `send_hex_byte` (`0x148–0x150`)
 - `morse_tone_unit` / `morse_silence_unit` (`0x190–0x1A1`)
+- Morse sequence fragments and complete G–Z emitters (`0x1A2–0x1F7`)
 - `send_dot` / `send_dash` / `send_character_space` (`0x1BA–0x1C6`)
 - `bit_mask_lookup` (`0x335–0x33F`)
 - `message_dispatch` (`0x340–0x355`)
