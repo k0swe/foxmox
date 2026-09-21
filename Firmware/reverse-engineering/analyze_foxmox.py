@@ -132,12 +132,17 @@ def produce_map(firmware_path: Path) -> str:
     for s2 in range(16):
         lines.append(f"| {s2:X} | `0x{cadence_pair_address(0, s2):02X}` | `0x{cadence_pair_address(5, s2):02X}` | {'yes' if s2 in (0xC, 0xD, 0xE) else 'no'} |")
 
-    lines += ["", "## Logical EEPROM 0x00-0x27 timing records", "", "Nominal timing uses EEPROM[0x28]=0. The recovered value is shown separately below.", "", "| Address | Bytes | BE counter | nominal primary | nominal low-byte follow-up |", "|---:|:---:|---:|---:|---:|"]
     tick0 = counter_tick_seconds(0)
-    for address in range(0, 0x28, 2):
+    lines += ["", "## Normal cadence records at EEPROM 0x00-0x1F", "", "Each pair contains independent transmit and silent durations. Nominal timing uses EEPROM[0x28]=0.", "", "| Address | Bytes | transmit | silent | total cycle |", "|---:|:---:|---:|---:|---:|"]
+    for address in range(0, 0x20, 2):
+        transmit = eeprom[address]
+        silent = eeprom[address + 1]
+        lines.append(f"| `0x{address:02X}` | `{transmit:02X} {silent:02X}` | {transmit*tick0:.3f} s | {silent*tick0:.3f} s | {(transmit+silent)*tick0:.3f} s |")
+
+    lines += ["", "## Startup-delay records at EEPROM 0x20-0x27", "", "These four records are big-endian 16-bit startup delays.", "", "| Address | Bytes | ticks | nominal delay |", "|---:|:---:|---:|---:|"]
+    for address in range(0x20, 0x28, 2):
         value = be16(eeprom, address)
-        low = eeprom[address + 1]
-        lines.append(f"| `0x{address:02X}` | `{eeprom[address]:02X} {low:02X}` | {value} | {value*tick0:.3f} s ({value*tick0/60:.3f} min) | {low*tick0:.3f} s |")
+        lines.append(f"| `0x{address:02X}` | `{eeprom[address]:02X} {eeprom[address+1]:02X}` | {value} | {value*tick0:.3f} s ({value*tick0/60:.3f} min) |")
 
     current = eeprom[0x28]
     lines += ["", "## Initial pair selection", "", "| S1 class | S2 | EEPROM pair |", "|:---|:---|---:|"]

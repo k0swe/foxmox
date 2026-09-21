@@ -31,9 +31,9 @@ firmware. It does **not** modify or reinterpret the original dumps.
   from S1. In the documented field procedure, S1=`0..4` selects the five fox
   identities, a common S2 selects their shared timing profile, and deliberately
   staggered power-up supplies the phase offset. There is no receiver/listening
-  logic. The recovered EEPROM values imply long timing intervals (roughly 52 to
-  260 minutes at calibration zero), whose exact operational interpretation
-  remains to be reconciled with field timing.
+  logic. EEPROM `0x00–0x1F` supplies separate transmit/silent durations; for
+  example profile 0 is 20 seconds on and 40 seconds silent. EEPROM `0x20–0x27`
+  supplies 0/30/60/120-minute startup delays.
 
 ## Reproduction
 
@@ -145,10 +145,11 @@ The normal cadence selector is ROM `0x0C1-0x0D0`. It computes:
 address = (0x10 if S1 >= 5 else 0x00) + 2 * (S2 & 7)
 ```
 
-It reads the selected EEPROM byte into the low counter byte at `0x0D0-0x0D1`.
-The initial pass had already read a two-byte big-endian counter at
-`0x0AA-0x0B2`. The counter decrement at interrupt ROM `0x014-0x022` proves RAM
-`0x13:0x14` is a big-endian 16-bit down-counter.
+It reads the selected record's first byte into the low counter byte at
+`0x0D0-0x0D1`; the high byte is already zero after startup. When that transmit
+phase expires, ROM `0x0F1-0x0F3` independently reads the record's second byte
+as the silent-phase duration. The startup path separately loads a big-endian
+16-bit counter from EEPROM `0x20–0x27` at `0x0AD-0x0B2`.
 
 Consequently S2 has these exact base-record aliases:
 
@@ -165,8 +166,8 @@ Consequently S2 has these exact base-record aliases:
 
 **[PROVED]** S2=`C,D,E` has one additional distinction for S1=`5..F`.
 The tests at `0x0F9-0x103` select exactly these three values. The firmware then
-adds either 0 or 32 ticks to RAM `0x14`, selected from bit 5 of the evolving
-per-message state byte at RAM `0x20`, and advances that state three LFSR steps
+adds 0–31 ticks to RAM `0x14` from the low five bits of the evolving
+pseudo-random state byte at RAM `0x20`, and advances that state three LFSR steps
 at `0x104-0x108`. Thus `C,D,E` are randomized/jittered versions of the same
 base records as `4,5,6`; `8..B` and `F` have no such extra step.
 
@@ -229,17 +230,17 @@ counter is nonzero. Morse generation itself continues under interrupt control,
 so this is cadence, not a claim that every message has exactly four seconds of
 silence after it.
 
-When the 16-bit phase reaches zero, ROM `0x0F1-0x0F6` reloads only its low byte
-from the second byte of the selected EEPROM pair and waits again. Thus each
-record contributes:
+When the transmit counter reaches zero, ROM `0x0F1-0x0F3` loads the second
+record byte as a new one-byte silent counter, releases PTT at `0x0F7`, and waits
+for that phase to expire. Thus each normal record is simply:
 
-1. a primary interval equal to the big-endian 16-bit value, and
-2. a follow-up interval equal to the record's low byte.
+1. transmit seconds; then
+2. silent seconds.
 
-With setting `0x00`, recovered primary intervals range from about 51.6 to 259.9
-minutes. With recovered setting `0xFF`, every tick is about 7.3% longer. These
-large values follow directly from the bytes and code; whether they were the
-intended field programming is **UNKNOWN**.
+For S1=`0..4`, S2=`0`/`8` selects `14 28`: nominally 20 seconds transmitting
+and 40 seconds silent, a one-minute cycle. Other profiles range from 20/100 to
+60/240 seconds. EEPROM setting `0xFF` lengthens every nominal second by about
+7.3%; the service mode exists to calibrate that base.
 
 ## Callsign insertion
 
@@ -289,7 +290,8 @@ The firmware matches that architecture:
    MOE/MOI/MOS/MOH/MO5.
 2. For a fixed S2, all five identities select the same cadence pair via
    `0x0C1-0x0D0`.
-3. For a fixed S2, all five select the same initial pair via `0x090-0x0A8`.
+3. For a fixed S2, all five select the same startup-delay pair via
+   `0x090-0x0AC`.
 4. No code samples receive audio or waits for another fox; each unit is an
    independent timer.
 
@@ -299,12 +301,11 @@ broadly synchronous. Powering them sequentially at the desired slot spacing
 creates the round robin, and their crystal-derived clocks preserve that spacing
 subject to oscillator drift.
 
-The remaining discrepancy is narrower: the recovered EEPROM counters evaluate
-to tens or hundreds of minutes using the proved nominal one-second tick, rather
-than an obvious one-minute/five-minute ARDF table. This may reflect the intended
-FoxMox event format, a less-obvious phase structure in the main loop, or EEPROM
-programming for this particular fleet. It does **not** imply coordination between
-units; that question is settled by both firmware and field practice.
+The normal S2=`0`/`8` fox profile is 20 seconds on and 40 seconds silent. Units
+powered up at different points in that one-minute cycle remain staggered using
+only their independent crystal-derived timers. Other S2 positions choose longer
+transmit/silent profiles or startup delays; no coordination between units is
+involved.
 
 ## R5 between RA2 and RA3
 

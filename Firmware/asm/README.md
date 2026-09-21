@@ -14,6 +14,7 @@ Mnemonic conversions completed so far:
 
 - reset vector, hardware initialization, and initial message (`0x000`, `0x058–0x08F`)
 - startup-delay selection and countdown (`0x090–0x0BF`)
+- transmit/silent phase loop and N0PUF insertion (`0x0C0–0x111`)
 - `wait_for_tmr0_interrupt` (`0x112–0x115`)
 - `eeprom_read` (`0x116–0x11C`)
 - `eeprom_write` (`0x11D–0x12D`)

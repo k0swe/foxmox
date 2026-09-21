@@ -256,98 +256,114 @@ wait_startup_delay:
         MOVF      phase_counter_lo, F ; 0x0B6
         BTFSS     STATUS, Z           ; 0x0B7
         GOTO      wait_startup_delay  ; 0x0B8
-wait_startup_delay_stable:
+wait_phase_counter_zero:
         CALL      wait_for_tmr0_interrupt ; 0x0B9
         MOVF      phase_counter_hi, F ; 0x0BA
         BTFSS     STATUS, Z           ; 0x0BB
-        GOTO      wait_startup_delay_stable ; 0x0BC
+        GOTO      wait_phase_counter_zero ; 0x0BC
         MOVF      phase_counter_lo, F ; 0x0BD
         BTFSS     STATUS, Z           ; 0x0BE
-        GOTO      wait_startup_delay_stable ; 0x0BF
-        DW        0x213E    ; 0x0C0: call 0x13E
-        DW        0x01AC    ; 0x0C1: clrf 0x2C
-        DW        0x0E1B    ; 0x0C2: swapf 0x1B,W
-        DW        0x3EB0    ; 0x0C3: addlw 0xB0
-        DW        0x0103    ; 0x0C4: clrw
-        DW        0x1803    ; 0x0C5: btfsc STATUS,0
-        DW        0x3010    ; 0x0C6: movlw 0x10
-        DW        0x07AC    ; 0x0C7: addwf 0x2C,F
-        DW        0x0E1B    ; 0x0C8: swapf 0x1B,W
-        DW        0x009E    ; 0x0C9: movwf 0x1E
-        DW        0x0D1E    ; 0x0CA: rlf 0x1E,W
-        DW        0x390E    ; 0x0CB: andlw 0x0E
-        DW        0x07AC    ; 0x0CC: addwf 0x2C,F
-        DW        0x3000    ; 0x0CD: movlw 0x00
-        DW        0x07AC    ; 0x0CE: addwf 0x2C,F
-        DW        0x082C    ; 0x0CF: movf 0x2C,W
-        DW        0x2116    ; 0x0D0: call 0x116
-        DW        0x0094    ; 0x0D1: movwf 0x14
-        DW        0x3004    ; 0x0D2: movlw 0x04
-        DW        0x0092    ; 0x0D3: movwf 0x12
-        DW        0x2340    ; 0x0D4: call 0x340
-        DW        0x2112    ; 0x0D5: call 0x112
-        DW        0x0893    ; 0x0D6: movf 0x13,F
-        DW        0x1D03    ; 0x0D7: btfss STATUS,2
-        DW        0x28DF    ; 0x0D8: goto 0x0DF
-        DW        0x0814    ; 0x0D9: movf 0x14,W
-        DW        0x1903    ; 0x0DA: btfsc STATUS,2
-        DW        0x28F1    ; 0x0DB: goto 0x0F1
-        DW        0x3A04    ; 0x0DC: xorlw 0x04
-        DW        0x1903    ; 0x0DD: btfsc STATUS,2
-        DW        0x28E3    ; 0x0DE: goto 0x0E3
-        DW        0x0892    ; 0x0DF: movf 0x12,F
-        DW        0x1D03    ; 0x0E0: btfss STATUS,2
-        DW        0x28D5    ; 0x0E1: goto 0x0D5
-        DW        0x28D2    ; 0x0E2: goto 0x0D2
-        DW        0x0895    ; 0x0E3: movf 0x15,F
-        DW        0x1D03    ; 0x0E4: btfss STATUS,2
-        DW        0x28D2    ; 0x0E5: goto 0x0D2
-        DW        0x0896    ; 0x0E6: movf 0x16,F
-        DW        0x1D03    ; 0x0E7: btfss STATUS,2
-        DW        0x28D2    ; 0x0E8: goto 0x0D2
-        DW        0x3004    ; 0x0E9: movlw 0x04
-        DW        0x0092    ; 0x0EA: movwf 0x12
-        DW        0x3002    ; 0x0EB: movlw 0x02
-        DW        0x0095    ; 0x0EC: movwf 0x15
-        DW        0x3058    ; 0x0ED: movlw 0x58
-        DW        0x0096    ; 0x0EE: movwf 0x16
-        DW        0x2109    ; 0x0EF: call 0x109
-        DW        0x28D5    ; 0x0F0: goto 0x0D5
-        DW        0x0A2C    ; 0x0F1: incf 0x2C,W
-        DW        0x2116    ; 0x0F2: call 0x116
-        DW        0x0094    ; 0x0F3: movwf 0x14
-        DW        0x0894    ; 0x0F4: movf 0x14,F
-        DW        0x1903    ; 0x0F5: btfsc STATUS,2
-        DW        0x28B9    ; 0x0F6: goto 0x0B9
-        DW        0x109A    ; 0x0F7: bcf 0x1A,1
-        DW        0x179D    ; 0x0F8: bsf 0x1D,7
-        DW        0x0E1B    ; 0x0F9: swapf 0x1B,W
-        DW        0x3EB0    ; 0x0FA: addlw 0xB0
-        DW        0x1C03    ; 0x0FB: btfss STATUS,0
-        DW        0x28B9    ; 0x0FC: goto 0x0B9
-        DW        0x081B    ; 0x0FD: movf 0x1B,W
-        DW        0x3E90    ; 0x0FE: addlw 0x90
-        DW        0x3970    ; 0x0FF: andlw 0x70
-        DW        0x3EB0    ; 0x100: addlw 0xB0
-        DW        0x1C03    ; 0x101: btfss STATUS,0
-        DW        0x28B9    ; 0x102: goto 0x0B9
-        DW        0x2112    ; 0x103: call 0x112
-        DW        0x301F    ; 0x104: movlw 0x1F
-        DW        0x0520    ; 0x105: andwf 0x20,W
-        DW        0x0794    ; 0x106: addwf 0x14,F
-        DW        0x212E    ; 0x107: call 0x12E
-        DW        0x28B9    ; 0x108: goto 0x0B9
+        GOTO      wait_phase_counter_zero ; 0x0BF
+
+; Select the repeating timing pair. S1 0..4 uses EEPROM 0x00..0x0F; S1 5..F
+; uses 0x10..0x1F. S2 bits 2:0 choose one of eight two-byte records.
+load_timing_profile:
+        CALL      read_switches       ; 0x0C0
+        CLRF      timing_record_addr  ; 0x0C1
+        SWAPF     switch_state, W     ; 0x0C2
+        ADDLW     0xB0                ; 0x0C3: carry iff S1 >= 5
+        CLRW                           ; 0x0C4: preserves carry on this core
+        BTFSC     STATUS, C           ; 0x0C5
+        MOVLW     0x10                ; 0x0C6
+        ADDWF     timing_record_addr, F ; 0x0C7: select timing table half
+        SWAPF     switch_state, W     ; 0x0C8
+        MOVWF     service_delay_lo    ; 0x0C9: scratch register
+        RLF       service_delay_lo, W ; 0x0CA
+        ANDLW     0x0E                ; 0x0CB: 2*(S2 & 7)
+        ADDWF     timing_record_addr, F ; 0x0CC
+        MOVLW     0x00                ; 0x0CD: preserved no-op from original
+        ADDWF     timing_record_addr, F ; 0x0CE
+        MOVF      timing_record_addr, W ; 0x0CF
+        CALL      eeprom_read         ; 0x0D0: first byte = transmit seconds
+        MOVWF     phase_counter_lo    ; 0x0D1
+
+transmit_message:
+        MOVLW     0x04                ; 0x0D2
+        MOVWF     message_seconds     ; 0x0D3
+        CALL      message_dispatch    ; 0x0D4
+transmit_phase_loop:
+        CALL      wait_for_tmr0_interrupt ; 0x0D5
+        MOVF      phase_counter_hi, F ; 0x0D6
+        BTFSS     STATUS, Z           ; 0x0D7
+        GOTO      check_message_interval ; 0x0D8
+        MOVF      phase_counter_lo, W ; 0x0D9
+        BTFSC     STATUS, Z           ; 0x0DA
+        GOTO      begin_silent_phase  ; 0x0DB
+        XORLW     0x04                ; 0x0DC
+        BTFSC     STATUS, Z           ; 0x0DD
+        GOTO      maybe_send_callsign ; 0x0DE
+check_message_interval:
+        MOVF      message_seconds, F  ; 0x0DF
+        BTFSS     STATUS, Z           ; 0x0E0
+        GOTO      transmit_phase_loop ; 0x0E1
+        GOTO      transmit_message    ; 0x0E2
+
+maybe_send_callsign:
+        MOVF      callsign_cooldown_hi, F ; 0x0E3
+        BTFSS     STATUS, Z           ; 0x0E4
+        GOTO      transmit_message    ; 0x0E5
+        MOVF      callsign_cooldown_lo, F ; 0x0E6
+        BTFSS     STATUS, Z           ; 0x0E7
+        GOTO      transmit_message    ; 0x0E8
+        MOVLW     0x04                ; 0x0E9
+        MOVWF     message_seconds     ; 0x0EA
+        MOVLW     0x02                ; 0x0EB
+        MOVWF     callsign_cooldown_hi ; 0x0EC
+        MOVLW     0x58                ; 0x0ED: cooldown = 0x0258 = 600 s
+        MOVWF     callsign_cooldown_lo ; 0x0EE
+        CALL      send_callsign_n0puf ; 0x0EF
+        GOTO      transmit_phase_loop ; 0x0F0
+
+begin_silent_phase:
+        INCF      timing_record_addr, W ; 0x0F1
+        CALL      eeprom_read         ; 0x0F2: second byte = silent seconds
+        MOVWF     phase_counter_lo    ; 0x0F3
+        MOVF      phase_counter_lo, F ; 0x0F4
+        BTFSC     STATUS, Z           ; 0x0F5
+        GOTO      wait_phase_counter_zero ; 0x0F6
+        BCF       porta_shadow, 1     ; 0x0F7: release PTT
+        BSF       tone_state, 7       ; 0x0F8: suppress tone waveform
+
+; Non-fox S2 modes C/D/E optionally add 0..31 seconds of LFSR jitter to the
+; silent phase. Other modes proceed directly to the common phase wait.
+maybe_add_silent_jitter:
+        SWAPF     switch_state, W     ; 0x0F9
+        ADDLW     0xB0                ; 0x0FA
+        BTFSS     STATUS, C           ; 0x0FB
+        GOTO      wait_phase_counter_zero ; 0x0FC
+        MOVF      switch_state, W     ; 0x0FD
+        ADDLW     0x90                ; 0x0FE
+        ANDLW     0x70                ; 0x0FF
+        ADDLW     0xB0                ; 0x100
+        BTFSS     STATUS, C           ; 0x101
+        GOTO      wait_phase_counter_zero ; 0x102
+        CALL      wait_for_tmr0_interrupt ; 0x103
+        MOVLW     0x1F                ; 0x104
+        ANDWF     lfsr_state, W       ; 0x105
+        ADDWF     phase_counter_lo, F ; 0x106
+        CALL      advance_lfsr_3      ; 0x107
+        GOTO      wait_phase_counter_zero ; 0x108
 
 send_callsign_n0puf:
-        DW        0x3031    ; 0x109: movlw 0x31
-        DW        0x0099    ; 0x10A: movwf 0x19
-        DW        0x21C2    ; 0x10B: call 0x1C2
-        DW        0x21D8    ; 0x10C: call 0x1D8
-        DW        0x2305    ; 0x10D: call 0x305
-        DW        0x21DC    ; 0x10E: call 0x1DC
-        DW        0x21E8    ; 0x10F: call 0x1E8
-        DW        0x2332    ; 0x110: call 0x332
-        DW        0x0008    ; 0x111: return
+        MOVLW     0x31                ; 0x109: faster Morse timing
+        MOVWF     morse_unit_ticks    ; 0x10A
+        CALL      send_character_space ; 0x10B
+        CALL      send_morse_n        ; 0x10C
+        CALL      send_hex_0          ; 0x10D
+        CALL      send_morse_p        ; 0x10E
+        CALL      send_morse_u        ; 0x10F
+        CALL      send_hex_f          ; 0x110
+        RETURN                        ; 0x111
 
 ; Wait for the next TMR0 interrupt. The ISR sets interrupt_flag bit 0 on every
 ; overflow; clearing it first prevents a stale event from satisfying the wait.
