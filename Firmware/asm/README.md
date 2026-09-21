@@ -4,11 +4,16 @@
 PIC16F84A image. It preserves every program word, the four user-ID locations,
 the configuration word, and all 64 EEPROM bytes.
 
-This first preservation pass deliberately expresses recovered program words with
-`DW` and adds labels plus decoded comments. That avoids inventing source-level
-structure or changing instruction placement. Individual words or routines can
-be converted to ordinary mnemonics incrementally; `make verify` is the gate that
-must remain green after every such change.
+The preservation source begins with recovered program words expressed as `DW`
+and adds labels plus decoded comments. That avoids inventing source-level
+structure or changing instruction placement. Proven routines are converted to
+ordinary mnemonics incrementally; `make verify` is the gate that must remain
+green after every such change.
+
+Mnemonic conversions completed so far:
+
+- `wait_for_tmr0_interrupt` (`0x112–0x115`)
+- `eeprom_read` (`0x116–0x11C`)
 
 ## Toolchain
 

@@ -6,7 +6,16 @@
 ; Canonical image: ../foxmox-v2.6.hex
 
         LIST      P=16F84A, F=INHX8M
+        INCLUDE   <p16f84a.inc>
         RADIX     HEX
+
+; RAM aliases established by the interrupt and main-loop data flow.
+interrupt_flag  EQU       0x27
+
+; PIC14 instructions encode seven file-address bits; RP0 supplies the bank.
+; This alias keeps the bank-1 register name visible without gpasm's expected
+; "register not in bank 0" advisory for its absolute 0x88 header value.
+EECON1_FILE     EQU       (EECON1 & 0x7F)
 
         ORG       0x0000
 
@@ -292,20 +301,26 @@ send_callsign_n0puf:
         DW        0x2332    ; 0x110: call 0x332
         DW        0x0008    ; 0x111: return
 
-wait_one_tick:
-        DW        0x1027    ; 0x112: bcf 0x27,0
-        DW        0x1C27    ; 0x113: btfss 0x27,0
-        DW        0x2913    ; 0x114: goto 0x113
-        DW        0x0008    ; 0x115: return
+; Wait for the next TMR0 interrupt. The ISR sets interrupt_flag bit 0 on every
+; overflow; clearing it first prevents a stale event from satisfying the wait.
+wait_for_tmr0_interrupt:
+        BCF       interrupt_flag, 0        ; 0x112
+wait_for_tmr0_interrupt_loop:
+        BTFSS     interrupt_flag, 0        ; 0x113
+        GOTO      wait_for_tmr0_interrupt_loop ; 0x114
+        RETURN                            ; 0x115
 
+; Read the EEPROM byte whose address arrives in W and return its value in W.
+; RP0 transitions are kept explicit because EEADR/EEDATA and EECON1 share file
+; addresses across banks on the PIC16F84A.
 eeprom_read:
-        DW        0x1283    ; 0x116: bcf STATUS,5
-        DW        0x0089    ; 0x117: movwf EEADR[b0]/EECON2[b1]
-        DW        0x1683    ; 0x118: bsf STATUS,5
-        DW        0x1408    ; 0x119: bsf EEDATA[b0]/EECON1[b1],0
-        DW        0x1283    ; 0x11A: bcf STATUS,5
-        DW        0x0808    ; 0x11B: movf EEDATA[b0]/EECON1[b1],W
-        DW        0x0008    ; 0x11C: return
+        BCF       STATUS, RP0        ; 0x116: bank 0
+        MOVWF     EEADR              ; 0x117
+        BSF       STATUS, RP0        ; 0x118: bank 1
+        BSF       EECON1_FILE, RD    ; 0x119: initiate read
+        BCF       STATUS, RP0        ; 0x11A: bank 0
+        MOVF      EEDATA, W          ; 0x11B
+        RETURN                       ; 0x11C
 
 eeprom_write:
         DW        0x1283    ; 0x11D: bcf STATUS,5
