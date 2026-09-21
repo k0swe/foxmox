@@ -5,16 +5,16 @@ FoxMOX V2.6 controller built around a PIC16F84A.
 
 ## Contents
 
-| Path                       | Purpose                                                                    |
-| -------------------------- | -------------------------------------------------------------------------- |
-| `foxmox-v2.6.asm`          | Validated, readable gpasm source for the complete firmware.                |
-| `foxmox-v2.6.hex`          | Original recovered programming image and exact-build regression oracle.   |
-| `Makefile`                 | Default exact build plus custom-callsign image builds.                     |
-| `emit_callsign.py`         | Validates a callsign and emits its Morse calls plus layout padding.        |
-| `verify_image.py`          | Compares all programmed regions against the recovered image.              |
-| `canonicalize_hex.py`      | Normalizes gpasm output to the recovered Intel HEX representation.         |
-| `test_emit_callsign.py`    | Unit tests for callsign generation and fixed-layout compensation.          |
-| `requirements.txt`         | Pinned Python package needed to operate a K150 with `picpro`.              |
+| Path                    | Purpose                                                                 |
+| ----------------------- | ----------------------------------------------------------------------- |
+| `foxmox-v2.6.asm`       | Validated, readable gpasm source for the complete firmware.             |
+| `foxmox-v2.6.hex`       | Original recovered programming image and exact-build regression oracle. |
+| `Makefile`              | Default exact build plus custom-callsign image builds.                  |
+| `emit_callsign.py`      | Validates a callsign and emits its Morse calls plus layout padding.     |
+| `verify_image.py`       | Compares all programmed regions against the recovered image.            |
+| `canonicalize_hex.py`   | Normalizes gpasm output to the recovered Intel HEX representation.      |
+| `test_emit_callsign.py` | Unit tests for callsign generation and fixed-layout compensation.       |
+| `requirements.txt`      | Pinned Python package needed to operate a K150 with `picpro`.           |
 
 `foxmox-v2.6.hex` was reconstructed from two original FoxMox PIC16F84A chips.
 Each chip was read twice. All four ROM reads and all four configuration reads
@@ -209,16 +209,17 @@ dummy load or an authorized test frequency and identify as required.
    characters.
 5. Use S2 to adjust or hold the value:
 
-   | S2 position | Service-mode action |
-   |---:|:---|
-   | `1`, `3`, `5`, `7` | Increment the trim |
-   | `8`–`F` | Decrement the trim |
-   | `2`, `4`, `6` | Hold without changing it |
-   | `0` | Exit service mode after the five-second service timer |
+   |        S2 position | Service-mode action                                   |
+   | -----------------: | :---------------------------------------------------- |
+   | `1`, `3`, `5`, `7` | Increment the trim                                    |
+   |            `8`–`F` | Decrement the trim                                    |
+   |      `2`, `4`, `6` | Hold without changing it                              |
+   |                `0` | Exit service mode after the five-second service timer |
 
    S2 positions that change the value repeat the operation while selected. Each
    new value is written immediately to EEPROM `0x28` and announced in
    hexadecimal Morse. Return S2 to `2` after the desired number of steps.
+
 6. Turn S2 to `0` and wait. The firmware announces the stored value again,
    restarts, and enters normal operation using the new trim.
 7. Power off, remove any temporary RA2 connection, restore the desired S1/S2

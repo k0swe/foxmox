@@ -15,7 +15,7 @@ controller. Transcribed by Chris Keller, **K0SWE**.
 | `Hardware/foxmox.kicad_sch` / `Hardware/foxmox.kicad_pcb` | The reproduction.                          |
 | `Hardware/foxmox.pdf`                                     | KiCad PDF export of the schematic.         |
 | `Firmware/foxmox-v2.6.hex`                                | Recovered, hardware-tested PIC image.      |
-| `Firmware/foxmox-v2.6.asm`                                | Validated, readable gpasm source.           |
+| `Firmware/foxmox-v2.6.asm`                                | Validated, readable gpasm source.          |
 
 Behavior is set entirely by the two hex switches (S1, S2). Program the PIC with
 **version 2.6** from `Firmware/foxmox-v2.6.hex`; setup, recovery, and
