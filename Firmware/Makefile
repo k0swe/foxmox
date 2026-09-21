@@ -8,7 +8,7 @@ OUTPUT_DIR := $(BUILD_DIR)
 CALLSIGN_INCLUDE := $(OUTPUT_DIR)/generated-callsign.inc
 GPASM_IMAGE := $(OUTPUT_DIR)/foxmox-v2.6-gpasm.hex
 EXACT_IMAGE := $(OUTPUT_DIR)/foxmox-v2.6.hex
-REFERENCE := ../foxmox-v2.6.hex
+REFERENCE := foxmox-v2.6.hex
 
 .PHONY: all image verify test clean FORCE require-default-callsign
 

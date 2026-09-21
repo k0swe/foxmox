@@ -62,7 +62,7 @@ def main() -> None:
     parser.add_argument(
         "--reference",
         type=Path,
-        default=Path(__file__).resolve().parent.parent / "foxmox-v2.6.hex",
+        default=Path(__file__).resolve().parent / "foxmox-v2.6.hex",
     )
     args = parser.parse_args()
 

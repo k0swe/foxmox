@@ -15,7 +15,7 @@ controller. Transcribed by Chris Keller, **K0SWE**.
 | `Hardware/foxmox.kicad_sch` / `Hardware/foxmox.kicad_pcb` | The reproduction.                          |
 | `Hardware/foxmox.pdf`                                     | KiCad PDF export of the schematic.         |
 | `Firmware/foxmox-v2.6.hex`                                | Recovered, hardware-tested PIC image.      |
-| `Firmware/reverse-engineering/`                           | Reproducible firmware analysis.            |
+| `Firmware/foxmox-v2.6.asm`                                | Validated, readable gpasm source.           |
 
 Behavior is set entirely by the two hex switches (S1, S2). Program the PIC with
 **version 2.6** from `Firmware/foxmox-v2.6.hex`; setup, recovery, and
@@ -135,8 +135,8 @@ The recovered V2.6 firmware settles its purpose: **R5 is a boot/service-mode
 strap.** At reset RA3 is driven high while RA2 is an input, so R5 pulls RA2 high
 for normal operation. Holding RA2 low at boot enters the calibration path; that
 path waits for RA2 to return high before continuing. Moving R5 to RA4 would
-break the boot test. Exact instruction addresses and bank-state proof are in
-`Firmware/reverse-engineering/README.md`.
+break the boot test. The validated startup and service-mode implementation is in
+`Firmware/foxmox-v2.6.asm`.
 
 ## Verifying schematic claims
 

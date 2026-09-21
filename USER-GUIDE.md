@@ -13,7 +13,7 @@ programmed with the intended callsign before deployment.
 
 The recovered firmware identifies as **N0PUF**. Changing it requires rebuilding
 the firmware and reprogramming the PIC; see
-[`Firmware/asm/README.md`](Firmware/asm/README.md).
+[`Firmware/README.md`](Firmware/README.md).
 
 ## Set the switches before applying power
 

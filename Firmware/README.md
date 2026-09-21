@@ -5,13 +5,16 @@ FoxMOX V2.6 controller built around a PIC16F84A.
 
 ## Contents
 
-| Path                                     | Purpose                                                                      |
-| ---------------------------------------- | ---------------------------------------------------------------------------- |
-| `foxmox-v2.6.hex`                        | Complete programming image: ROM, user IDs, configuration word, and EEPROM.   |
-| `requirements.txt`                       | Pinned Python package needed to operate a K150 with `picpro`.                |
-| `tools/reconstruct_from_picpro_dumps.py` | Rebuild a combined Intel HEX file from fresh binary ROM/EEPROM/config reads. |
-| `asm/`                                   | Lossless gpasm reconstruction and exact-memory verifier.                     |
-| `reverse-engineering/`                   | Reproducible disassembly, firmware map, and detailed behavioral analysis.    |
+| Path                       | Purpose                                                                    |
+| -------------------------- | -------------------------------------------------------------------------- |
+| `foxmox-v2.6.asm`          | Validated, readable gpasm source for the complete firmware.                |
+| `foxmox-v2.6.hex`          | Original recovered programming image and exact-build regression oracle.   |
+| `Makefile`                 | Default exact build plus custom-callsign image builds.                     |
+| `emit_callsign.py`         | Validates a callsign and emits its Morse calls plus layout padding.        |
+| `verify_image.py`          | Compares all programmed regions against the recovered image.              |
+| `canonicalize_hex.py`      | Normalizes gpasm output to the recovered Intel HEX representation.         |
+| `test_emit_callsign.py`    | Unit tests for callsign generation and fixed-layout compensation.          |
+| `requirements.txt`         | Pinned Python package needed to operate a K150 with `picpro`.              |
 
 `foxmox-v2.6.hex` was reconstructed from two original FoxMox PIC16F84A chips.
 Each chip was read twice. All four ROM reads and all four configuration reads
@@ -111,33 +114,10 @@ mkdir -p /tmp/foxmox-read
   -o /tmp/foxmox-read/config.bin
 ```
 
-Read twice and compare hashes before treating a recovery as trustworthy.
-
-## Reconstruct a combined image from new reads
-
-The K150 protocol returns ROM, EEPROM, and configuration separately. Picpro's
-binary dump path also swaps adjacent EEPROM bytes. The reconstruction utility
-handles the memory map and byte order:
-
-```sh
-.venv/bin/python Firmware/tools/reconstruct_from_picpro_dumps.py \
-  --rom /tmp/foxmox-read/rom.bin \
-  --eeprom /tmp/foxmox-read/eeprom.bin \
-  --config /tmp/foxmox-read/config.bin \
-  -o /tmp/foxmox-read/combined.hex
-```
-
-The generated PIC16F84A Intel HEX regions are:
-
-| Region             |  Byte addresses |
-| ------------------ | --------------: |
-| Program ROM        | `0x0000–0x07FF` |
-| User-ID words      | `0x4000–0x4007` |
-| Configuration word | `0x400E–0x400F` |
-| Data EEPROM        | `0x4200–0x423F` |
-
-The silicon ID is read-only and is not placed in the image. The generic K150
-`CAL` field is also excluded because the PIC16F84A has no calibration word.
+Read twice and compare hashes before treating a recovery as trustworthy. The
+committed combined HEX remains the canonical recovered image; the disposable
+raw-read reconstruction utility was retired after the readable assembly was
+proved byte-identical across every programmed region.
 
 ## Program and verify a replacement PIC
 
@@ -249,31 +229,55 @@ to the firmware's halt/blink loop instead of the adjustment interface. The trim
 arithmetic wraps at `00`/`FF`; there is no saturation check, so count carefully
 near either endpoint.
 
-## Build the lossless assembly reconstruction
+## Build and verify the assembly source
 
-Install `gputils`, then assemble and compare every programmed memory region:
+`foxmox-v2.6.asm` is the maintained firmware source. Every executable program
+word is readable gpasm; the remaining `DW 0x3FFF` values intentionally represent
+erased reset padding and the variable gap before the fixed page-3 tables.
+
+Install the open-source, MPASM-compatible `gputils` assembler:
 
 ```sh
 sudo apt install gputils
-make -C Firmware/asm verify
 ```
 
-See [`asm/README.md`](asm/README.md) for the exactness boundary and the safe
-incremental workflow for replacing numeric words with named gpasm mnemonics.
-
-## Reproduce the reverse engineering
-
-The analysis uses only Python's standard library and reads the committed Intel
-HEX image directly:
+The validated toolchain is `gpasm-1.4.0 #1107 (Jan 1 2021)`. Build the default
+`N0PUF` image and compare its program ROM, configuration word, EEPROM, user-ID
+nibbles, emitted regions, and canonical Intel HEX against the recovered image:
 
 ```sh
-python3 Firmware/reverse-engineering/pic14_disasm.py \
-  -o Firmware/reverse-engineering/generated-disassembly.txt
-python3 Firmware/reverse-engineering/analyze_foxmox.py \
-  -o Firmware/reverse-engineering/generated-map.md
-python3 -m py_compile Firmware/reverse-engineering/*.py
+make -C Firmware verify
 ```
 
-See [`reverse-engineering/README.md`](reverse-engineering/README.md) for the
-switch map, timing model, callsign routine, EEPROM interpretation, and R5 boot
-strap analysis.
+The final canonical image is `Firmware/build/foxmox-v2.6.hex`. A successful
+build reports both lossless programmed-memory equivalence and byte-for-byte
+canonical HEX identity.
+
+### Build a different callsign
+
+The identification callsign is compiled into program memory and defaults to the
+recovered value, `N0PUF`. Build a custom alphanumeric callsign with:
+
+```sh
+make -C Firmware image CALLSIGN=K0SWE BUILD_DIR=build/K0SWE
+```
+
+This creates `Firmware/build/K0SWE/foxmox-v2.6.hex`. Supported characters are
+`A-Z` and `0-9`; lowercase is normalized and punctuation is rejected. The
+emitter adjusts erased padding so callsigns of different lengths cannot move
+`hex_digit_dispatch` from `0x300` or `tone_pattern_lookup` from `0x367`; an
+assembler assertion fails closed if the boundary changes.
+
+`make verify` is intentionally limited to `N0PUF`, because a customized image
+must differ from the recovered regression oracle. Run the callsign tests alone
+with:
+
+```sh
+make -C Firmware test
+```
+
+Remove generated output with:
+
+```sh
+make -C Firmware clean
+```
