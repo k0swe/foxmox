@@ -159,6 +159,96 @@ The strongest practical check is to install the replacement in an original
 FoxMox controller and confirm its on-air behavior; that validation has already
 succeeded for this committed image.
 
+## Calibrate the one-second time base
+
+The firmware stores an unsigned clock-trim byte in data EEPROM address `0x28`.
+The recovered chip-1 image contains `0xFF`; this is a runtime setting, not the
+PIC programmer's unrelated generic `CAL` field.
+
+Every 64th nominal second, the timer ISR adds the trim byte to that one
+software-divider interval. Consequently:
+
+- increasing the value makes firmware seconds and all timed phases **longer**;
+- decreasing the value makes them **shorter**;
+- one count changes the average rate by approximately **4.472 ppm**.
+
+There is no universal target byte: crystal frequency, loading, supply voltage,
+and temperature all affect the correct setting. Measure the assembled controller
+rather than copying another unit's value.
+
+The firmware's service interface was reconstructed from code. No surviving
+factory instruction identifies the original fixture or contact used to ground
+RA2. On an unmodified board, use a temporary, controlled connection to RA2 only
+if you are comfortable working directly at the PIC; RA2 is PIC pin 1. During the
+boot test RA2 is an input pulled high from RA3 through R5 (10 kOhm). **Do not
+leave RA2 grounded:** after service entry the firmware changes RA2 to an output.
+
+### Measure the error
+
+Use a stable reference clock and measure complete PTT cycles rather than Morse
+element lengths. A convenient setup is S1=`0` through `4` and S2=`6`, whose
+normal cycle is 60 seconds transmitting plus 240 seconds silent, or 300 firmware
+seconds. Ignore the one-time transmission immediately after power-on and time
+from one later PTT assertion to the same edge after several complete cycles.
+Twelve cycles give a nominal one-hour observation.
+
+For a one-hour measurement:
+
+```text
+trim change ≈ (3600.000 s - measured seconds) / 0.016091 s
+```
+
+Round to the nearest whole count:
+
+- a measurement shorter than 3600 seconds means the firmware is fast, so
+  **increase** the trim;
+- a measurement longer than 3600 seconds means it is slow, so **decrease** the
+  trim.
+
+For an arbitrary observation of `N` nominal firmware seconds, the equivalent
+calculation is:
+
+```text
+trim change ≈ (N - measured seconds) / (N × 4.47195e-6)
+```
+
+This is a first-order correction. Re-measure after adjustment, preferably over a
+longer interval and at the expected field temperature.
+
+### Enter service mode and change the value
+
+Service mode keys the transmitter and announces values over the radio. Use a
+dummy load or an authorized test frequency and identify as required.
+
+1. Power the controller off.
+2. Set **S1=`1` and S2=`2`**. This keeps the combined switch value nonzero while
+   selecting a no-change S2 position.
+3. Hold RA2 low and apply power.
+4. Release RA2. The firmware waits for a stable high level, enters service mode,
+   keys the transmitter, and sends the current trim as two hexadecimal Morse
+   characters.
+5. Use S2 to adjust or hold the value:
+
+   | S2 position | Service-mode action |
+   |---:|:---|
+   | `1`, `3`, `5`, `7` | Increment the trim |
+   | `8`–`F` | Decrement the trim |
+   | `2`, `4`, `6` | Hold without changing it |
+   | `0` | Exit service mode after the five-second service timer |
+
+   S2 positions that change the value repeat the operation while selected. Each
+   new value is written immediately to EEPROM `0x28` and announced in
+   hexadecimal Morse. Return S2 to `2` after the desired number of steps.
+6. Turn S2 to `0` and wait. The firmware announces the stored value again,
+   restarts, and enters normal operation using the new trim.
+7. Power off, remove any temporary RA2 connection, restore the desired S1/S2
+   operating settings, and repeat the timing measurement.
+
+Do not enter service mode with both switches at zero. That combination branches
+to the firmware's halt/blink loop instead of the adjustment interface. The trim
+arithmetic wraps at `00`/`FF`; there is no saturation check, so count carefully
+near either endpoint.
+
 ## Build the lossless assembly reconstruction
 
 Install `gputils`, then assemble and compare every programmed memory region:
