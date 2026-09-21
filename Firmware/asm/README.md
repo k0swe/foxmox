@@ -14,6 +14,9 @@ Mnemonic conversions completed so far:
 
 - `wait_for_tmr0_interrupt` (`0x112–0x115`)
 - `eeprom_read` (`0x116–0x11C`)
+- `eeprom_write` (`0x11D–0x12D`)
+- `advance_lfsr_3` (`0x12E–0x133`)
+- `advance_lfsr_1` (`0x134–0x13D`)
 
 ## Toolchain
 

@@ -10,12 +10,15 @@
         RADIX     HEX
 
 ; RAM aliases established by the interrupt and main-loop data flow.
+lfsr_state      EQU       0x20
+lfsr_steps      EQU       0x23
 interrupt_flag  EQU       0x27
 
 ; PIC14 instructions encode seven file-address bits; RP0 supplies the bank.
-; This alias keeps the bank-1 register name visible without gpasm's expected
-; "register not in bank 0" advisory for its absolute 0x88 header value.
+; These aliases keep bank-1 register names visible without gpasm's expected
+; "register not in bank 0" advisory for their absolute header values.
 EECON1_FILE     EQU       (EECON1 & 0x7F)
+EECON2_FILE     EQU       (EECON2 & 0x7F)
 
         ORG       0x0000
 
@@ -322,44 +325,54 @@ eeprom_read:
         MOVF      EEDATA, W          ; 0x11B
         RETURN                       ; 0x11C
 
+; Write the byte in W to the EEPROM address already loaded into EEADR. This is
+; the standard PIC16F84A unlock sequence. The recovered code restores GIE
+; unconditionally after starting the write, then polls EEIF for completion.
 eeprom_write:
-        DW        0x1283    ; 0x11D: bcf STATUS,5
-        DW        0x0088    ; 0x11E: movwf EEDATA[b0]/EECON1[b1]
-        DW        0x1683    ; 0x11F: bsf STATUS,5
-        DW        0x138B    ; 0x120: bcf INTCON,7
-        DW        0x1508    ; 0x121: bsf EEDATA[b0]/EECON1[b1],2
-        DW        0x3055    ; 0x122: movlw 0x55
-        DW        0x0089    ; 0x123: movwf EEADR[b0]/EECON2[b1]
-        DW        0x30AA    ; 0x124: movlw 0xAA
-        DW        0x0089    ; 0x125: movwf EEADR[b0]/EECON2[b1]
-        DW        0x1488    ; 0x126: bsf EEDATA[b0]/EECON1[b1],1
-        DW        0x178B    ; 0x127: bsf INTCON,7
-        DW        0x1E08    ; 0x128: btfss EEDATA[b0]/EECON1[b1],4
-        DW        0x2928    ; 0x129: goto 0x128
-        DW        0x1208    ; 0x12A: bcf EEDATA[b0]/EECON1[b1],4
-        DW        0x1108    ; 0x12B: bcf EEDATA[b0]/EECON1[b1],2
-        DW        0x1283    ; 0x12C: bcf STATUS,5
-        DW        0x0008    ; 0x12D: return
+        BCF       STATUS, RP0         ; 0x11D: bank 0
+        MOVWF     EEDATA              ; 0x11E
+        BSF       STATUS, RP0         ; 0x11F: bank 1
+        BCF       INTCON, GIE         ; 0x120: protect unlock sequence
+        BSF       EECON1_FILE, WREN   ; 0x121
+        MOVLW     0x55                ; 0x122
+        MOVWF     EECON2_FILE         ; 0x123
+        MOVLW     0xAA                ; 0x124
+        MOVWF     EECON2_FILE         ; 0x125
+        BSF       EECON1_FILE, WR     ; 0x126: begin write
+        BSF       INTCON, GIE         ; 0x127
+wait_for_eeprom_write:
+        BTFSS     EECON1_FILE, EEIF   ; 0x128
+        GOTO      wait_for_eeprom_write ; 0x129
+        BCF       EECON1_FILE, EEIF   ; 0x12A
+        BCF       EECON1_FILE, WREN   ; 0x12B
+        BCF       STATUS, RP0         ; 0x12C: bank 0
+        RETURN                        ; 0x12D
 
+; Advance the seven-bit pseudo-random state three times.
 advance_lfsr_3:
-        DW        0x3003    ; 0x12E: movlw 0x03
-        DW        0x00A3    ; 0x12F: movwf 0x23
-        DW        0x2134    ; 0x130: call 0x134
-        DW        0x0BA3    ; 0x131: decfsz 0x23,F
-        DW        0x2930    ; 0x132: goto 0x130
-        DW        0x0008    ; 0x133: return
+        MOVLW     0x03                ; 0x12E
+        MOVWF     lfsr_steps          ; 0x12F
+advance_lfsr_3_loop:
+        CALL      advance_lfsr_1      ; 0x130
+        DECFSZ    lfsr_steps, F       ; 0x131
+        GOTO      advance_lfsr_3_loop ; 0x132
+        RETURN                        ; 0x133
 
+; Advance the seven-bit LFSR in bits 6:0 of lfsr_state. Carry is loaded with
+; bit0 XOR bit6, then rotated into bit0 while the old bit6 rotates into bit7.
 advance_lfsr_1:
-        DW        0x1003    ; 0x134: bcf STATUS,0
-        DW        0x1820    ; 0x135: btfsc 0x20,0
-        DW        0x293A    ; 0x136: goto 0x13A
-        DW        0x1B20    ; 0x137: btfsc 0x20,6
-        DW        0x1403    ; 0x138: bsf STATUS,0
-        DW        0x293C    ; 0x139: goto 0x13C
-        DW        0x1F20    ; 0x13A: btfss 0x20,6
-        DW        0x1403    ; 0x13B: bsf STATUS,0
-        DW        0x0DA0    ; 0x13C: rlf 0x20,F
-        DW        0x0008    ; 0x13D: return
+        BCF       STATUS, C           ; 0x134: default feedback = 0
+        BTFSC     lfsr_state, 0       ; 0x135
+        GOTO      lfsr_bit0_set       ; 0x136
+        BTFSC     lfsr_state, 6       ; 0x137: bit0=0 -> feedback=bit6
+        BSF       STATUS, C           ; 0x138
+        GOTO      lfsr_rotate         ; 0x139
+lfsr_bit0_set:
+        BTFSS     lfsr_state, 6       ; 0x13A: bit0=1 -> feedback=!bit6
+        BSF       STATUS, C           ; 0x13B
+lfsr_rotate:
+        RLF       lfsr_state, F       ; 0x13C
+        RETURN                        ; 0x13D
 
 read_switches:
         DW        0x1683    ; 0x13E: bsf STATUS,5
