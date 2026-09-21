@@ -17,6 +17,10 @@ second_div_lo   EQU       0x0F
 subsecond_phase EQU       0x10
 tmr0_wait_count EQU       0x11
 message_seconds EQU       0x12
+phase_counter_hi EQU      0x13
+phase_counter_lo EQU      0x14
+callsign_cooldown_hi EQU  0x15
+callsign_cooldown_lo EQU  0x16
 morse_unit_ticks EQU      0x19
 porta_shadow    EQU       0x1A
 switch_state    EQU       0x1B
@@ -31,6 +35,7 @@ saved_w         EQU       0x25
 interrupt_flag  EQU       0x27
 hex_byte        EQU       0x28
 message_index   EQU       0x2B
+timing_record_addr EQU    0x2C
 timing_trim     EQU       0x3F
 
 ; PIC14 instructions encode seven file-address bits; RP0 supplies the bank.
@@ -199,54 +204,66 @@ startup_wait_message:
         BTFSS     STATUS, Z           ; 0x08D
         GOTO      startup_wait_message ; 0x08E
         BCF       porta_shadow, 1     ; 0x08F: release PTT
-        DW        0x01AC    ; 0x090: clrf 0x2C
-        DW        0x0E1B    ; 0x091: swapf 0x1B,W
-        DW        0x3EB0    ; 0x092: addlw 0xB0
-        DW        0x1C03    ; 0x093: btfss STATUS,0
-        DW        0x289A    ; 0x094: goto 0x09A
-        DW        0x081B    ; 0x095: movf 0x1B,W
-        DW        0x3E80    ; 0x096: addlw 0x80
-        DW        0x1803    ; 0x097: btfsc STATUS,0
-        DW        0x28A6    ; 0x098: goto 0x0A6
-        DW        0x28A8    ; 0x099: goto 0x0A8
-        DW        0x081B    ; 0x09A: movf 0x1B,W
-        DW        0x3E10    ; 0x09B: addlw 0x10
-        DW        0x1803    ; 0x09C: btfsc STATUS,0
-        DW        0x28A5    ; 0x09D: goto 0x0A5
-        DW        0x3E60    ; 0x09E: addlw 0x60
-        DW        0x1803    ; 0x09F: btfsc STATUS,0
-        DW        0x28A6    ; 0x0A0: goto 0x0A6
-        DW        0x3E20    ; 0x0A1: addlw 0x20
-        DW        0x1803    ; 0x0A2: btfsc STATUS,0
-        DW        0x28A7    ; 0x0A3: goto 0x0A7
-        DW        0x28A8    ; 0x0A4: goto 0x0A8
-        DW        0x0AAC    ; 0x0A5: incf 0x2C,F
-        DW        0x0AAC    ; 0x0A6: incf 0x2C,F
-        DW        0x0AAC    ; 0x0A7: incf 0x2C,F
-        DW        0x082C    ; 0x0A8: movf 0x2C,W
-        DW        0x07AC    ; 0x0A9: addwf 0x2C,F
-        DW        0x2112    ; 0x0AA: call 0x112
-        DW        0x3020    ; 0x0AB: movlw 0x20
-        DW        0x07AC    ; 0x0AC: addwf 0x2C,F
-        DW        0x082C    ; 0x0AD: movf 0x2C,W
-        DW        0x2116    ; 0x0AE: call 0x116
-        DW        0x0093    ; 0x0AF: movwf 0x13
-        DW        0x0A2C    ; 0x0B0: incf 0x2C,W
-        DW        0x2116    ; 0x0B1: call 0x116
-        DW        0x0094    ; 0x0B2: movwf 0x14
-        DW        0x0893    ; 0x0B3: movf 0x13,F
-        DW        0x1D03    ; 0x0B4: btfss STATUS,2
-        DW        0x28B3    ; 0x0B5: goto 0x0B3
-        DW        0x0894    ; 0x0B6: movf 0x14,F
-        DW        0x1D03    ; 0x0B7: btfss STATUS,2
-        DW        0x28B3    ; 0x0B8: goto 0x0B3
-        DW        0x2112    ; 0x0B9: call 0x112
-        DW        0x0893    ; 0x0BA: movf 0x13,F
-        DW        0x1D03    ; 0x0BB: btfss STATUS,2
-        DW        0x28B9    ; 0x0BC: goto 0x0B9
-        DW        0x0894    ; 0x0BD: movf 0x14,F
-        DW        0x1D03    ; 0x0BE: btfss STATUS,2
-        DW        0x28B9    ; 0x0BF: goto 0x0B9
+
+; Select one of four startup-delay records. The compact carry tests classify
+; S1/S2 combinations into record numbers 0..3; doubling and adding 0x20 maps
+; them to EEPROM pairs 0x20, 0x22, 0x24, or 0x26 (0/30/60/120 minutes).
+select_startup_delay:
+        CLRF      timing_record_addr  ; 0x090
+        SWAPF     switch_state, W     ; 0x091
+        ADDLW     0xB0                ; 0x092
+        BTFSS     STATUS, C           ; 0x093
+        GOTO      startup_delay_low_s2 ; 0x094
+        MOVF      switch_state, W     ; 0x095
+        ADDLW     0x80                ; 0x096
+        BTFSC     STATUS, C           ; 0x097
+        GOTO      startup_delay_inc_2 ; 0x098
+        GOTO      startup_delay_scale ; 0x099
+startup_delay_low_s2:
+        MOVF      switch_state, W     ; 0x09A
+        ADDLW     0x10                ; 0x09B
+        BTFSC     STATUS, C           ; 0x09C
+        GOTO      startup_delay_inc_1 ; 0x09D
+        ADDLW     0x60                ; 0x09E
+        BTFSC     STATUS, C           ; 0x09F
+        GOTO      startup_delay_inc_2 ; 0x0A0
+        ADDLW     0x20                ; 0x0A1
+        BTFSC     STATUS, C           ; 0x0A2
+        GOTO      startup_delay_inc_3 ; 0x0A3
+        GOTO      startup_delay_scale ; 0x0A4
+startup_delay_inc_1:
+        INCF      timing_record_addr, F ; 0x0A5
+startup_delay_inc_2:
+        INCF      timing_record_addr, F ; 0x0A6
+startup_delay_inc_3:
+        INCF      timing_record_addr, F ; 0x0A7
+startup_delay_scale:
+        MOVF      timing_record_addr, W ; 0x0A8
+        ADDWF     timing_record_addr, F ; 0x0A9: pair offset = 2*n
+        CALL      wait_for_tmr0_interrupt ; 0x0AA: align counter load
+        MOVLW     0x20                ; 0x0AB
+        ADDWF     timing_record_addr, F ; 0x0AC: startup table base
+        MOVF      timing_record_addr, W ; 0x0AD
+        CALL      eeprom_read         ; 0x0AE
+        MOVWF     phase_counter_hi    ; 0x0AF
+        INCF      timing_record_addr, W ; 0x0B0
+        CALL      eeprom_read         ; 0x0B1
+        MOVWF     phase_counter_lo    ; 0x0B2
+wait_startup_delay:
+        MOVF      phase_counter_hi, F ; 0x0B3
+        BTFSS     STATUS, Z           ; 0x0B4
+        GOTO      wait_startup_delay  ; 0x0B5
+        MOVF      phase_counter_lo, F ; 0x0B6
+        BTFSS     STATUS, Z           ; 0x0B7
+        GOTO      wait_startup_delay  ; 0x0B8
+wait_startup_delay_stable:
+        CALL      wait_for_tmr0_interrupt ; 0x0B9
+        MOVF      phase_counter_hi, F ; 0x0BA
+        BTFSS     STATUS, Z           ; 0x0BB
+        GOTO      wait_startup_delay_stable ; 0x0BC
+        MOVF      phase_counter_lo, F ; 0x0BD
+        BTFSS     STATUS, Z           ; 0x0BE
+        GOTO      wait_startup_delay_stable ; 0x0BF
         DW        0x213E    ; 0x0C0: call 0x13E
         DW        0x01AC    ; 0x0C1: clrf 0x2C
         DW        0x0E1B    ; 0x0C2: swapf 0x1B,W

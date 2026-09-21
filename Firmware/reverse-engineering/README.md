@@ -181,10 +181,9 @@ Adjacent-byte unswapping gives:
 ```
 
 The complete generated table, including decimal counters and timing, is in
-[`generated-map.md`](generated-map.md). The first 16 records are the S2 cadence
-records. EEPROM `0x20-0x27` is not selected by the S2 expression and has no
-proved read reference in reachable normal control flow; its purpose is
-**UNKNOWN**. It is listed rather than assigned a speculative meaning.
+[`generated-map.md`](generated-map.md). EEPROM `0x00-0x1F` contains the normal
+cadence records. EEPROM `0x20-0x27` contains four startup-delay records selected
+at ROM `0x090-0x0AC`: 0, 1800, 3600, and 7200 nominal one-second ticks.
 
 ## Time base, initial offset, and cadence
 
@@ -203,20 +202,22 @@ six-bit seconds/divider byte.
 
 ### Initial record selection
 
-ROM `0x090-0x0A8` selects one of the first four EEPROM pairs before entering
-the repeating message loop. Exact selection is:
+ROM `0x090-0x0A9` selects an offset of 0, 2, 4, or 6. Crucially, ROM
+`0x0AB-0x0AC` then adds `0x20`, selecting the dedicated startup-delay records:
 
-| S1 class | S2 values | Initial pair |
-|:---|:---|---:|
-| `0..4` | `0..6` | `0x00` (`14 28`) |
-| `0..4` | `7,8` | `0x02` (`14 64`) |
-| `0..4` | `9..E` | `0x04` (`18 60`) |
-| `0..4` | `F` | `0x06` (`24 90`) |
-| `5..F` | `0..7` | `0x00` (`14 28`) |
-| `5..F` | `8..F` | `0x04` (`18 60`) |
+| S1 class | S2 values | EEPROM pair | Nominal delay |
+|:---|:---|---:|---:|
+| `0..4` | `0..6` | `0x20` (`00 00`) | 0 min |
+| `0..4` | `7,8` | `0x22` (`07 08`) | 30 min |
+| `0..4` | `9..E` | `0x24` (`0E 10`) | 60 min |
+| `0..4` | `F` | `0x26` (`1C 20`) | 120 min |
+| `5..F` | `0..7` | `0x20` (`00 00`) | 0 min |
+| `5..F` | `8..F` | `0x24` (`0E 10`) | 60 min |
 
-This non-linear table is reproduced by `initial_pair_address()` in the analyzer,
-not simplified from an assumed product description.
+This is the firmware's simple startup-delay mechanism. Units remain independent;
+manually staggered power-up provides any finer phase offset used in the field.
+The non-linear selection is reproduced by `initial_pair_address()` in the
+analyzer rather than simplified from an assumed product description.
 
 ### Repeating messages
 
@@ -336,7 +337,8 @@ for factory probing, are not recoverable from firmware alone.
   treating blank program space as reachable code.
 - Computed `ADDWF PCL` tables are decoded only where their index bounds are
   proved by masks or callers. No speculative control-flow edges are added.
-- EEPROM `0x20-0x27` has no proved normal read in this image.
+- EEPROM `0x20-0x27` is the proved startup-delay table; ROM `0x0AB-0x0B2`
+  loads its selected big-endian counter.
 - The timing calculation assumes the documented 3.579545 MHz crystal and normal
   PIC16F84A instruction timing. It does not model analog oscillator tolerance or
   every interrupt-entry instruction cycle.

@@ -77,12 +77,12 @@ Nominal timing uses EEPROM[0x28]=0. The recovered value is shown separately belo
 
 | S1 class | S2 | EEPROM pair |
 |:---|:---|---:|
-| 0-4 | 0,1,2,3,4,5,6 | `0x00` |
-| 0-4 | 7,8 | `0x02` |
-| 0-4 | 9,A,B,C,D,E | `0x04` |
-| 0-4 | F | `0x06` |
-| 5-F | 0,1,2,3,4,5,6,7 | `0x00` |
-| 5-F | 8,9,A,B,C,D,E,F | `0x04` |
+| 0-4 | 0,1,2,3,4,5,6 | `0x20` |
+| 0-4 | 7,8 | `0x22` |
+| 0-4 | 9,A,B,C,D,E | `0x24` |
+| 0-4 | F | `0x26` |
+| 5-F | 0,1,2,3,4,5,6,7 | `0x20` |
+| 5-F | 8,9,A,B,C,D,E,F | `0x24` |
 
 ## Runtime timing trim
 

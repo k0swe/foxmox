@@ -45,16 +45,18 @@ def expect(words: list[int], address: int, expected: int) -> None:
 
 
 def initial_pair_address(s1: int, s2: int) -> int:
-    """Equivalent of ROM 0x090-0x0A8; returned value is 0,2,4,or 6."""
+    """Equivalent of ROM 0x090-0x0AC; returns 0x20, 0x22, 0x24, or 0x26."""
     if s1 >= 5:
-        return 4 if s2 >= 8 else 0
-    if s2 == 15:
-        return 6
-    if s2 >= 9:
-        return 4
-    if s2 >= 7:
-        return 2
-    return 0
+        offset = 4 if s2 >= 8 else 0
+    elif s2 == 15:
+        offset = 6
+    elif s2 >= 9:
+        offset = 4
+    elif s2 >= 7:
+        offset = 2
+    else:
+        offset = 0
+    return 0x20 + offset
 
 
 def cadence_pair_address(s1: int, s2: int) -> int:
