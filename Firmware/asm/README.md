@@ -19,6 +19,7 @@ Mnemonic conversions completed so far:
 - `advance_lfsr_1` (`0x134–0x13D`)
 - `read_switches` (`0x13E–0x147`)
 - `send_hex_byte` (`0x148–0x150`)
+- calibration/service mode and halt loop (`0x151–0x18F`)
 - `morse_tone_unit` / `morse_silence_unit` (`0x190–0x1A1`)
 - Morse sequence fragments and complete G–Z emitters (`0x1A2–0x1F7`)
 - all sixteen S1 message routines (`0x1F8–0x28A`)

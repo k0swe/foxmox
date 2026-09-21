@@ -11,9 +11,12 @@
 
 ; RAM aliases established by the interrupt and main-loop data flow.
 tmr0_wait_count EQU       0x11
+message_seconds EQU       0x12
 morse_unit_ticks EQU      0x19
 porta_shadow    EQU       0x1A
 switch_state    EQU       0x1B
+service_delay_lo EQU      0x1E
+service_delay_hi EQU      0x1F
 tone_state      EQU       0x1D
 lfsr_state      EQU       0x20
 hex_digit_index EQU       0x22
@@ -22,10 +25,12 @@ saved_w         EQU       0x25
 interrupt_flag  EQU       0x27
 hex_byte        EQU       0x28
 message_index   EQU       0x2B
+timing_trim     EQU       0x3F
 
 ; PIC14 instructions encode seven file-address bits; RP0 supplies the bank.
 ; These aliases keep bank-1 register names visible without gpasm's expected
 ; "register not in bank 0" advisory for their absolute header values.
+TRISA_FILE      EQU       (TRISA & 0x7F)
 TRISB_FILE      EQU       (TRISB & 0x7F)
 EECON1_FILE     EQU       (EECON1 & 0x7F)
 EECON2_FILE     EQU       (EECON2 & 0x7F)
@@ -411,72 +416,86 @@ send_hex_byte:
         MOVF      hex_byte, W         ; 0x14F
         RETURN                        ; 0x150
 
+; Calibration/service mode entered when RA2 is held low during startup.
 service_mode:
-        DW        0x019E    ; 0x151: clrf 0x1E
-        DW        0x307F    ; 0x152: movlw 0x7F
-        DW        0x009F    ; 0x153: movwf 0x1F
-        DW        0x1D05    ; 0x154: btfss PORTA[b0]/TRISA[b1],2
-        DW        0x2951    ; 0x155: goto 0x151
-        DW        0x0B9E    ; 0x156: decfsz 0x1E,F
-        DW        0x2954    ; 0x157: goto 0x154
-        DW        0x0B9F    ; 0x158: decfsz 0x1F,F
-        DW        0x2954    ; 0x159: goto 0x154
-        DW        0x1683    ; 0x15A: bsf STATUS,5
-        DW        0x30E8    ; 0x15B: movlw 0xE8
-        DW        0x0085    ; 0x15C: movwf PORTA[b0]/TRISA[b1]
-        DW        0x1283    ; 0x15D: bcf STATUS,5
-        DW        0x213E    ; 0x15E: call 0x13E
-        DW        0x089B    ; 0x15F: movf 0x1B,F
-        DW        0x1903    ; 0x160: btfsc STATUS,2
-        DW        0x298B    ; 0x161: goto 0x18B
-        DW        0x149A    ; 0x162: bsf 0x1A,1
-        DW        0x0181    ; 0x163: clrf TMR0[b0]/OPTION_REG[b1]
-        DW        0x168B    ; 0x164: bsf INTCON,5
-        DW        0x178B    ; 0x165: bsf INTCON,7
-        DW        0x019E    ; 0x166: clrf 0x1E
-        DW        0x307F    ; 0x167: movlw 0x7F
-        DW        0x009F    ; 0x168: movwf 0x1F
-        DW        0x0B9E    ; 0x169: decfsz 0x1E,F
-        DW        0x2969    ; 0x16A: goto 0x169
-        DW        0x0B9F    ; 0x16B: decfsz 0x1F,F
-        DW        0x2969    ; 0x16C: goto 0x169
-        DW        0x21C3    ; 0x16D: call 0x1C3
-        DW        0x083F    ; 0x16E: movf 0x3F,W
-        DW        0x2148    ; 0x16F: call 0x148
-        DW        0x3005    ; 0x170: movlw 0x05
-        DW        0x0092    ; 0x171: movwf 0x12
-        DW        0x213E    ; 0x172: call 0x13E
-        DW        0x081B    ; 0x173: movf 0x1B,W
-        DW        0x39F0    ; 0x174: andlw 0xF0
-        DW        0x1D03    ; 0x175: btfss STATUS,2
-        DW        0x297F    ; 0x176: goto 0x17F
-        DW        0x0892    ; 0x177: movf 0x12,F
-        DW        0x1D03    ; 0x178: btfss STATUS,2
-        DW        0x297F    ; 0x179: goto 0x17F
-        DW        0x21C3    ; 0x17A: call 0x1C3
-        DW        0x3028    ; 0x17B: movlw 0x28
-        DW        0x2116    ; 0x17C: call 0x116
-        DW        0x2148    ; 0x17D: call 0x148
-        DW        0x2858    ; 0x17E: goto 0x058
-        DW        0x1F9B    ; 0x17F: btfss 0x1B,7
-        DW        0x2983    ; 0x180: goto 0x183
-        DW        0x03BF    ; 0x181: decf 0x3F,F
-        DW        0x2986    ; 0x182: goto 0x186
-        DW        0x1E1B    ; 0x183: btfss 0x1B,4
-        DW        0x2972    ; 0x184: goto 0x172
-        DW        0x0ABF    ; 0x185: incf 0x3F,F
-        DW        0x3028    ; 0x186: movlw 0x28
-        DW        0x0089    ; 0x187: movwf EEADR[b0]/EECON2[b1]
-        DW        0x083F    ; 0x188: movf 0x3F,W
-        DW        0x211D    ; 0x189: call 0x11D
-        DW        0x2966    ; 0x18A: goto 0x166
+service_wait_release_restart:
+        CLRF      service_delay_lo    ; 0x151
+        MOVLW     0x7F                ; 0x152
+        MOVWF     service_delay_hi    ; 0x153
+service_wait_release:
+        BTFSS     PORTA, 2            ; 0x154: restart until RA2 is released
+        GOTO      service_wait_release_restart ; 0x155
+        DECFSZ    service_delay_lo, F ; 0x156
+        GOTO      service_wait_release ; 0x157
+        DECFSZ    service_delay_hi, F ; 0x158
+        GOTO      service_wait_release ; 0x159
+
+        BSF       STATUS, RP0         ; 0x15A: bank 1
+        MOVLW     0xE8                ; 0x15B
+        MOVWF     TRISA_FILE          ; 0x15C: RA2 output, RA3 input
+        BCF       STATUS, RP0         ; 0x15D: bank 0
+        CALL      read_switches       ; 0x15E
+        MOVF      switch_state, F     ; 0x15F
+        BTFSC     STATUS, Z           ; 0x160
+        GOTO      halt_blink          ; 0x161: both switches zero
+
+        BSF       porta_shadow, 1     ; 0x162: assert PTT
+        CLRF      TMR0                ; 0x163
+        BSF       INTCON, T0IE        ; 0x164
+        BSF       INTCON, GIE         ; 0x165
+
+service_announce:
+        CLRF      service_delay_lo    ; 0x166
+        MOVLW     0x7F                ; 0x167
+        MOVWF     service_delay_hi    ; 0x168
+service_announce_delay:
+        DECFSZ    service_delay_lo, F ; 0x169
+        GOTO      service_announce_delay ; 0x16A
+        DECFSZ    service_delay_hi, F ; 0x16B
+        GOTO      service_announce_delay ; 0x16C
+        CALL      send_three_space_units ; 0x16D
+        MOVF      timing_trim, W      ; 0x16E
+        CALL      send_hex_byte       ; 0x16F
+        MOVLW     0x05                ; 0x170
+        MOVWF     message_seconds     ; 0x171
+
+service_poll_switch:
+        CALL      read_switches       ; 0x172
+        MOVF      switch_state, W     ; 0x173
+        ANDLW     0xF0                ; 0x174: inspect S2 only
+        BTFSS     STATUS, Z           ; 0x175
+        GOTO      service_apply_switch ; 0x176
+        MOVF      message_seconds, F  ; 0x177
+        BTFSS     STATUS, Z           ; 0x178
+        GOTO      service_apply_switch ; 0x179
+        CALL      send_three_space_units ; 0x17A
+        MOVLW     0x28                ; 0x17B
+        CALL      eeprom_read         ; 0x17C
+        CALL      send_hex_byte       ; 0x17D
+        GOTO      startup             ; 0x17E
+
+service_apply_switch:
+        BTFSS     switch_state, 7     ; 0x17F: S2 8-F decrements
+        GOTO      service_test_increment ; 0x180
+        DECF      timing_trim, F      ; 0x181
+        GOTO      service_save_trim   ; 0x182
+service_test_increment:
+        BTFSS     switch_state, 4     ; 0x183: odd S2 1,3,5,7 increments
+        GOTO      service_poll_switch ; 0x184
+        INCF      timing_trim, F      ; 0x185
+service_save_trim:
+        MOVLW     0x28                ; 0x186
+        MOVWF     EEADR              ; 0x187
+        MOVF      timing_trim, W      ; 0x188
+        CALL      eeprom_write        ; 0x189
+        GOTO      service_announce    ; 0x18A
 
 halt_blink:
-        DW        0x1505    ; 0x18B: bsf PORTA[b0]/TRISA[b1],2
-        DW        0x138B    ; 0x18C: bcf INTCON,7
-        DW        0x0000    ; 0x18D: nop
-        DW        0x1105    ; 0x18E: bcf PORTA[b0]/TRISA[b1],2
-        DW        0x298B    ; 0x18F: goto 0x18B
+        BSF       PORTA, 2            ; 0x18B
+        BCF       INTCON, GIE         ; 0x18C
+        NOP                            ; 0x18D
+        BCF       PORTA, 2            ; 0x18E
+        GOTO      halt_blink          ; 0x18F
 
 ; Emit tone for one Morse time unit. W is preserved because these helpers are
 ; chained through nested letter routines. Clearing tone_state bit 7 enables the
