@@ -10,6 +10,7 @@ FoxMOX V2.6 controller built around a PIC16F84A.
 | `foxmox-v2.6.hex`                        | Complete programming image: ROM, user IDs, configuration word, and EEPROM.   |
 | `requirements.txt`                       | Pinned Python package needed to operate a K150 with `picpro`.                |
 | `tools/reconstruct_from_picpro_dumps.py` | Rebuild a combined Intel HEX file from fresh binary ROM/EEPROM/config reads. |
+| `asm/`                                   | Lossless gpasm reconstruction and exact-memory verifier.                     |
 | `reverse-engineering/`                   | Reproducible disassembly, firmware map, and detailed behavioral analysis.    |
 
 `foxmox-v2.6.hex` was reconstructed from two original FoxMox PIC16F84A chips.
@@ -157,6 +158,18 @@ installed first.
 The strongest practical check is to install the replacement in an original
 FoxMox controller and confirm its on-air behavior; that validation has already
 succeeded for this committed image.
+
+## Build the lossless assembly reconstruction
+
+Install `gputils`, then assemble and compare every programmed memory region:
+
+```sh
+sudo apt install gputils
+make -C Firmware/asm verify
+```
+
+See [`asm/README.md`](asm/README.md) for the exactness boundary and the safe
+incremental workflow for replacing numeric words with named gpasm mnemonics.
 
 ## Reproduce the reverse engineering
 

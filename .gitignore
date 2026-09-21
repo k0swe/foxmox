@@ -48,6 +48,7 @@ fp-info-cache
 venv/
 __pycache__/
 *.py[cod]
+Firmware/asm/build/
 
 ################################
 # Created by https://www.toptal.com/developers/gitignore/api/linux,macos,windows,visualstudiocode
