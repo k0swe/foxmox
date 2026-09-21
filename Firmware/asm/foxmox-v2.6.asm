@@ -339,7 +339,7 @@ maybe_send_callsign:
         MOVWF     callsign_cooldown_hi
         MOVLW     0x58 ; cooldown = 0x0258 = 600 s
         MOVWF     callsign_cooldown_lo
-        CALL      send_callsign_n0puf
+        CALL      send_callsign
         GOTO      transmit_phase_loop
 
 begin_silent_phase:
@@ -372,16 +372,9 @@ maybe_add_silent_jitter:
         CALL      advance_lfsr_3
         GOTO      wait_phase_counter_zero
 
-send_callsign_n0puf:
-        MOVLW     0x31 ; faster Morse timing
-        MOVWF     morse_unit_ticks
-        CALL      send_character_space
-        CALL      send_morse_n
-        CALL      send_morse_0
-        CALL      send_morse_p
-        CALL      send_morse_u
-        CALL      send_morse_f
-        RETURN
+; Generated from CALLSIGN by emit_callsign.py. The include also defines the
+; padding macro used before the fixed page-3 lookup tables.
+        INCLUDE   "generated-callsign.inc"
 
 ; Wait for the next TMR0 interrupt. The ISR sets interrupt_flag bit 0 on every
 ; overflow; clearing it first prevents a stale event from satisfying the wait.
@@ -930,123 +923,11 @@ message_fox:
         CALL      send_morse_o
         CALL      send_morse_x
         RETURN
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+; Expand erased words so callsign length changes do not move page-3 tables.
+        EMIT_CALLSIGN_PADDING
+        IF ($ != 0x300)
+          ERROR "callsign padding did not preserve the page-3 table address"
+        ENDIF
 
 ; Send the low nibble of W as a hexadecimal Morse character. Every table entry
 ; occupies three words so 3*n can index it directly; NOP pads short A/D/E forms.

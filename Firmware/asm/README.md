@@ -86,6 +86,34 @@ and canonical record layout; `make verify` proves that result is byte-for-byte
 identical to `../foxmox-v2.6.hex`. ROM, configuration, and EEPROM already match
 without normalization.
 
+### Build-time callsign
+
+The identification callsign defaults to the recovered value, `N0PUF`. Build a
+custom alphanumeric callsign with:
+
+```sh
+make image CALLSIGN=K0SWE BUILD_DIR=build/K0SWE
+```
+
+The resulting programming image is
+`build/K0SWE/foxmox-v2.6.hex`. `emit_callsign.py` validates and normalizes the
+value, emits one `CALL send_morse_*` instruction per character, and adjusts the
+erased padding before the page-3 tables. Consequently callsigns shorter or
+longer than five characters do not move `hex_digit_dispatch` from `0x300` or
+`tone_pattern_lookup` from `0x367`.
+
+Supported characters are `A-Z` and `0-9`; punctuation such as `/` is rejected.
+The available erased program space permits 1–122 characters, although normal
+amateur callsigns are much shorter. `make verify` is intentionally restricted
+to the default `N0PUF`, because only that build can be byte-identical to the
+recovered image. Use a separate `BUILD_DIR` for each customized image.
+
+Run the emitter unit tests independently with:
+
+```sh
+make test
+```
+
 Remove generated files with:
 
 ```sh
@@ -100,22 +128,22 @@ engineering, including:
 - reset and interrupt vectors;
 - EEPROM read/write routines;
 - switch sampling;
-- the N0PUF identifier;
+- the build-time generated callsign identifier (default `N0PUF`);
 - Morse primitives and message routines;
 - S1 message dispatch; and
 - lookup tables.
 
-Comments after each `DW` show the PIC word address and bank-conservative decode
-from `../reverse-engineering/pic14_disasm.py`. Those comments are explanatory;
-the numeric word is the lossless evidence.
+The remaining `DW 0x3FFF` words represent erased program space. Three are
+explicit reset-vector padding; the generated callsign include emits the rest so
+custom callsign lengths cannot move the computed tables.
 
 ## Safe refinement workflow
 
-1. Replace one `DW` or one small routine with gpasm mnemonics and symbolic names.
-2. Run `make verify`.
+1. Make one bounded source change.
+2. Run `make verify` for the default recovered image.
 3. Keep the change only if all programmed-memory checks pass.
-4. Preserve erased or genuinely uncertain encodings as `DW` rather than
-   inventing executable intent.
+4. For callsign customization, run `make image CALLSIGN=...` and retain the
+   generated HEX with its chosen callsign and hash.
 
-This workflow produced the current fully mnemonic executable image without ever
-losing the original binary.
+This workflow keeps the recovered image reproducible while allowing deliberate
+custom builds.
