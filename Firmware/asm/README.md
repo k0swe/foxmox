@@ -17,6 +17,8 @@ Mnemonic conversions completed so far:
 - `eeprom_write` (`0x11D–0x12D`)
 - `advance_lfsr_3` (`0x12E–0x133`)
 - `advance_lfsr_1` (`0x134–0x13D`)
+- `read_switches` (`0x13E–0x147`)
+- `send_hex_byte` (`0x148–0x150`)
 
 ## Toolchain
 

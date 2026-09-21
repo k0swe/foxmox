@@ -10,13 +10,16 @@
         RADIX     HEX
 
 ; RAM aliases established by the interrupt and main-loop data flow.
+switch_state    EQU       0x1B
 lfsr_state      EQU       0x20
 lfsr_steps      EQU       0x23
 interrupt_flag  EQU       0x27
+hex_byte        EQU       0x28
 
 ; PIC14 instructions encode seven file-address bits; RP0 supplies the bank.
 ; These aliases keep bank-1 register names visible without gpasm's expected
 ; "register not in bank 0" advisory for their absolute header values.
+TRISB_FILE      EQU       (TRISB & 0x7F)
 EECON1_FILE     EQU       (EECON1 & 0x7F)
 EECON2_FILE     EQU       (EECON2 & 0x7F)
 
@@ -374,28 +377,32 @@ lfsr_rotate:
         RLF       lfsr_state, F       ; 0x13C
         RETURN                        ; 0x13D
 
+; Read the two active-low hexadecimal switches on PORTB. The pins are inputs
+; only for the sample; afterwards they return to outputs for the tone sequencer.
 read_switches:
-        DW        0x1683    ; 0x13E: bsf STATUS,5
-        DW        0x30FF    ; 0x13F: movlw 0xFF
-        DW        0x0086    ; 0x140: movwf PORTB[b0]/TRISB[b1]
-        DW        0x1283    ; 0x141: bcf STATUS,5
-        DW        0x0906    ; 0x142: comf PORTB[b0]/TRISB[b1],W
-        DW        0x009B    ; 0x143: movwf 0x1B
-        DW        0x1683    ; 0x144: bsf STATUS,5
-        DW        0x0186    ; 0x145: clrf PORTB[b0]/TRISB[b1]
-        DW        0x1283    ; 0x146: bcf STATUS,5
-        DW        0x0008    ; 0x147: return
+        BSF       STATUS, RP0         ; 0x13E: bank 1
+        MOVLW     0xFF                ; 0x13F
+        MOVWF     TRISB_FILE          ; 0x140: all PORTB pins inputs
+        BCF       STATUS, RP0         ; 0x141: bank 0
+        COMF      PORTB, W            ; 0x142: sample and invert active-low bits
+        MOVWF     switch_state        ; 0x143: S2 in high nibble, S1 in low
+        BSF       STATUS, RP0         ; 0x144: bank 1
+        CLRF      TRISB_FILE          ; 0x145: restore PORTB outputs
+        BCF       STATUS, RP0         ; 0x146: bank 0
+        RETURN                        ; 0x147
 
+; Send W as two hexadecimal Morse digits, high nibble first, and preserve the
+; original byte in W on return.
 send_hex_byte:
-        DW        0x00A8    ; 0x148: movwf 0x28
-        DW        0x0E28    ; 0x149: swapf 0x28,W
-        DW        0x390F    ; 0x14A: andlw 0x0F
-        DW        0x2300    ; 0x14B: call 0x300
-        DW        0x0828    ; 0x14C: movf 0x28,W
-        DW        0x390F    ; 0x14D: andlw 0x0F
-        DW        0x2300    ; 0x14E: call 0x300
-        DW        0x0828    ; 0x14F: movf 0x28,W
-        DW        0x0008    ; 0x150: return
+        MOVWF     hex_byte            ; 0x148
+        SWAPF     hex_byte, W         ; 0x149
+        ANDLW     0x0F                ; 0x14A
+        CALL      hex_digit_dispatch  ; 0x14B
+        MOVF      hex_byte, W         ; 0x14C
+        ANDLW     0x0F                ; 0x14D
+        CALL      hex_digit_dispatch  ; 0x14E
+        MOVF      hex_byte, W         ; 0x14F
+        RETURN                        ; 0x150
 
 service_mode:
         DW        0x019E    ; 0x151: clrf 0x1E
