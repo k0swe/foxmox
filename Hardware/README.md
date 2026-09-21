@@ -95,9 +95,8 @@ normal approximately 3 V supply.
 
 ## R5 is the boot/service-mode strap
 
-R5, 10 kΩ, is intentionally connected between **RA2 (PIC pin 1)** and
-**RA3 (PIC pin 2)**. **RA4/T0CKI (PIC pin 3) is unconnected. Do not move R5 to
-RA4.**
+R5, 10 kΩ, is intentionally connected between **RA2 (PIC pin 1)** and **RA3 (PIC
+pin 2)**. **RA4/T0CKI (PIC pin 3) is unconnected. Do not move R5 to RA4.**
 
 The original scan is easy to misread:
 
@@ -109,23 +108,22 @@ The original scan is easy to misread:
    reading: its darkness matches printed material rather than the lighter pencil
    handwriting elsewhere on the scan.
 
-   | Scan feature | Mean gray |
-   |---|---:|
-   | Printed wire | 73 |
-   | RA4 X mark | 81 |
-   | Printed text | 89 |
-   | Pencil handwriting at top margin | 140 |
+   | Scan feature                     | Mean gray |
+   | -------------------------------- | --------: |
+   | Printed wire                     |        73 |
+   | RA4 X mark                       |        81 |
+   | Printed text                     |        89 |
+   | Pencil handwriting at top margin |       140 |
 
-The reconstructed schematic has an explicit RA4 no-connect at `(97.79,
-105.41)`; with U1 placed at `(80.01, 110.49)`, that location resolves to PIC pin
-3. The PCB independently names the pad
-`unconnected-(U1-TOCKI{slash}RA4-Pad3)`. The reconstructed schematic and PCB
-therefore agree.
+The reconstructed schematic has an explicit RA4 no-connect at `(97.79, 105.41)`;
+with U1 placed at `(80.01, 110.49)`, that location resolves to PIC pin 3. The
+PCB independently names the pad `unconnected-(U1-TOCKI{slash}RA4-Pad3)`. The
+reconstructed schematic and PCB therefore agree.
 
 The firmware also proves R5's purpose: at reset RA3 is driven high while RA2 is
-an input, so R5 pulls RA2 high for normal startup. Holding RA2 low during startup
-enters the clock-calibration service mode; the firmware waits for RA2 to be
-released before continuing. Moving R5 to RA4 would break that boot test.
+an input, so R5 pulls RA2 high for normal startup. Holding RA2 low during
+startup enters the clock-calibration service mode; the firmware waits for RA2 to
+be released before continuing. Moving R5 to RA4 would break that boot test.
 
 The service-mode procedure is documented in
 [`../Firmware/README.md`](../Firmware/README.md).
