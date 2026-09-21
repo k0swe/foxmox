@@ -1,26 +1,9 @@
 # AGENTS.md — FoxMox
 
-Working notes for humans and agents modifying this repository. Durable design
-and operating information belongs in the public documentation rather than here:
-
-- [`Hardware/README.md`](Hardware/README.md) — circuit behavior, radio
-  interface, power constraints, R5, and bench checks
-- [`Firmware/README.md`](Firmware/README.md) — programming, calibration,
-  assembly builds, regression verification, and callsign generation
-- [`USER-GUIDE.md`](USER-GUIDE.md) — field switch settings and staggered startup
-
-## Project overview
-
-This is a KiCad reproduction of Larry Benko **W0QE**'s _Low Power FoxMOX
-Controller V2.6_ (December 2004), transcribed by Chris Keller **K0SWE**.
-
-| File                                                      | Role                                       |
-| --------------------------------------------------------- | ------------------------------------------ |
-| `Hardware/W0QE FoxMox scanned.pdf`                        | Source of truth for the original hardware. |
-| `Hardware/foxmox.kicad_sch` / `Hardware/foxmox.kicad_pcb` | Reconstructed design.                      |
-| `Hardware/foxmox.pdf`                                     | Exported reconstructed schematic.          |
-| `Firmware/foxmox-v2.6.hex`                                | Recovered, hardware-tested PIC image.      |
-| `Firmware/foxmox-v2.6.asm`                                | Validated, readable gpasm source.          |
+Contributor instructions for this repository. Start with
+[`README.md`](README.md) for the public project overview; durable design and
+operating information belongs in the linked public documentation rather than
+here.
 
 ## Repository workflow
 
