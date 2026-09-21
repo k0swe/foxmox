@@ -23,6 +23,7 @@ Mnemonic conversions completed so far:
 - `send_dot` / `send_dash` / `send_character_space` (`0x1BA–0x1C6`)
 - `bit_mask_lookup` (`0x335–0x33F`)
 - `message_dispatch` (`0x340–0x355`)
+- `lfsr_seed_lookup` (`0x356–0x366`)
 
 ## Toolchain
 

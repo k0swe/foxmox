@@ -1055,24 +1055,26 @@ message_dispatch:
         GOTO      message_z           ; 0x354: S1=E
         GOTO      message_fox         ; 0x355: S1=F
 
+; Map the low-nibble switch index in W to a nonzero pseudo-random seed.
+; Callers prove W is in the range 0..15 and PCLATH selects this code page.
 lfsr_seed_lookup:
-        DW        0x0782    ; 0x356: addwf PCL,F
-        DW        0x34FE    ; 0x357: retlw 0xFE
-        DW        0x34CE    ; 0x358: retlw 0xCE
-        DW        0x345B    ; 0x359: retlw 0x5B
-        DW        0x3434    ; 0x35A: retlw 0x34
-        DW        0x344F    ; 0x35B: retlw 0x4F
-        DW        0x3440    ; 0x35C: retlw 0x40
-        DW        0x3454    ; 0x35D: retlw 0x54
-        DW        0x3470    ; 0x35E: retlw 0x70
-        DW        0x347B    ; 0x35F: retlw 0x7B
-        DW        0x3430    ; 0x360: retlw 0x30
-        DW        0x34E9    ; 0x361: retlw 0xE9
-        DW        0x34BE    ; 0x362: retlw 0xBE
-        DW        0x3414    ; 0x363: retlw 0x14
-        DW        0x3463    ; 0x364: retlw 0x63
-        DW        0x3457    ; 0x365: retlw 0x57
-        DW        0x3424    ; 0x366: retlw 0x24
+        ADDWF     PCL, F              ; 0x356
+        RETLW     0xFE                ; 0x357: S1=0
+        RETLW     0xCE                ; 0x358: S1=1
+        RETLW     0x5B                ; 0x359: S1=2
+        RETLW     0x34                ; 0x35A: S1=3
+        RETLW     0x4F                ; 0x35B: S1=4
+        RETLW     0x40                ; 0x35C: S1=5
+        RETLW     0x54                ; 0x35D: S1=6
+        RETLW     0x70                ; 0x35E: S1=7
+        RETLW     0x7B                ; 0x35F: S1=8
+        RETLW     0x30                ; 0x360: S1=9
+        RETLW     0xE9                ; 0x361: S1=A
+        RETLW     0xBE                ; 0x362: S1=B
+        RETLW     0x14                ; 0x363: S1=C
+        RETLW     0x63                ; 0x364: S1=D
+        RETLW     0x57                ; 0x365: S1=E
+        RETLW     0x24                ; 0x366: S1=F
 
 tone_pattern_lookup:
         DW        0x0782    ; 0x367: addwf PCL,F
