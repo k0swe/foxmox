@@ -10,9 +10,13 @@
         RADIX     HEX
 
 ; RAM aliases established by the interrupt and main-loop data flow.
+tmr0_wait_count EQU       0x11
+morse_unit_ticks EQU      0x19
 switch_state    EQU       0x1B
+tone_state      EQU       0x1D
 lfsr_state      EQU       0x20
 lfsr_steps      EQU       0x23
+saved_w         EQU       0x25
 interrupt_flag  EQU       0x27
 hex_byte        EQU       0x28
 
@@ -471,27 +475,34 @@ halt_blink:
         DW        0x1105    ; 0x18E: bcf PORTA[b0]/TRISA[b1],2
         DW        0x298B    ; 0x18F: goto 0x18B
 
-morse_gap_element:
-        DW        0x00A5    ; 0x190: movwf 0x25
-        DW        0x0819    ; 0x191: movf 0x19,W
-        DW        0x0091    ; 0x192: movwf 0x11
-        DW        0x139D    ; 0x193: bcf 0x1D,7
-        DW        0x0891    ; 0x194: movf 0x11,F
-        DW        0x1D03    ; 0x195: btfss STATUS,2
-        DW        0x2994    ; 0x196: goto 0x194
-        DW        0x0825    ; 0x197: movf 0x25,W
-        DW        0x0008    ; 0x198: return
+; Emit tone for one Morse time unit. W is preserved because these helpers are
+; chained through nested letter routines. Clearing tone_state bit 7 enables the
+; ISR's waveform path; the polarity is therefore opposite the old placeholder
+; label inherited from the raw disassembly.
+morse_tone_unit:
+        MOVWF     saved_w             ; 0x190
+        MOVF      morse_unit_ticks, W ; 0x191
+        MOVWF     tmr0_wait_count     ; 0x192
+        BCF       tone_state, 7       ; 0x193: enable ISR tone waveform
+morse_tone_wait:
+        MOVF      tmr0_wait_count, F  ; 0x194: ISR decrements this counter
+        BTFSS     STATUS, Z           ; 0x195
+        GOTO      morse_tone_wait     ; 0x196
+        MOVF      saved_w, W          ; 0x197
+        RETURN                        ; 0x198
 
-morse_mark_element:
-        DW        0x00A5    ; 0x199: movwf 0x25
-        DW        0x0819    ; 0x19A: movf 0x19,W
-        DW        0x0091    ; 0x19B: movwf 0x11
-        DW        0x179D    ; 0x19C: bsf 0x1D,7
-        DW        0x0891    ; 0x19D: movf 0x11,F
-        DW        0x1D03    ; 0x19E: btfss STATUS,2
-        DW        0x299D    ; 0x19F: goto 0x19D
-        DW        0x0825    ; 0x1A0: movf 0x25,W
-        DW        0x0008    ; 0x1A1: return
+; Emit silence for one Morse time unit, preserving W.
+morse_silence_unit:
+        MOVWF     saved_w             ; 0x199
+        MOVF      morse_unit_ticks, W ; 0x19A
+        MOVWF     tmr0_wait_count     ; 0x19B
+        BSF       tone_state, 7       ; 0x19C: suppress ISR tone waveform
+morse_silence_wait:
+        MOVF      tmr0_wait_count, F  ; 0x19D
+        BTFSS     STATUS, Z           ; 0x19E
+        GOTO      morse_silence_wait  ; 0x19F
+        MOVF      saved_w, W          ; 0x1A0
+        RETURN                        ; 0x1A1
 
 morse_i:
         DW        0x21BA    ; 0x1A2: call 0x1BA
@@ -541,24 +552,26 @@ morse_v:
         DW        0x21BD    ; 0x1B8: call 0x1BD
         DW        0x0008    ; 0x1B9: return
 
+; Element builders. A dot is one tone unit plus one silence unit; a dash is
+; three tone units plus one silence unit.
 send_dot:
-        DW        0x2190    ; 0x1BA: call 0x190
-        DW        0x2199    ; 0x1BB: call 0x199
-        DW        0x0008    ; 0x1BC: return
+        CALL      morse_tone_unit     ; 0x1BA
+        CALL      morse_silence_unit  ; 0x1BB
+        RETURN                        ; 0x1BC
 
 send_dash:
-        DW        0x2190    ; 0x1BD: call 0x190
-        DW        0x2190    ; 0x1BE: call 0x190
-        DW        0x2190    ; 0x1BF: call 0x190
-        DW        0x2199    ; 0x1C0: call 0x199
-        DW        0x0008    ; 0x1C1: return
+        CALL      morse_tone_unit     ; 0x1BD
+        CALL      morse_tone_unit     ; 0x1BE
+        CALL      morse_tone_unit     ; 0x1BF
+        CALL      morse_silence_unit  ; 0x1C0
+        RETURN                        ; 0x1C1
 
 send_character_space:
-        DW        0x2199    ; 0x1C2: call 0x199
-        DW        0x2199    ; 0x1C3: call 0x199
-        DW        0x2199    ; 0x1C4: call 0x199
-        DW        0x2199    ; 0x1C5: call 0x199
-        DW        0x0008    ; 0x1C6: return
+        CALL      morse_silence_unit  ; 0x1C2
+        CALL      morse_silence_unit  ; 0x1C3
+        CALL      morse_silence_unit  ; 0x1C4
+        CALL      morse_silence_unit  ; 0x1C5
+        RETURN                        ; 0x1C6
 
 morse_z:
         DW        0x21B0    ; 0x1C7: call 0x1B0

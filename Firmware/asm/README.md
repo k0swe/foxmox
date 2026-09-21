@@ -19,6 +19,8 @@ Mnemonic conversions completed so far:
 - `advance_lfsr_1` (`0x134–0x13D`)
 - `read_switches` (`0x13E–0x147`)
 - `send_hex_byte` (`0x148–0x150`)
+- `morse_tone_unit` / `morse_silence_unit` (`0x190–0x1A1`)
+- `send_dot` / `send_dash` / `send_character_space` (`0x1BA–0x1C6`)
 
 ## Toolchain
 
