@@ -74,8 +74,12 @@ the clock-calibration value stored in EEPROM can shift them slightly.
 | `E` |     60 s |  240 s | 5 min |        60 min |
 | `F` |     60 s |  240 s | 5 min |       120 min |
 
-S2 `8` through `F` repeat the cadence profiles of `0` through `7`, but select
-different startup delays.
+Cadence and startup delay are selected independently. Cadence uses only the low
+three S2 bits, so `0`/`8`, `1`/`9`, …, and `7`/`F` are cadence pairs. For the
+standard fox identities, however, the startup-delay groups are `0`–`6` = none,
+`7`–`8` = 30 minutes, `9`–`E` = 60 minutes, and `F` = 120 minutes. Therefore
+**S2=`7` really does have a 30-minute startup delay**; use S2=`6` for the same
+60-second transmit / 240-second silent cadence with no startup delay.
 
 ## S2 timing for alternate messages
 
@@ -155,8 +159,9 @@ correct point in the five-minute cycle.
   40 seconds silent, with no startup delay.
 - **Delayed deployment:** upper-half S2 settings (`8`–`F`) retain a lower-half
   cadence but add a 30-, 60-, or 120-minute startup delay as shown in the
-  tables. The unit still sends its selected message once immediately after
-  power-on before waiting through that delay.
+  tables. In the standard S1=`0`–`4` modes, S2=`7` also has a 30-minute delay.
+  The unit still sends its selected message once immediately after power-on
+  before waiting through that delay.
 
 ## Operational cautions
 
