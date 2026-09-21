@@ -10,6 +10,11 @@
         RADIX     HEX
 
 ; RAM aliases established by the interrupt and main-loop data flow.
+isr_w_save      EQU       0x0C
+isr_status_save EQU       0x0D
+second_div_hi   EQU       0x0E
+second_div_lo   EQU       0x0F
+subsecond_phase EQU       0x10
 tmr0_wait_count EQU       0x11
 message_seconds EQU       0x12
 morse_unit_ticks EQU      0x19
@@ -17,6 +22,7 @@ porta_shadow    EQU       0x1A
 switch_state    EQU       0x1B
 service_delay_lo EQU      0x1E
 service_delay_hi EQU      0x1F
+tone_phase      EQU       0x1C
 tone_state      EQU       0x1D
 lfsr_state      EQU       0x20
 hex_digit_index EQU       0x22
@@ -30,6 +36,7 @@ timing_trim     EQU       0x3F
 ; PIC14 instructions encode seven file-address bits; RP0 supplies the bank.
 ; These aliases keep bank-1 register names visible without gpasm's expected
 ; "register not in bank 0" advisory for their absolute header values.
+OPTION_REG_FILE EQU       (OPTION_REG & 0x7F)
 TRISA_FILE      EQU       (TRISA & 0x7F)
 TRISB_FILE      EQU       (TRISB & 0x7F)
 EECON1_FILE     EQU       (EECON1 & 0x7F)
@@ -38,7 +45,7 @@ EECON2_FILE     EQU       (EECON2 & 0x7F)
         ORG       0x0000
 
 reset_vector:
-        DW        0x2858    ; 0x000: goto 0x058
+        GOTO      startup             ; 0x000
         DW        0x3FFF    ; 0x001: erased (instruction encoding: addlw 0xFF)
         DW        0x3FFF    ; 0x002: erased (instruction encoding: addlw 0xFF)
         DW        0x3FFF    ; 0x003: erased (instruction encoding: addlw 0xFF)
@@ -130,62 +137,68 @@ interrupt_vector:
         DW        0x0009    ; 0x057: retfie
 
 startup:
-        DW        0x018B    ; 0x058: clrf INTCON
-        DW        0x1283    ; 0x059: bcf STATUS,5
-        DW        0x3008    ; 0x05A: movlw 0x08
-        DW        0x0085    ; 0x05B: movwf PORTA[b0]/TRISA[b1]
-        DW        0x3000    ; 0x05C: movlw 0x00
-        DW        0x0086    ; 0x05D: movwf PORTB[b0]/TRISB[b1]
-        DW        0x1683    ; 0x05E: bsf STATUS,5
-        DW        0x3008    ; 0x05F: movlw 0x08
-        DW        0x0081    ; 0x060: movwf TMR0[b0]/OPTION_REG[b1]
-        DW        0x30E4    ; 0x061: movlw 0xE4
-        DW        0x0085    ; 0x062: movwf PORTA[b0]/TRISA[b1]
-        DW        0x3000    ; 0x063: movlw 0x00
-        DW        0x0086    ; 0x064: movwf PORTB[b0]/TRISB[b1]
-        DW        0x1283    ; 0x065: bcf STATUS,5
-        DW        0x3003    ; 0x066: movlw 0x03
-        DW        0x008A    ; 0x067: movwf PCLATH
-        DW        0x300C    ; 0x068: movlw 0x0C
-        DW        0x0084    ; 0x069: movwf FSR
-        DW        0x0180    ; 0x06A: clrf INDF
-        DW        0x0A84    ; 0x06B: incf FSR,F
-        DW        0x1F04    ; 0x06C: btfss FSR,6
-        DW        0x286A    ; 0x06D: goto 0x06A
-        DW        0x30A6    ; 0x06E: movlw 0xA6
-        DW        0x008F    ; 0x06F: movwf 0x0F
-        DW        0x300E    ; 0x070: movlw 0x0E
-        DW        0x008E    ; 0x071: movwf 0x0E
-        DW        0x3083    ; 0x072: movlw 0x83
-        DW        0x009D    ; 0x073: movwf 0x1D
-        DW        0x3046    ; 0x074: movlw 0x46
-        DW        0x0099    ; 0x075: movwf 0x19
-        DW        0x3028    ; 0x076: movlw 0x28
-        DW        0x2116    ; 0x077: call 0x116
-        DW        0x00BF    ; 0x078: movwf 0x3F
-        DW        0x1D05    ; 0x079: btfss PORTA[b0]/TRISA[b1],2
-        DW        0x2951    ; 0x07A: goto 0x151
-        DW        0x0181    ; 0x07B: clrf TMR0[b0]/OPTION_REG[b1]
-        DW        0x168B    ; 0x07C: bsf INTCON,5
-        DW        0x178B    ; 0x07D: bsf INTCON,7
-        DW        0x1683    ; 0x07E: bsf STATUS,5
-        DW        0x30E8    ; 0x07F: movlw 0xE8
-        DW        0x0085    ; 0x080: movwf PORTA[b0]/TRISA[b1]
-        DW        0x213E    ; 0x081: call 0x13E
-        DW        0x300F    ; 0x082: movlw 0x0F
-        DW        0x051B    ; 0x083: andwf 0x1B,W
-        DW        0x00AB    ; 0x084: movwf 0x2B
-        DW        0x2356    ; 0x085: call 0x356
-        DW        0x00A0    ; 0x086: movwf 0x20
-        DW        0x149A    ; 0x087: bsf 0x1A,1
-        DW        0x3004    ; 0x088: movlw 0x04
-        DW        0x0092    ; 0x089: movwf 0x12
-        DW        0x21C3    ; 0x08A: call 0x1C3
-        DW        0x2340    ; 0x08B: call 0x340
-        DW        0x0892    ; 0x08C: movf 0x12,F
-        DW        0x1D03    ; 0x08D: btfss STATUS,2
-        DW        0x288C    ; 0x08E: goto 0x08C
-        DW        0x109A    ; 0x08F: bcf 0x1A,1
+        CLRF      INTCON              ; 0x058: interrupts off
+        BCF       STATUS, RP0         ; 0x059: bank 0
+        MOVLW     0x08                ; 0x05A: RA3 latch high for service strap
+        MOVWF     PORTA               ; 0x05B
+        MOVLW     0x00                ; 0x05C
+        MOVWF     PORTB               ; 0x05D
+        BSF       STATUS, RP0         ; 0x05E: bank 1
+        MOVLW     0x08                ; 0x05F
+        MOVWF     OPTION_REG_FILE     ; 0x060: TMR0 from Fosc/4, no prescaler
+        MOVLW     0xE4                ; 0x061
+        MOVWF     TRISA_FILE          ; 0x062: RA3 output, RA2 input
+        MOVLW     0x00                ; 0x063
+        MOVWF     TRISB_FILE          ; 0x064
+        BCF       STATUS, RP0         ; 0x065: bank 0
+        MOVLW     0x03                ; 0x066
+        MOVWF     PCLATH              ; 0x067: computed tables live at 0x300
+
+        MOVLW     0x0C                ; 0x068
+        MOVWF     FSR                 ; 0x069
+clear_ram:
+        CLRF      INDF                ; 0x06A: clear RAM 0x0C..0x3F
+        INCF      FSR, F              ; 0x06B
+        BTFSS     FSR, 6              ; 0x06C
+        GOTO      clear_ram           ; 0x06D
+
+        MOVLW     0xA6                ; 0x06E
+        MOVWF     second_div_lo       ; 0x06F
+        MOVLW     0x0E                ; 0x070
+        MOVWF     second_div_hi       ; 0x071
+        MOVLW     0x83                ; 0x072
+        MOVWF     tone_state          ; 0x073
+        MOVLW     0x46                ; 0x074
+        MOVWF     morse_unit_ticks    ; 0x075
+        MOVLW     0x28                ; 0x076
+        CALL      eeprom_read         ; 0x077
+        MOVWF     timing_trim         ; 0x078
+        BTFSS     PORTA, 2            ; 0x079: low selects calibration mode
+        GOTO      service_mode        ; 0x07A
+
+        CLRF      TMR0                ; 0x07B
+        BSF       INTCON, T0IE        ; 0x07C
+        BSF       INTCON, GIE         ; 0x07D
+        BSF       STATUS, RP0         ; 0x07E: bank 1
+        MOVLW     0xE8                ; 0x07F
+        MOVWF     TRISA_FILE          ; 0x080: RA2 output, RA3 input
+        CALL      read_switches       ; 0x081: returns in bank 0
+        MOVLW     0x0F                ; 0x082
+        ANDWF     switch_state, W     ; 0x083: isolate S1
+        MOVWF     message_index       ; 0x084
+        CALL      lfsr_seed_lookup    ; 0x085
+        MOVWF     lfsr_state          ; 0x086
+
+        BSF       porta_shadow, 1     ; 0x087: assert PTT
+        MOVLW     0x04                ; 0x088
+        MOVWF     message_seconds     ; 0x089
+        CALL      send_three_space_units ; 0x08A
+        CALL      message_dispatch    ; 0x08B
+startup_wait_message:
+        MOVF      message_seconds, F  ; 0x08C
+        BTFSS     STATUS, Z           ; 0x08D
+        GOTO      startup_wait_message ; 0x08E
+        BCF       porta_shadow, 1     ; 0x08F: release PTT
         DW        0x01AC    ; 0x090: clrf 0x2C
         DW        0x0E1B    ; 0x091: swapf 0x1B,W
         DW        0x3EB0    ; 0x092: addlw 0xB0

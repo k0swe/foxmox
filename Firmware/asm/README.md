@@ -12,6 +12,7 @@ green after every such change.
 
 Mnemonic conversions completed so far:
 
+- reset vector and normal startup path (`0x000`, `0x058–0x08F`)
 - `wait_for_tmr0_interrupt` (`0x112–0x115`)
 - `eeprom_read` (`0x116–0x11C`)
 - `eeprom_write` (`0x11D–0x12D`)
