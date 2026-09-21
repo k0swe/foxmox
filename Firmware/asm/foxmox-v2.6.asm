@@ -377,10 +377,10 @@ send_callsign_n0puf:
         MOVWF     morse_unit_ticks    ; 0x10A
         CALL      send_character_space ; 0x10B
         CALL      send_morse_n        ; 0x10C
-        CALL      send_hex_0          ; 0x10D
+        CALL      send_morse_0          ; 0x10D
         CALL      send_morse_p        ; 0x10E
         CALL      send_morse_u        ; 0x10F
-        CALL      send_hex_f          ; 0x110
+        CALL      send_morse_f          ; 0x110
         RETURN                        ; 0x111
 
 ; Wait for the next TMR0 interrupt. The ISR sets interrupt_flag bit 0 on every
@@ -760,7 +760,7 @@ message_moe:
         CALL      send_three_space_units   ; 0x1FC
         CALL      send_morse_m             ; 0x1FD
         CALL      send_morse_o             ; 0x1FE
-        CALL      send_hex_e               ; 0x1FF
+        CALL      send_morse_e               ; 0x1FF
         RETURN                             ; 0x200
 
 message_moi:
@@ -804,7 +804,7 @@ message_mo5:
         CALL      send_three_space_units   ; 0x220
         CALL      send_morse_m             ; 0x221
         CALL      send_morse_o             ; 0x222
-        CALL      send_hex_5               ; 0x223
+        CALL      send_morse_5               ; 0x223
         RETURN                             ; 0x224
 
 message_mo:
@@ -823,11 +823,11 @@ message_a:
         MOVLW     0x80                     ; 0x22F
         MOVWF     tone_state               ; 0x230
         CALL      finish_character_space   ; 0x231
-        CALL      send_hex_a               ; 0x232
+        CALL      send_morse_a               ; 0x232
         CALL      finish_character_space   ; 0x233
-        CALL      send_hex_a               ; 0x234
+        CALL      send_morse_a               ; 0x234
         CALL      finish_character_space   ; 0x235
-        CALL      send_hex_a               ; 0x236
+        CALL      send_morse_a               ; 0x236
         RETURN                             ; 0x237
 
 message_b:
@@ -836,9 +836,9 @@ message_b:
         MOVLW     0x81                     ; 0x23A
         MOVWF     tone_state               ; 0x23B
         CALL      send_three_space_units   ; 0x23C
-        CALL      send_hex_b               ; 0x23D
+        CALL      send_morse_b               ; 0x23D
         CALL      send_three_space_units   ; 0x23E
-        CALL      send_hex_b               ; 0x23F
+        CALL      send_morse_b               ; 0x23F
         RETURN                             ; 0x240
 
 message_f:
@@ -847,9 +847,9 @@ message_f:
         MOVLW     0x82                     ; 0x243
         MOVWF     tone_state               ; 0x244
         CALL      send_three_space_units   ; 0x245
-        CALL      send_hex_f               ; 0x246
+        CALL      send_morse_f               ; 0x246
         CALL      send_three_space_units   ; 0x247
-        CALL      send_hex_f               ; 0x248
+        CALL      send_morse_f               ; 0x248
         RETURN                             ; 0x249
 
 message_l:
@@ -926,7 +926,7 @@ message_fox:
         MOVLW     0x83                     ; 0x284
         MOVWF     tone_state               ; 0x285
         CALL      send_three_space_units   ; 0x286
-        CALL      send_hex_f               ; 0x287
+        CALL      send_morse_f               ; 0x287
         CALL      send_morse_o             ; 0x288
         CALL      send_morse_x             ; 0x289
         RETURN                             ; 0x28A
@@ -1056,67 +1056,67 @@ hex_digit_dispatch:
         ADDWF     hex_digit_index, W  ; 0x302: 2*n
         ADDWF     hex_digit_index, W  ; 0x303: 3*n
         ADDWF     PCL, F              ; 0x304
-send_hex_0:
+send_morse_0:
         CALL      morse_o_sequence    ; 0x305: ---
         CALL      morse_m_sequence    ; 0x306: --
         GOTO      finish_character_space ; 0x307
-send_hex_1:
+send_morse_1:
         CALL      morse_w_sequence    ; 0x308: .--
         CALL      morse_m_sequence    ; 0x309: --
         GOTO      finish_character_space ; 0x30A
-send_hex_2:
+send_morse_2:
         CALL      morse_u_sequence    ; 0x30B: ..-
         CALL      morse_m_sequence    ; 0x30C: --
         GOTO      finish_character_space ; 0x30D
-send_hex_3:
+send_morse_3:
         CALL      morse_s_sequence    ; 0x30E: ...
         CALL      morse_m_sequence    ; 0x30F: --
         GOTO      finish_character_space ; 0x310
-send_hex_4:
+send_morse_4:
         CALL      morse_s_sequence    ; 0x311: ...
         CALL      morse_u_tail        ; 0x312: .-
         GOTO      finish_character_space ; 0x313
-send_hex_5:
+send_morse_5:
         CALL      morse_s_sequence    ; 0x314: ...
         CALL      morse_i_sequence    ; 0x315: ..
         GOTO      finish_character_space ; 0x316
-send_hex_6:
+send_morse_6:
         CALL      morse_d_sequence    ; 0x317: -..
         CALL      morse_i_sequence    ; 0x318: ..
         GOTO      finish_character_space ; 0x319
-send_hex_7:
+send_morse_7:
         CALL      morse_g_sequence    ; 0x31A: --.
         CALL      morse_i_sequence    ; 0x31B: ..
         GOTO      finish_character_space ; 0x31C
-send_hex_8:
+send_morse_8:
         CALL      morse_o_sequence    ; 0x31D: ---
         CALL      morse_i_sequence    ; 0x31E: ..
         GOTO      finish_character_space ; 0x31F
-send_hex_9:
+send_morse_9:
         CALL      morse_o_sequence    ; 0x320: ---
         CALL      morse_n_sequence    ; 0x321: -.
         GOTO      finish_character_space ; 0x322
-send_hex_a:
+send_morse_a:
         CALL      morse_u_tail        ; 0x323: .-
         GOTO      finish_character_space ; 0x324
         NOP                             ; 0x325: table padding
-send_hex_b:
+send_morse_b:
         CALL      morse_d_sequence    ; 0x326: -..
         CALL      morse_e_sequence    ; 0x327: .
         GOTO      finish_character_space ; 0x328
-send_hex_c:
+send_morse_c:
         CALL      morse_n_sequence    ; 0x329: -.
         CALL      morse_n_sequence    ; 0x32A: -.
         GOTO      finish_character_space ; 0x32B
-send_hex_d:
+send_morse_d:
         CALL      morse_d_sequence    ; 0x32C: -..
         GOTO      finish_character_space ; 0x32D
         NOP                             ; 0x32E: table padding
-send_hex_e:
+send_morse_e:
         CALL      morse_e_sequence    ; 0x32F: .
         GOTO      finish_character_space ; 0x330
         NOP                             ; 0x331: table padding
-send_hex_f:
+send_morse_f:
         CALL      morse_u_sequence    ; 0x332: ..-
         CALL      morse_e_sequence    ; 0x333: .
         GOTO      finish_character_space ; 0x334
