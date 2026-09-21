@@ -573,6 +573,7 @@ send_dash:
 
 send_character_space:
         CALL      morse_silence_unit  ; 0x1C2
+send_three_space_units:
         CALL      morse_silence_unit  ; 0x1C3
 finish_character_space:
         CALL      morse_silence_unit  ; 0x1C4
@@ -669,183 +670,183 @@ send_morse_z:
         GOTO      finish_character_space  ; 0x1F7
 
 message_moe:
-        DW        0x3071    ; 0x1F8: movlw 0x71
-        DW        0x0099    ; 0x1F9: movwf 0x19
-        DW        0x3083    ; 0x1FA: movlw 0x83
-        DW        0x009D    ; 0x1FB: movwf 0x1D
-        DW        0x21C3    ; 0x1FC: call 0x1C3
-        DW        0x21D6    ; 0x1FD: call 0x1D6
-        DW        0x21DA    ; 0x1FE: call 0x1DA
-        DW        0x232F    ; 0x1FF: call 0x32F
-        DW        0x0008    ; 0x200: return
+        MOVLW     0x71                     ; 0x1F8
+        MOVWF     morse_unit_ticks         ; 0x1F9
+        MOVLW     0x83                     ; 0x1FA
+        MOVWF     tone_state               ; 0x1FB
+        CALL      send_three_space_units   ; 0x1FC
+        CALL      send_morse_m             ; 0x1FD
+        CALL      send_morse_o             ; 0x1FE
+        CALL      send_hex_e               ; 0x1FF
+        RETURN                             ; 0x200
 
 message_moi:
-        DW        0x3069    ; 0x201: movlw 0x69
-        DW        0x0099    ; 0x202: movwf 0x19
-        DW        0x3083    ; 0x203: movlw 0x83
-        DW        0x009D    ; 0x204: movwf 0x1D
-        DW        0x21C3    ; 0x205: call 0x1C3
-        DW        0x21D6    ; 0x206: call 0x1D6
-        DW        0x21DA    ; 0x207: call 0x1DA
-        DW        0x21CC    ; 0x208: call 0x1CC
-        DW        0x0008    ; 0x209: return
+        MOVLW     0x69                     ; 0x201
+        MOVWF     morse_unit_ticks         ; 0x202
+        MOVLW     0x83                     ; 0x203
+        MOVWF     tone_state               ; 0x204
+        CALL      send_three_space_units   ; 0x205
+        CALL      send_morse_m             ; 0x206
+        CALL      send_morse_o             ; 0x207
+        CALL      send_morse_i             ; 0x208
+        RETURN                             ; 0x209
 
 message_mos:
-        DW        0x3063    ; 0x20A: movlw 0x63
-        DW        0x0099    ; 0x20B: movwf 0x19
-        DW        0x3083    ; 0x20C: movlw 0x83
-        DW        0x009D    ; 0x20D: movwf 0x1D
-        DW        0x21C3    ; 0x20E: call 0x1C3
-        DW        0x21D6    ; 0x20F: call 0x1D6
-        DW        0x21DA    ; 0x210: call 0x1DA
-        DW        0x21E4    ; 0x211: call 0x1E4
-        DW        0x0008    ; 0x212: return
+        MOVLW     0x63                     ; 0x20A
+        MOVWF     morse_unit_ticks         ; 0x20B
+        MOVLW     0x83                     ; 0x20C
+        MOVWF     tone_state               ; 0x20D
+        CALL      send_three_space_units   ; 0x20E
+        CALL      send_morse_m             ; 0x20F
+        CALL      send_morse_o             ; 0x210
+        CALL      send_morse_s             ; 0x211
+        RETURN                             ; 0x212
 
 message_moh:
-        DW        0x305E    ; 0x213: movlw 0x5E
-        DW        0x0099    ; 0x214: movwf 0x19
-        DW        0x3083    ; 0x215: movlw 0x83
-        DW        0x009D    ; 0x216: movwf 0x1D
-        DW        0x21C3    ; 0x217: call 0x1C3
-        DW        0x21D6    ; 0x218: call 0x1D6
-        DW        0x21DA    ; 0x219: call 0x1DA
-        DW        0x21C9    ; 0x21A: call 0x1C9
-        DW        0x0008    ; 0x21B: return
+        MOVLW     0x5E                     ; 0x213
+        MOVWF     morse_unit_ticks         ; 0x214
+        MOVLW     0x83                     ; 0x215
+        MOVWF     tone_state               ; 0x216
+        CALL      send_three_space_units   ; 0x217
+        CALL      send_morse_m             ; 0x218
+        CALL      send_morse_o             ; 0x219
+        CALL      send_morse_h             ; 0x21A
+        RETURN                             ; 0x21B
 
 message_mo5:
-        DW        0x3059    ; 0x21C: movlw 0x59
-        DW        0x0099    ; 0x21D: movwf 0x19
-        DW        0x3083    ; 0x21E: movlw 0x83
-        DW        0x009D    ; 0x21F: movwf 0x1D
-        DW        0x21C3    ; 0x220: call 0x1C3
-        DW        0x21D6    ; 0x221: call 0x1D6
-        DW        0x21DA    ; 0x222: call 0x1DA
-        DW        0x2314    ; 0x223: call 0x314
-        DW        0x0008    ; 0x224: return
+        MOVLW     0x59                     ; 0x21C
+        MOVWF     morse_unit_ticks         ; 0x21D
+        MOVLW     0x83                     ; 0x21E
+        MOVWF     tone_state               ; 0x21F
+        CALL      send_three_space_units   ; 0x220
+        CALL      send_morse_m             ; 0x221
+        CALL      send_morse_o             ; 0x222
+        CALL      send_hex_5               ; 0x223
+        RETURN                             ; 0x224
 
 message_mo:
-        DW        0x3081    ; 0x225: movlw 0x81
-        DW        0x0099    ; 0x226: movwf 0x19
-        DW        0x3083    ; 0x227: movlw 0x83
-        DW        0x009D    ; 0x228: movwf 0x1D
-        DW        0x21C3    ; 0x229: call 0x1C3
-        DW        0x21D6    ; 0x22A: call 0x1D6
-        DW        0x21DA    ; 0x22B: call 0x1DA
-        DW        0x0008    ; 0x22C: return
+        MOVLW     0x81                     ; 0x225
+        MOVWF     morse_unit_ticks         ; 0x226
+        MOVLW     0x83                     ; 0x227
+        MOVWF     tone_state               ; 0x228
+        CALL      send_three_space_units   ; 0x229
+        CALL      send_morse_m             ; 0x22A
+        CALL      send_morse_o             ; 0x22B
+        RETURN                             ; 0x22C
 
 message_a:
-        DW        0x3074    ; 0x22D: movlw 0x74
-        DW        0x0099    ; 0x22E: movwf 0x19
-        DW        0x3080    ; 0x22F: movlw 0x80
-        DW        0x009D    ; 0x230: movwf 0x1D
-        DW        0x21C4    ; 0x231: call 0x1C4
-        DW        0x2323    ; 0x232: call 0x323
-        DW        0x21C4    ; 0x233: call 0x1C4
-        DW        0x2323    ; 0x234: call 0x323
-        DW        0x21C4    ; 0x235: call 0x1C4
-        DW        0x2323    ; 0x236: call 0x323
-        DW        0x0008    ; 0x237: return
+        MOVLW     0x74                     ; 0x22D
+        MOVWF     morse_unit_ticks         ; 0x22E
+        MOVLW     0x80                     ; 0x22F
+        MOVWF     tone_state               ; 0x230
+        CALL      finish_character_space   ; 0x231
+        CALL      send_hex_a               ; 0x232
+        CALL      finish_character_space   ; 0x233
+        CALL      send_hex_a               ; 0x234
+        CALL      finish_character_space   ; 0x235
+        CALL      send_hex_a               ; 0x236
+        RETURN                             ; 0x237
 
 message_b:
-        DW        0x3074    ; 0x238: movlw 0x74
-        DW        0x0099    ; 0x239: movwf 0x19
-        DW        0x3081    ; 0x23A: movlw 0x81
-        DW        0x009D    ; 0x23B: movwf 0x1D
-        DW        0x21C3    ; 0x23C: call 0x1C3
-        DW        0x2326    ; 0x23D: call 0x326
-        DW        0x21C3    ; 0x23E: call 0x1C3
-        DW        0x2326    ; 0x23F: call 0x326
-        DW        0x0008    ; 0x240: return
+        MOVLW     0x74                     ; 0x238
+        MOVWF     morse_unit_ticks         ; 0x239
+        MOVLW     0x81                     ; 0x23A
+        MOVWF     tone_state               ; 0x23B
+        CALL      send_three_space_units   ; 0x23C
+        CALL      send_hex_b               ; 0x23D
+        CALL      send_three_space_units   ; 0x23E
+        CALL      send_hex_b               ; 0x23F
+        RETURN                             ; 0x240
 
-message_c:
-        DW        0x3074    ; 0x241: movlw 0x74
-        DW        0x0099    ; 0x242: movwf 0x19
-        DW        0x3082    ; 0x243: movlw 0x82
-        DW        0x009D    ; 0x244: movwf 0x1D
-        DW        0x21C3    ; 0x245: call 0x1C3
-        DW        0x2332    ; 0x246: call 0x332
-        DW        0x21C3    ; 0x247: call 0x1C3
-        DW        0x2332    ; 0x248: call 0x332
-        DW        0x0008    ; 0x249: return
+message_f:
+        MOVLW     0x74                     ; 0x241
+        MOVWF     morse_unit_ticks         ; 0x242
+        MOVLW     0x82                     ; 0x243
+        MOVWF     tone_state               ; 0x244
+        CALL      send_three_space_units   ; 0x245
+        CALL      send_hex_f               ; 0x246
+        CALL      send_three_space_units   ; 0x247
+        CALL      send_hex_f               ; 0x248
+        RETURN                             ; 0x249
 
 message_l:
-        DW        0x3074    ; 0x24A: movlw 0x74
-        DW        0x0099    ; 0x24B: movwf 0x19
-        DW        0x3084    ; 0x24C: movlw 0x84
-        DW        0x009D    ; 0x24D: movwf 0x1D
-        DW        0x21C3    ; 0x24E: call 0x1C3
-        DW        0x21D3    ; 0x24F: call 0x1D3
-        DW        0x21C3    ; 0x250: call 0x1C3
-        DW        0x21D3    ; 0x251: call 0x1D3
-        DW        0x0008    ; 0x252: return
+        MOVLW     0x74                     ; 0x24A
+        MOVWF     morse_unit_ticks         ; 0x24B
+        MOVLW     0x84                     ; 0x24C
+        MOVWF     tone_state               ; 0x24D
+        CALL      send_three_space_units   ; 0x24E
+        CALL      send_morse_l             ; 0x24F
+        CALL      send_three_space_units   ; 0x250
+        CALL      send_morse_l             ; 0x251
+        RETURN                             ; 0x252
 
 message_n:
-        DW        0x3074    ; 0x253: movlw 0x74
-        DW        0x0099    ; 0x254: movwf 0x19
-        DW        0x3085    ; 0x255: movlw 0x85
-        DW        0x009D    ; 0x256: movwf 0x1D
-        DW        0x21C4    ; 0x257: call 0x1C4
-        DW        0x21D8    ; 0x258: call 0x1D8
-        DW        0x21C4    ; 0x259: call 0x1C4
-        DW        0x21D8    ; 0x25A: call 0x1D8
-        DW        0x21C4    ; 0x25B: call 0x1C4
-        DW        0x21D8    ; 0x25C: call 0x1D8
-        DW        0x0008    ; 0x25D: return
+        MOVLW     0x74                     ; 0x253
+        MOVWF     morse_unit_ticks         ; 0x254
+        MOVLW     0x85                     ; 0x255
+        MOVWF     tone_state               ; 0x256
+        CALL      finish_character_space   ; 0x257
+        CALL      send_morse_n             ; 0x258
+        CALL      finish_character_space   ; 0x259
+        CALL      send_morse_n             ; 0x25A
+        CALL      finish_character_space   ; 0x25B
+        CALL      send_morse_n             ; 0x25C
+        RETURN                             ; 0x25D
 
 message_p:
-        DW        0x3066    ; 0x25E: movlw 0x66
-        DW        0x0099    ; 0x25F: movwf 0x19
-        DW        0x3086    ; 0x260: movlw 0x86
-        DW        0x009D    ; 0x261: movwf 0x1D
-        DW        0x21C3    ; 0x262: call 0x1C3
-        DW        0x21DC    ; 0x263: call 0x1DC
-        DW        0x21C3    ; 0x264: call 0x1C3
-        DW        0x21DC    ; 0x265: call 0x1DC
-        DW        0x0008    ; 0x266: return
+        MOVLW     0x66                     ; 0x25E
+        MOVWF     morse_unit_ticks         ; 0x25F
+        MOVLW     0x86                     ; 0x260
+        MOVWF     tone_state               ; 0x261
+        CALL      send_three_space_units   ; 0x262
+        CALL      send_morse_p             ; 0x263
+        CALL      send_three_space_units   ; 0x264
+        CALL      send_morse_p             ; 0x265
+        RETURN                             ; 0x266
 
 message_v:
-        DW        0x3074    ; 0x267: movlw 0x74
-        DW        0x0099    ; 0x268: movwf 0x19
-        DW        0x3087    ; 0x269: movlw 0x87
-        DW        0x009D    ; 0x26A: movwf 0x1D
-        DW        0x21C3    ; 0x26B: call 0x1C3
-        DW        0x21EA    ; 0x26C: call 0x1EA
-        DW        0x21C3    ; 0x26D: call 0x1C3
-        DW        0x21EA    ; 0x26E: call 0x1EA
-        DW        0x0008    ; 0x26F: return
+        MOVLW     0x74                     ; 0x267
+        MOVWF     morse_unit_ticks         ; 0x268
+        MOVLW     0x87                     ; 0x269
+        MOVWF     tone_state               ; 0x26A
+        CALL      send_three_space_units   ; 0x26B
+        CALL      send_morse_v             ; 0x26C
+        CALL      send_three_space_units   ; 0x26D
+        CALL      send_morse_v             ; 0x26E
+        RETURN                             ; 0x26F
 
 message_x:
-        DW        0x3066    ; 0x270: movlw 0x66
-        DW        0x0099    ; 0x271: movwf 0x19
-        DW        0x3080    ; 0x272: movlw 0x80
-        DW        0x009D    ; 0x273: movwf 0x1D
-        DW        0x21C3    ; 0x274: call 0x1C3
-        DW        0x21EF    ; 0x275: call 0x1EF
-        DW        0x21C3    ; 0x276: call 0x1C3
-        DW        0x21EF    ; 0x277: call 0x1EF
-        DW        0x0008    ; 0x278: return
+        MOVLW     0x66                     ; 0x270
+        MOVWF     morse_unit_ticks         ; 0x271
+        MOVLW     0x80                     ; 0x272
+        MOVWF     tone_state               ; 0x273
+        CALL      send_three_space_units   ; 0x274
+        CALL      send_morse_x             ; 0x275
+        CALL      send_three_space_units   ; 0x276
+        CALL      send_morse_x             ; 0x277
+        RETURN                             ; 0x278
 
 message_z:
-        DW        0x3066    ; 0x279: movlw 0x66
-        DW        0x0099    ; 0x27A: movwf 0x19
-        DW        0x3081    ; 0x27B: movlw 0x81
-        DW        0x009D    ; 0x27C: movwf 0x1D
-        DW        0x21C3    ; 0x27D: call 0x1C3
-        DW        0x21F5    ; 0x27E: call 0x1F5
-        DW        0x21C3    ; 0x27F: call 0x1C3
-        DW        0x21F5    ; 0x280: call 0x1F5
-        DW        0x0008    ; 0x281: return
+        MOVLW     0x66                     ; 0x279
+        MOVWF     morse_unit_ticks         ; 0x27A
+        MOVLW     0x81                     ; 0x27B
+        MOVWF     tone_state               ; 0x27C
+        CALL      send_three_space_units   ; 0x27D
+        CALL      send_morse_z             ; 0x27E
+        CALL      send_three_space_units   ; 0x27F
+        CALL      send_morse_z             ; 0x280
+        RETURN                             ; 0x281
 
 message_fox:
-        DW        0x3052    ; 0x282: movlw 0x52
-        DW        0x0099    ; 0x283: movwf 0x19
-        DW        0x3083    ; 0x284: movlw 0x83
-        DW        0x009D    ; 0x285: movwf 0x1D
-        DW        0x21C3    ; 0x286: call 0x1C3
-        DW        0x2332    ; 0x287: call 0x332
-        DW        0x21DA    ; 0x288: call 0x1DA
-        DW        0x21EF    ; 0x289: call 0x1EF
-        DW        0x0008    ; 0x28A: return
+        MOVLW     0x52                     ; 0x282
+        MOVWF     morse_unit_ticks         ; 0x283
+        MOVLW     0x83                     ; 0x284
+        MOVWF     tone_state               ; 0x285
+        CALL      send_three_space_units   ; 0x286
+        CALL      send_hex_f               ; 0x287
+        CALL      send_morse_o             ; 0x288
+        CALL      send_morse_x             ; 0x289
+        RETURN                             ; 0x28A
         DW        0x3FFF    ; 0x28B: erased (instruction encoding: addlw 0xFF)
         DW        0x3FFF    ; 0x28C: erased (instruction encoding: addlw 0xFF)
         DW        0x3FFF    ; 0x28D: erased (instruction encoding: addlw 0xFF)
@@ -1068,7 +1069,7 @@ message_dispatch:
         GOTO      message_mo          ; 0x34B: S1=5
         GOTO      message_a           ; 0x34C: S1=6
         GOTO      message_b           ; 0x34D: S1=7
-        GOTO      message_c           ; 0x34E: S1=8
+        GOTO      message_f           ; 0x34E: S1=8
         GOTO      message_l           ; 0x34F: S1=9
         GOTO      message_n           ; 0x350: S1=A
         GOTO      message_p           ; 0x351: S1=B

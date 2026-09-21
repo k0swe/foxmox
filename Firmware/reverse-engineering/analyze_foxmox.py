@@ -21,7 +21,7 @@ EXPECTED_ROM_SHA256 = "546781166e6c349ccbb167d5767dacbf99e84a844c02573d8a7d72412
 EXPECTED_EEPROM_SHA256 = "3ecd61956a537acd8086bfbe1c5345dce7cae8af925cf8473f01e992a6cb9bab"
 FOSC_HZ = 3_579_545
 
-S1_NAMES = ["MOE", "MOI", "MOS", "MOH", "MO5", "MO", "A", "B", "C", "L", "N", "P", "V", "X", "Z", "FOX"]
+S1_NAMES = ["MOE", "MOI", "MOS", "MOH", "MO5", "MO", "A", "B", "F", "L", "N", "P", "V", "X", "Z", "FOX"]
 S1_TARGETS = [0x1F8, 0x201, 0x20A, 0x213, 0x21C, 0x225, 0x22D, 0x238, 0x241, 0x24A, 0x253, 0x25E, 0x267, 0x270, 0x279, 0x282]
 
 

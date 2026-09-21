@@ -14,7 +14,9 @@ firmware. It does **not** modify or reinterpret the original dumps.
   The discarded picpro binary source required swapping each adjacent pair to
   reach this logical address order.
 - **[PROVED]** RB0..RB3 select the 16 messages in the observed order:
-  `MOE, MOI, MOS, MOH, MO5, MO, A, B, C, L, N, P, V, X, Z, FOX`.
+  `MOE, MOI, MOS, MOH, MO5, MO, A, B, F, L, N, P, V, X, Z, FOX`.
+  S1=`8` was initially logged by ear as C, but its routine calls the proved
+  hexadecimal-F emitter (`0x332`: `..-.`).
 - **[PROVED]** RB4..RB7 select timing, but the low three S2 bits select one of
   eight EEPROM records. Thus S2 `8..F` aliases `0..7` for the basic cadence.
 - **[PROVED]** The firmware's embedded identification is **N0PUF**, not W0QE or
@@ -121,7 +123,7 @@ Morse are:
 | `5` | `0x225` | MO | PROVED |
 | `6` | `0x22D` | A | PROVED |
 | `7` | `0x238` | B | PROVED |
-| `8` | `0x241` | C | PROVED |
+| `8` | `0x241` | F | PROVED |
 | `9` | `0x24A` | L | PROVED |
 | `A` | `0x253` | N | PROVED |
 | `B` | `0x25E` | P | PROVED |
