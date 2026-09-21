@@ -12,6 +12,7 @@
 ; RAM aliases established by the interrupt and main-loop data flow.
 tmr0_wait_count EQU       0x11
 morse_unit_ticks EQU      0x19
+porta_shadow    EQU       0x1A
 switch_state    EQU       0x1B
 tone_state      EQU       0x1D
 lfsr_state      EQU       0x20
@@ -19,6 +20,7 @@ lfsr_steps      EQU       0x23
 saved_w         EQU       0x25
 interrupt_flag  EQU       0x27
 hex_byte        EQU       0x28
+message_index   EQU       0x2B
 
 ; PIC14 instructions encode seven file-address bits; RP0 supplies the bank.
 ; These aliases keep bank-1 register names visible without gpasm's expected
@@ -1013,42 +1015,45 @@ hex_digit_dispatch:
         DW        0x21A6    ; 0x333: call 0x1A6
         DW        0x29C4    ; 0x334: goto 0x1C4
 
+; Convert tone_state bits 2:0 into the corresponding PORTB bit mask.
 bit_mask_lookup:
-        DW        0x081D    ; 0x335: movf 0x1D,W
-        DW        0x3907    ; 0x336: andlw 0x07
-        DW        0x0782    ; 0x337: addwf PCL,F
-        DW        0x3410    ; 0x338: retlw 0x10
-        DW        0x3440    ; 0x339: retlw 0x40
-        DW        0x3401    ; 0x33A: retlw 0x01
-        DW        0x3420    ; 0x33B: retlw 0x20
-        DW        0x3408    ; 0x33C: retlw 0x08
-        DW        0x3402    ; 0x33D: retlw 0x02
-        DW        0x3480    ; 0x33E: retlw 0x80
-        DW        0x3404    ; 0x33F: retlw 0x04
+        MOVF      tone_state, W       ; 0x335
+        ANDLW     0x07                ; 0x336
+        ADDWF     PCL, F              ; 0x337
+        RETLW     0x10                ; 0x338
+        RETLW     0x40                ; 0x339
+        RETLW     0x01                ; 0x33A
+        RETLW     0x20                ; 0x33B
+        RETLW     0x08                ; 0x33C
+        RETLW     0x02                ; 0x33D
+        RETLW     0x80                ; 0x33E
+        RETLW     0x04                ; 0x33F
 
+; Key the transmitter, resample S1, and tail-dispatch its low nibble to one of
+; the sixteen message routines. PCLATH was initialized to page 3 at startup.
 message_dispatch:
-        DW        0x149A    ; 0x340: bsf 0x1A,1
-        DW        0x213E    ; 0x341: call 0x13E
-        DW        0x081B    ; 0x342: movf 0x1B,W
-        DW        0x390F    ; 0x343: andlw 0x0F
-        DW        0x00AB    ; 0x344: movwf 0x2B
-        DW        0x0782    ; 0x345: addwf PCL,F
-        DW        0x29F8    ; 0x346: goto 0x1F8
-        DW        0x2A01    ; 0x347: goto 0x201
-        DW        0x2A0A    ; 0x348: goto 0x20A
-        DW        0x2A13    ; 0x349: goto 0x213
-        DW        0x2A1C    ; 0x34A: goto 0x21C
-        DW        0x2A25    ; 0x34B: goto 0x225
-        DW        0x2A2D    ; 0x34C: goto 0x22D
-        DW        0x2A38    ; 0x34D: goto 0x238
-        DW        0x2A41    ; 0x34E: goto 0x241
-        DW        0x2A4A    ; 0x34F: goto 0x24A
-        DW        0x2A53    ; 0x350: goto 0x253
-        DW        0x2A5E    ; 0x351: goto 0x25E
-        DW        0x2A67    ; 0x352: goto 0x267
-        DW        0x2A70    ; 0x353: goto 0x270
-        DW        0x2A79    ; 0x354: goto 0x279
-        DW        0x2A82    ; 0x355: goto 0x282
+        BSF       porta_shadow, 1     ; 0x340: assert PTT through RA1
+        CALL      read_switches       ; 0x341
+        MOVF      switch_state, W     ; 0x342
+        ANDLW     0x0F                ; 0x343: S1 only
+        MOVWF     message_index       ; 0x344
+        ADDWF     PCL, F              ; 0x345
+        GOTO      message_moe         ; 0x346: S1=0
+        GOTO      message_moi         ; 0x347: S1=1
+        GOTO      message_mos         ; 0x348: S1=2
+        GOTO      message_moh         ; 0x349: S1=3
+        GOTO      message_mo5         ; 0x34A: S1=4
+        GOTO      message_mo          ; 0x34B: S1=5
+        GOTO      message_a           ; 0x34C: S1=6
+        GOTO      message_b           ; 0x34D: S1=7
+        GOTO      message_c           ; 0x34E: S1=8
+        GOTO      message_l           ; 0x34F: S1=9
+        GOTO      message_n           ; 0x350: S1=A
+        GOTO      message_p           ; 0x351: S1=B
+        GOTO      message_v           ; 0x352: S1=C
+        GOTO      message_x           ; 0x353: S1=D
+        GOTO      message_z           ; 0x354: S1=E
+        GOTO      message_fox         ; 0x355: S1=F
 
 lfsr_seed_lookup:
         DW        0x0782    ; 0x356: addwf PCL,F
