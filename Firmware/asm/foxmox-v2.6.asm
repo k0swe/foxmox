@@ -16,6 +16,7 @@ porta_shadow    EQU       0x1A
 switch_state    EQU       0x1B
 tone_state      EQU       0x1D
 lfsr_state      EQU       0x20
+hex_digit_index EQU       0x22
 lfsr_steps      EQU       0x23
 saved_w         EQU       0x25
 interrupt_flag  EQU       0x27
@@ -963,60 +964,78 @@ message_fox:
         DW        0x3FFF    ; 0x2FE: erased (instruction encoding: addlw 0xFF)
         DW        0x3FFF    ; 0x2FF: erased (instruction encoding: addlw 0xFF)
 
+; Send the low nibble of W as a hexadecimal Morse character. Every table entry
+; occupies three words so 3*n can index it directly; NOP pads short A/D/E forms.
 hex_digit_dispatch:
-        DW        0x390F    ; 0x300: andlw 0x0F
-        DW        0x00A2    ; 0x301: movwf 0x22
-        DW        0x0722    ; 0x302: addwf 0x22,W
-        DW        0x0722    ; 0x303: addwf 0x22,W
-        DW        0x0782    ; 0x304: addwf PCL,F
-        DW        0x21AA    ; 0x305: call 0x1AA
-        DW        0x21AB    ; 0x306: call 0x1AB
-        DW        0x29C4    ; 0x307: goto 0x1C4
-        DW        0x21A8    ; 0x308: call 0x1A8
-        DW        0x21AB    ; 0x309: call 0x1AB
-        DW        0x29C4    ; 0x30A: goto 0x1C4
-        DW        0x21B4    ; 0x30B: call 0x1B4
-        DW        0x21AB    ; 0x30C: call 0x1AB
-        DW        0x29C4    ; 0x30D: goto 0x1C4
-        DW        0x21A2    ; 0x30E: call 0x1A2
-        DW        0x21AB    ; 0x30F: call 0x1AB
-        DW        0x29C4    ; 0x310: goto 0x1C4
-        DW        0x21A2    ; 0x311: call 0x1A2
-        DW        0x21B7    ; 0x312: call 0x1B7
-        DW        0x29C4    ; 0x313: goto 0x1C4
-        DW        0x21A2    ; 0x314: call 0x1A2
-        DW        0x21A5    ; 0x315: call 0x1A5
-        DW        0x29C4    ; 0x316: goto 0x1C4
-        DW        0x21A4    ; 0x317: call 0x1A4
-        DW        0x21A5    ; 0x318: call 0x1A5
-        DW        0x29C4    ; 0x319: goto 0x1C4
-        DW        0x21B0    ; 0x31A: call 0x1B0
-        DW        0x21A5    ; 0x31B: call 0x1A5
-        DW        0x29C4    ; 0x31C: goto 0x1C4
-        DW        0x21AA    ; 0x31D: call 0x1AA
-        DW        0x21A5    ; 0x31E: call 0x1A5
-        DW        0x29C4    ; 0x31F: goto 0x1C4
-        DW        0x21AA    ; 0x320: call 0x1AA
-        DW        0x21B1    ; 0x321: call 0x1B1
-        DW        0x29C4    ; 0x322: goto 0x1C4
-        DW        0x21B7    ; 0x323: call 0x1B7
-        DW        0x29C4    ; 0x324: goto 0x1C4
-        DW        0x0000    ; 0x325: nop
-        DW        0x21A4    ; 0x326: call 0x1A4
-        DW        0x21A6    ; 0x327: call 0x1A6
-        DW        0x29C4    ; 0x328: goto 0x1C4
-        DW        0x21B1    ; 0x329: call 0x1B1
-        DW        0x21B1    ; 0x32A: call 0x1B1
-        DW        0x29C4    ; 0x32B: goto 0x1C4
-        DW        0x21A4    ; 0x32C: call 0x1A4
-        DW        0x29C4    ; 0x32D: goto 0x1C4
-        DW        0x0000    ; 0x32E: nop
-        DW        0x21A6    ; 0x32F: call 0x1A6
-        DW        0x29C4    ; 0x330: goto 0x1C4
-        DW        0x0000    ; 0x331: nop
-        DW        0x21B4    ; 0x332: call 0x1B4
-        DW        0x21A6    ; 0x333: call 0x1A6
-        DW        0x29C4    ; 0x334: goto 0x1C4
+        ANDLW     0x0F                ; 0x300
+        MOVWF     hex_digit_index     ; 0x301
+        ADDWF     hex_digit_index, W  ; 0x302: 2*n
+        ADDWF     hex_digit_index, W  ; 0x303: 3*n
+        ADDWF     PCL, F              ; 0x304
+send_hex_0:
+        CALL      morse_o_sequence    ; 0x305: ---
+        CALL      morse_m_sequence    ; 0x306: --
+        GOTO      finish_character_space ; 0x307
+send_hex_1:
+        CALL      morse_w_sequence    ; 0x308: .--
+        CALL      morse_m_sequence    ; 0x309: --
+        GOTO      finish_character_space ; 0x30A
+send_hex_2:
+        CALL      morse_u_sequence    ; 0x30B: ..-
+        CALL      morse_m_sequence    ; 0x30C: --
+        GOTO      finish_character_space ; 0x30D
+send_hex_3:
+        CALL      morse_s_sequence    ; 0x30E: ...
+        CALL      morse_m_sequence    ; 0x30F: --
+        GOTO      finish_character_space ; 0x310
+send_hex_4:
+        CALL      morse_s_sequence    ; 0x311: ...
+        CALL      morse_u_tail        ; 0x312: .-
+        GOTO      finish_character_space ; 0x313
+send_hex_5:
+        CALL      morse_s_sequence    ; 0x314: ...
+        CALL      morse_i_sequence    ; 0x315: ..
+        GOTO      finish_character_space ; 0x316
+send_hex_6:
+        CALL      morse_d_sequence    ; 0x317: -..
+        CALL      morse_i_sequence    ; 0x318: ..
+        GOTO      finish_character_space ; 0x319
+send_hex_7:
+        CALL      morse_g_sequence    ; 0x31A: --.
+        CALL      morse_i_sequence    ; 0x31B: ..
+        GOTO      finish_character_space ; 0x31C
+send_hex_8:
+        CALL      morse_o_sequence    ; 0x31D: ---
+        CALL      morse_i_sequence    ; 0x31E: ..
+        GOTO      finish_character_space ; 0x31F
+send_hex_9:
+        CALL      morse_o_sequence    ; 0x320: ---
+        CALL      morse_n_sequence    ; 0x321: -.
+        GOTO      finish_character_space ; 0x322
+send_hex_a:
+        CALL      morse_u_tail        ; 0x323: .-
+        GOTO      finish_character_space ; 0x324
+        NOP                             ; 0x325: table padding
+send_hex_b:
+        CALL      morse_d_sequence    ; 0x326: -..
+        CALL      morse_e_sequence    ; 0x327: .
+        GOTO      finish_character_space ; 0x328
+send_hex_c:
+        CALL      morse_n_sequence    ; 0x329: -.
+        CALL      morse_n_sequence    ; 0x32A: -.
+        GOTO      finish_character_space ; 0x32B
+send_hex_d:
+        CALL      morse_d_sequence    ; 0x32C: -..
+        GOTO      finish_character_space ; 0x32D
+        NOP                             ; 0x32E: table padding
+send_hex_e:
+        CALL      morse_e_sequence    ; 0x32F: .
+        GOTO      finish_character_space ; 0x330
+        NOP                             ; 0x331: table padding
+send_hex_f:
+        CALL      morse_u_sequence    ; 0x332: ..-
+        CALL      morse_e_sequence    ; 0x333: .
+        GOTO      finish_character_space ; 0x334
 
 ; Convert tone_state bits 2:0 into the corresponding PORTB bit mask.
 bit_mask_lookup:
