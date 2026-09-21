@@ -4,13 +4,13 @@
 PIC16F84A image. It preserves every program word, the four user-ID locations,
 the configuration word, and all 64 EEPROM bytes.
 
-The preservation source begins with recovered program words expressed as `DW`
-and adds labels plus decoded comments. That avoids inventing source-level
-structure or changing instruction placement. Proven routines are converted to
-ordinary mnemonics incrementally; `make verify` is the gate that must remain
-green after every such change.
+The preservation source began with every recovered program word expressed as
+`DW`, then converted proved code to ordinary mnemonics under the `make verify`
+gate. **All executable words are now mnemonic assembly.** The only remaining
+`DW` directives intentionally emit erased `0x3FFF` words: reset-vector padding
+at `0x001–0x003` and unused program space at `0x28B–0x2FF`.
 
-Mnemonic conversions completed so far:
+Converted regions include:
 
 - reset and interrupt vectors, timer ISR, and waveform service (`0x000–0x057`)
 - hardware initialization and initial message (`0x058–0x08F`)
@@ -114,7 +114,8 @@ the numeric word is the lossless evidence.
 1. Replace one `DW` or one small routine with gpasm mnemonics and symbolic names.
 2. Run `make verify`.
 3. Keep the change only if all programmed-memory checks pass.
-4. Preserve uncertain encodings as `DW` rather than guessing.
+4. Preserve erased or genuinely uncertain encodings as `DW` rather than
+   inventing executable intent.
 
-This lets the reconstruction become progressively more readable without ever
+This workflow produced the current fully mnemonic executable image without ever
 losing the original binary.
