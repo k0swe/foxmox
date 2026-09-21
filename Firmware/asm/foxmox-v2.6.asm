@@ -51,1291 +51,1291 @@ EECON2_FILE     EQU       (EECON2 & 0x7F)
         ORG       0x0000
 
 reset_vector:
-        GOTO      startup             ; 0x000
-        DW        0x3FFF    ; 0x001: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x002: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x003: erased (instruction encoding: addlw 0xFF)
+        GOTO      startup
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
 
 interrupt_vector:
-        GOTO      tmr0_isr             ; 0x004
+        GOTO      tmr0_isr
 
 tmr0_isr:
-        MOVWF     isr_w_save           ; 0x005
-        MOVF      STATUS, W            ; 0x006
-        MOVWF     isr_status_save      ; 0x007
-        BCF       INTCON, T0IF         ; 0x008
-        BCF       STATUS, RP0          ; 0x009: bank 0
-        MOVF      porta_shadow, W      ; 0x00A
-        MOVWF     PORTA                ; 0x00B
+        MOVWF     isr_w_save
+        MOVF      STATUS, W
+        MOVWF     isr_status_save
+        BCF       INTCON, T0IF
+        BCF       STATUS, RP0 ; bank 0
+        MOVF      porta_shadow, W
+        MOVWF     PORTA
 
-        DECFSZ    second_div_lo, F     ; 0x00C
-        GOTO      isr_tone_update      ; 0x00D
-        DECFSZ    second_div_hi, F     ; 0x00E
-        GOTO      isr_tone_update      ; 0x00F
-        MOVLW     0xA6                 ; 0x010
-        MOVWF     second_div_lo        ; 0x011
-        MOVLW     0x0E                 ; 0x012
-        MOVWF     second_div_hi        ; 0x013
+        DECFSZ    second_div_lo, F
+        GOTO      isr_tone_update
+        DECFSZ    second_div_hi, F
+        GOTO      isr_tone_update
+        MOVLW     0xA6
+        MOVWF     second_div_lo
+        MOVLW     0x0E
+        MOVWF     second_div_hi
 
-        MOVF      message_seconds, F   ; 0x014
-        BTFSS     STATUS, Z            ; 0x015
-        DECF      message_seconds, F   ; 0x016
+        MOVF      message_seconds, F
+        BTFSS     STATUS, Z
+        DECF      message_seconds, F
 
-        MOVF      phase_counter_hi, F  ; 0x017
-        BTFSS     STATUS, Z            ; 0x018
-        GOTO      isr_decrement_phase  ; 0x019
-        MOVF      phase_counter_lo, F  ; 0x01A
-        BTFSC     STATUS, Z            ; 0x01B
-        GOTO      isr_update_cooldown  ; 0x01C
+        MOVF      phase_counter_hi, F
+        BTFSS     STATUS, Z
+        GOTO      isr_decrement_phase
+        MOVF      phase_counter_lo, F
+        BTFSC     STATUS, Z
+        GOTO      isr_update_cooldown
 isr_decrement_phase:
-        MOVLW     0x01                 ; 0x01D
-        SUBWF     phase_counter_lo, F  ; 0x01E
-        MOVLW     0x00                 ; 0x01F
-        BTFSS     STATUS, C            ; 0x020: borrow from high byte
-        MOVLW     0x01                 ; 0x021
-        SUBWF     phase_counter_hi, F  ; 0x022
+        MOVLW     0x01
+        SUBWF     phase_counter_lo, F
+        MOVLW     0x00
+        BTFSS     STATUS, C ; borrow from high byte
+        MOVLW     0x01
+        SUBWF     phase_counter_hi, F
 
 isr_update_cooldown:
-        MOVF      callsign_cooldown_hi, F ; 0x023
-        BTFSS     STATUS, Z            ; 0x024
-        GOTO      isr_decrement_cooldown ; 0x025
-        MOVF      callsign_cooldown_lo, F ; 0x026
-        BTFSC     STATUS, Z            ; 0x027
-        GOTO      isr_second_epoch_update ; 0x028
+        MOVF      callsign_cooldown_hi, F
+        BTFSS     STATUS, Z
+        GOTO      isr_decrement_cooldown
+        MOVF      callsign_cooldown_lo, F
+        BTFSC     STATUS, Z
+        GOTO      isr_second_epoch_update
 isr_decrement_cooldown:
-        MOVLW     0x01                 ; 0x029
-        SUBWF     callsign_cooldown_lo, F ; 0x02A
-        MOVLW     0x00                 ; 0x02B
-        BTFSS     STATUS, C            ; 0x02C
-        MOVLW     0x01                 ; 0x02D
-        SUBWF     callsign_cooldown_hi, F ; 0x02E
+        MOVLW     0x01
+        SUBWF     callsign_cooldown_lo, F
+        MOVLW     0x00
+        BTFSS     STATUS, C
+        MOVLW     0x01
+        SUBWF     callsign_cooldown_hi, F
 
 isr_second_epoch_update:
-        INCF      seconds_mod64, F     ; 0x02F
-        MOVF      seconds_mod64, W     ; 0x030
-        ANDLW     0x3F                 ; 0x031
-        BTFSS     STATUS, Z            ; 0x032
-        GOTO      isr_tone_update      ; 0x033
-        BSF       interrupt_flag, 1    ; 0x034: 64-second epoch marker
-        MOVF      timing_trim, W       ; 0x035
-        ADDWF     second_div_lo, F     ; 0x036: lengthen one interval per epoch
-        BTFSC     STATUS, C            ; 0x037
-        INCF      second_div_hi, F     ; 0x038
+        INCF      seconds_mod64, F
+        MOVF      seconds_mod64, W
+        ANDLW     0x3F
+        BTFSS     STATUS, Z
+        GOTO      isr_tone_update
+        BSF       interrupt_flag, 1 ; 64-second epoch marker
+        MOVF      timing_trim, W
+        ADDWF     second_div_lo, F ; lengthen one interval per epoch
+        BTFSC     STATUS, C
+        INCF      second_div_hi, F
 
 isr_tone_update:
-        INCF      tone_phase, F        ; 0x039
-        MOVLW     0x88                 ; 0x03A
-        ADDWF     tone_phase, W        ; 0x03B: carry when phase reaches 0x78
-        BTFSC     STATUS, C            ; 0x03C
-        CLRF      tone_phase           ; 0x03D: 120-entry waveform period
-        BCF       porta_shadow, 0      ; 0x03E
-        BTFSC     tone_state, 7        ; 0x03F: silence suppresses waveform
-        GOTO      isr_aux_output       ; 0x040
-        MOVF      tone_phase, W        ; 0x041
-        CALL      tone_pattern_lookup  ; 0x042
-        MOVWF     tone_pattern         ; 0x043
-        CALL      bit_mask_lookup      ; 0x044
-        ANDWF     tone_pattern, F      ; 0x045
-        BTFSC     STATUS, Z            ; 0x046
-        BSF       porta_shadow, 0      ; 0x047
+        INCF      tone_phase, F
+        MOVLW     0x88
+        ADDWF     tone_phase, W ; carry when phase reaches 0x78
+        BTFSC     STATUS, C
+        CLRF      tone_phase ; 120-entry waveform period
+        BCF       porta_shadow, 0
+        BTFSC     tone_state, 7 ; silence suppresses waveform
+        GOTO      isr_aux_output
+        MOVF      tone_phase, W
+        CALL      tone_pattern_lookup
+        MOVWF     tone_pattern
+        CALL      bit_mask_lookup
+        ANDWF     tone_pattern, F
+        BTFSC     STATUS, Z
+        BSF       porta_shadow, 0
 
 isr_aux_output:
-        BCF       porta_shadow, 2      ; 0x048
-        BTFSS     tone_state, 7        ; 0x049
-        BSF       porta_shadow, 2      ; 0x04A
-        BTFSS     tone_phase, 0        ; 0x04B
-        GOTO      isr_signal_event     ; 0x04C
-        BTFSS     tone_phase, 1        ; 0x04D
-        GOTO      isr_signal_event     ; 0x04E
-        MOVF      tmr0_wait_count, F   ; 0x04F
-        BTFSS     STATUS, Z            ; 0x050
-        DECF      tmr0_wait_count, F   ; 0x051: every fourth overflow
+        BCF       porta_shadow, 2
+        BTFSS     tone_state, 7
+        BSF       porta_shadow, 2
+        BTFSS     tone_phase, 0
+        GOTO      isr_signal_event
+        BTFSS     tone_phase, 1
+        GOTO      isr_signal_event
+        MOVF      tmr0_wait_count, F
+        BTFSS     STATUS, Z
+        DECF      tmr0_wait_count, F ; every fourth overflow
 
 isr_signal_event:
-        BSF       interrupt_flag, 0    ; 0x052
-        MOVF      isr_status_save, W   ; 0x053
-        MOVWF     STATUS               ; 0x054
-        SWAPF     isr_w_save, F        ; 0x055
-        SWAPF     isr_w_save, W        ; 0x056
-        RETFIE                         ; 0x057
+        BSF       interrupt_flag, 0
+        MOVF      isr_status_save, W
+        MOVWF     STATUS
+        SWAPF     isr_w_save, F
+        SWAPF     isr_w_save, W
+        RETFIE
 
 startup:
-        CLRF      INTCON              ; 0x058: interrupts off
-        BCF       STATUS, RP0         ; 0x059: bank 0
-        MOVLW     0x08                ; 0x05A: RA3 latch high for service strap
-        MOVWF     PORTA               ; 0x05B
-        MOVLW     0x00                ; 0x05C
-        MOVWF     PORTB               ; 0x05D
-        BSF       STATUS, RP0         ; 0x05E: bank 1
-        MOVLW     0x08                ; 0x05F
-        MOVWF     OPTION_REG_FILE     ; 0x060: TMR0 from Fosc/4, no prescaler
-        MOVLW     0xE4                ; 0x061
-        MOVWF     TRISA_FILE          ; 0x062: RA3 output, RA2 input
-        MOVLW     0x00                ; 0x063
-        MOVWF     TRISB_FILE          ; 0x064
-        BCF       STATUS, RP0         ; 0x065: bank 0
-        MOVLW     0x03                ; 0x066
-        MOVWF     PCLATH              ; 0x067: computed tables live at 0x300
+        CLRF      INTCON ; interrupts off
+        BCF       STATUS, RP0 ; bank 0
+        MOVLW     0x08 ; RA3 latch high for service strap
+        MOVWF     PORTA
+        MOVLW     0x00
+        MOVWF     PORTB
+        BSF       STATUS, RP0 ; bank 1
+        MOVLW     0x08
+        MOVWF     OPTION_REG_FILE ; TMR0 from Fosc/4, no prescaler
+        MOVLW     0xE4
+        MOVWF     TRISA_FILE ; RA3 output, RA2 input
+        MOVLW     0x00
+        MOVWF     TRISB_FILE
+        BCF       STATUS, RP0 ; bank 0
+        MOVLW     0x03
+        MOVWF     PCLATH ; computed tables live at 0x300
 
-        MOVLW     0x0C                ; 0x068
-        MOVWF     FSR                 ; 0x069
+        MOVLW     0x0C
+        MOVWF     FSR
 clear_ram:
-        CLRF      INDF                ; 0x06A: clear RAM 0x0C..0x3F
-        INCF      FSR, F              ; 0x06B
-        BTFSS     FSR, 6              ; 0x06C
-        GOTO      clear_ram           ; 0x06D
+        CLRF      INDF ; clear RAM 0x0C..0x3F
+        INCF      FSR, F
+        BTFSS     FSR, 6
+        GOTO      clear_ram
 
-        MOVLW     0xA6                ; 0x06E
-        MOVWF     second_div_lo       ; 0x06F
-        MOVLW     0x0E                ; 0x070
-        MOVWF     second_div_hi       ; 0x071
-        MOVLW     0x83                ; 0x072
-        MOVWF     tone_state          ; 0x073
-        MOVLW     0x46                ; 0x074
-        MOVWF     morse_unit_ticks    ; 0x075
-        MOVLW     0x28                ; 0x076
-        CALL      eeprom_read         ; 0x077
-        MOVWF     timing_trim         ; 0x078
-        BTFSS     PORTA, 2            ; 0x079: low selects calibration mode
-        GOTO      service_mode        ; 0x07A
+        MOVLW     0xA6
+        MOVWF     second_div_lo
+        MOVLW     0x0E
+        MOVWF     second_div_hi
+        MOVLW     0x83
+        MOVWF     tone_state
+        MOVLW     0x46
+        MOVWF     morse_unit_ticks
+        MOVLW     0x28
+        CALL      eeprom_read
+        MOVWF     timing_trim
+        BTFSS     PORTA, 2 ; low selects calibration mode
+        GOTO      service_mode
 
-        CLRF      TMR0                ; 0x07B
-        BSF       INTCON, T0IE        ; 0x07C
-        BSF       INTCON, GIE         ; 0x07D
-        BSF       STATUS, RP0         ; 0x07E: bank 1
-        MOVLW     0xE8                ; 0x07F
-        MOVWF     TRISA_FILE          ; 0x080: RA2 output, RA3 input
-        CALL      read_switches       ; 0x081: returns in bank 0
-        MOVLW     0x0F                ; 0x082
-        ANDWF     switch_state, W     ; 0x083: isolate S1
-        MOVWF     message_index       ; 0x084
-        CALL      lfsr_seed_lookup    ; 0x085
-        MOVWF     lfsr_state          ; 0x086
+        CLRF      TMR0
+        BSF       INTCON, T0IE
+        BSF       INTCON, GIE
+        BSF       STATUS, RP0 ; bank 1
+        MOVLW     0xE8
+        MOVWF     TRISA_FILE ; RA2 output, RA3 input
+        CALL      read_switches ; returns in bank 0
+        MOVLW     0x0F
+        ANDWF     switch_state, W ; isolate S1
+        MOVWF     message_index
+        CALL      lfsr_seed_lookup
+        MOVWF     lfsr_state
 
-        BSF       porta_shadow, 1     ; 0x087: assert PTT
-        MOVLW     0x04                ; 0x088
-        MOVWF     message_seconds     ; 0x089
-        CALL      send_three_space_units ; 0x08A
-        CALL      message_dispatch    ; 0x08B
+        BSF       porta_shadow, 1 ; assert PTT
+        MOVLW     0x04
+        MOVWF     message_seconds
+        CALL      send_three_space_units
+        CALL      message_dispatch
 startup_wait_message:
-        MOVF      message_seconds, F  ; 0x08C
-        BTFSS     STATUS, Z           ; 0x08D
-        GOTO      startup_wait_message ; 0x08E
-        BCF       porta_shadow, 1     ; 0x08F: release PTT
+        MOVF      message_seconds, F
+        BTFSS     STATUS, Z
+        GOTO      startup_wait_message
+        BCF       porta_shadow, 1 ; release PTT
 
 ; Select one of four startup-delay records. The compact carry tests classify
 ; S1/S2 combinations into record numbers 0..3; doubling and adding 0x20 maps
 ; them to EEPROM pairs 0x20, 0x22, 0x24, or 0x26 (0/30/60/120 minutes).
 select_startup_delay:
-        CLRF      timing_record_addr  ; 0x090
-        SWAPF     switch_state, W     ; 0x091
-        ADDLW     0xB0                ; 0x092
-        BTFSS     STATUS, C           ; 0x093
-        GOTO      startup_delay_low_s2 ; 0x094
-        MOVF      switch_state, W     ; 0x095
-        ADDLW     0x80                ; 0x096
-        BTFSC     STATUS, C           ; 0x097
-        GOTO      startup_delay_inc_2 ; 0x098
-        GOTO      startup_delay_scale ; 0x099
+        CLRF      timing_record_addr
+        SWAPF     switch_state, W
+        ADDLW     0xB0
+        BTFSS     STATUS, C
+        GOTO      startup_delay_low_s2
+        MOVF      switch_state, W
+        ADDLW     0x80
+        BTFSC     STATUS, C
+        GOTO      startup_delay_inc_2
+        GOTO      startup_delay_scale
 startup_delay_low_s2:
-        MOVF      switch_state, W     ; 0x09A
-        ADDLW     0x10                ; 0x09B
-        BTFSC     STATUS, C           ; 0x09C
-        GOTO      startup_delay_inc_1 ; 0x09D
-        ADDLW     0x60                ; 0x09E
-        BTFSC     STATUS, C           ; 0x09F
-        GOTO      startup_delay_inc_2 ; 0x0A0
-        ADDLW     0x20                ; 0x0A1
-        BTFSC     STATUS, C           ; 0x0A2
-        GOTO      startup_delay_inc_3 ; 0x0A3
-        GOTO      startup_delay_scale ; 0x0A4
+        MOVF      switch_state, W
+        ADDLW     0x10
+        BTFSC     STATUS, C
+        GOTO      startup_delay_inc_1
+        ADDLW     0x60
+        BTFSC     STATUS, C
+        GOTO      startup_delay_inc_2
+        ADDLW     0x20
+        BTFSC     STATUS, C
+        GOTO      startup_delay_inc_3
+        GOTO      startup_delay_scale
 startup_delay_inc_1:
-        INCF      timing_record_addr, F ; 0x0A5
+        INCF      timing_record_addr, F
 startup_delay_inc_2:
-        INCF      timing_record_addr, F ; 0x0A6
+        INCF      timing_record_addr, F
 startup_delay_inc_3:
-        INCF      timing_record_addr, F ; 0x0A7
+        INCF      timing_record_addr, F
 startup_delay_scale:
-        MOVF      timing_record_addr, W ; 0x0A8
-        ADDWF     timing_record_addr, F ; 0x0A9: pair offset = 2*n
-        CALL      wait_for_tmr0_interrupt ; 0x0AA: align counter load
-        MOVLW     0x20                ; 0x0AB
-        ADDWF     timing_record_addr, F ; 0x0AC: startup table base
-        MOVF      timing_record_addr, W ; 0x0AD
-        CALL      eeprom_read         ; 0x0AE
-        MOVWF     phase_counter_hi    ; 0x0AF
-        INCF      timing_record_addr, W ; 0x0B0
-        CALL      eeprom_read         ; 0x0B1
-        MOVWF     phase_counter_lo    ; 0x0B2
+        MOVF      timing_record_addr, W
+        ADDWF     timing_record_addr, F ; pair offset = 2*n
+        CALL      wait_for_tmr0_interrupt ; align counter load
+        MOVLW     0x20
+        ADDWF     timing_record_addr, F ; startup table base
+        MOVF      timing_record_addr, W
+        CALL      eeprom_read
+        MOVWF     phase_counter_hi
+        INCF      timing_record_addr, W
+        CALL      eeprom_read
+        MOVWF     phase_counter_lo
 wait_startup_delay:
-        MOVF      phase_counter_hi, F ; 0x0B3
-        BTFSS     STATUS, Z           ; 0x0B4
-        GOTO      wait_startup_delay  ; 0x0B5
-        MOVF      phase_counter_lo, F ; 0x0B6
-        BTFSS     STATUS, Z           ; 0x0B7
-        GOTO      wait_startup_delay  ; 0x0B8
+        MOVF      phase_counter_hi, F
+        BTFSS     STATUS, Z
+        GOTO      wait_startup_delay
+        MOVF      phase_counter_lo, F
+        BTFSS     STATUS, Z
+        GOTO      wait_startup_delay
 wait_phase_counter_zero:
-        CALL      wait_for_tmr0_interrupt ; 0x0B9
-        MOVF      phase_counter_hi, F ; 0x0BA
-        BTFSS     STATUS, Z           ; 0x0BB
-        GOTO      wait_phase_counter_zero ; 0x0BC
-        MOVF      phase_counter_lo, F ; 0x0BD
-        BTFSS     STATUS, Z           ; 0x0BE
-        GOTO      wait_phase_counter_zero ; 0x0BF
+        CALL      wait_for_tmr0_interrupt
+        MOVF      phase_counter_hi, F
+        BTFSS     STATUS, Z
+        GOTO      wait_phase_counter_zero
+        MOVF      phase_counter_lo, F
+        BTFSS     STATUS, Z
+        GOTO      wait_phase_counter_zero
 
 ; Select the repeating timing pair. S1 0..4 uses EEPROM 0x00..0x0F; S1 5..F
 ; uses 0x10..0x1F. S2 bits 2:0 choose one of eight two-byte records.
 load_timing_profile:
-        CALL      read_switches       ; 0x0C0
-        CLRF      timing_record_addr  ; 0x0C1
-        SWAPF     switch_state, W     ; 0x0C2
-        ADDLW     0xB0                ; 0x0C3: carry iff S1 >= 5
-        CLRW                           ; 0x0C4: preserves carry on this core
-        BTFSC     STATUS, C           ; 0x0C5
-        MOVLW     0x10                ; 0x0C6
-        ADDWF     timing_record_addr, F ; 0x0C7: select timing table half
-        SWAPF     switch_state, W     ; 0x0C8
-        MOVWF     service_delay_lo    ; 0x0C9: scratch register
-        RLF       service_delay_lo, W ; 0x0CA
-        ANDLW     0x0E                ; 0x0CB: 2*(S2 & 7)
-        ADDWF     timing_record_addr, F ; 0x0CC
-        MOVLW     0x00                ; 0x0CD: preserved no-op from original
-        ADDWF     timing_record_addr, F ; 0x0CE
-        MOVF      timing_record_addr, W ; 0x0CF
-        CALL      eeprom_read         ; 0x0D0: first byte = transmit seconds
-        MOVWF     phase_counter_lo    ; 0x0D1
+        CALL      read_switches
+        CLRF      timing_record_addr
+        SWAPF     switch_state, W
+        ADDLW     0xB0 ; carry iff S1 >= 5
+        CLRW ; preserves carry on this core
+        BTFSC     STATUS, C
+        MOVLW     0x10
+        ADDWF     timing_record_addr, F ; select timing table half
+        SWAPF     switch_state, W
+        MOVWF     service_delay_lo ; scratch register
+        RLF       service_delay_lo, W
+        ANDLW     0x0E ; 2*(S2 & 7)
+        ADDWF     timing_record_addr, F
+        MOVLW     0x00 ; preserved no-op from original
+        ADDWF     timing_record_addr, F
+        MOVF      timing_record_addr, W
+        CALL      eeprom_read ; first byte = transmit seconds
+        MOVWF     phase_counter_lo
 
 transmit_message:
-        MOVLW     0x04                ; 0x0D2
-        MOVWF     message_seconds     ; 0x0D3
-        CALL      message_dispatch    ; 0x0D4
+        MOVLW     0x04
+        MOVWF     message_seconds
+        CALL      message_dispatch
 transmit_phase_loop:
-        CALL      wait_for_tmr0_interrupt ; 0x0D5
-        MOVF      phase_counter_hi, F ; 0x0D6
-        BTFSS     STATUS, Z           ; 0x0D7
-        GOTO      check_message_interval ; 0x0D8
-        MOVF      phase_counter_lo, W ; 0x0D9
-        BTFSC     STATUS, Z           ; 0x0DA
-        GOTO      begin_silent_phase  ; 0x0DB
-        XORLW     0x04                ; 0x0DC
-        BTFSC     STATUS, Z           ; 0x0DD
-        GOTO      maybe_send_callsign ; 0x0DE
+        CALL      wait_for_tmr0_interrupt
+        MOVF      phase_counter_hi, F
+        BTFSS     STATUS, Z
+        GOTO      check_message_interval
+        MOVF      phase_counter_lo, W
+        BTFSC     STATUS, Z
+        GOTO      begin_silent_phase
+        XORLW     0x04
+        BTFSC     STATUS, Z
+        GOTO      maybe_send_callsign
 check_message_interval:
-        MOVF      message_seconds, F  ; 0x0DF
-        BTFSS     STATUS, Z           ; 0x0E0
-        GOTO      transmit_phase_loop ; 0x0E1
-        GOTO      transmit_message    ; 0x0E2
+        MOVF      message_seconds, F
+        BTFSS     STATUS, Z
+        GOTO      transmit_phase_loop
+        GOTO      transmit_message
 
 maybe_send_callsign:
-        MOVF      callsign_cooldown_hi, F ; 0x0E3
-        BTFSS     STATUS, Z           ; 0x0E4
-        GOTO      transmit_message    ; 0x0E5
-        MOVF      callsign_cooldown_lo, F ; 0x0E6
-        BTFSS     STATUS, Z           ; 0x0E7
-        GOTO      transmit_message    ; 0x0E8
-        MOVLW     0x04                ; 0x0E9
-        MOVWF     message_seconds     ; 0x0EA
-        MOVLW     0x02                ; 0x0EB
-        MOVWF     callsign_cooldown_hi ; 0x0EC
-        MOVLW     0x58                ; 0x0ED: cooldown = 0x0258 = 600 s
-        MOVWF     callsign_cooldown_lo ; 0x0EE
-        CALL      send_callsign_n0puf ; 0x0EF
-        GOTO      transmit_phase_loop ; 0x0F0
+        MOVF      callsign_cooldown_hi, F
+        BTFSS     STATUS, Z
+        GOTO      transmit_message
+        MOVF      callsign_cooldown_lo, F
+        BTFSS     STATUS, Z
+        GOTO      transmit_message
+        MOVLW     0x04
+        MOVWF     message_seconds
+        MOVLW     0x02
+        MOVWF     callsign_cooldown_hi
+        MOVLW     0x58 ; cooldown = 0x0258 = 600 s
+        MOVWF     callsign_cooldown_lo
+        CALL      send_callsign_n0puf
+        GOTO      transmit_phase_loop
 
 begin_silent_phase:
-        INCF      timing_record_addr, W ; 0x0F1
-        CALL      eeprom_read         ; 0x0F2: second byte = silent seconds
-        MOVWF     phase_counter_lo    ; 0x0F3
-        MOVF      phase_counter_lo, F ; 0x0F4
-        BTFSC     STATUS, Z           ; 0x0F5
-        GOTO      wait_phase_counter_zero ; 0x0F6
-        BCF       porta_shadow, 1     ; 0x0F7: release PTT
-        BSF       tone_state, 7       ; 0x0F8: suppress tone waveform
+        INCF      timing_record_addr, W
+        CALL      eeprom_read ; second byte = silent seconds
+        MOVWF     phase_counter_lo
+        MOVF      phase_counter_lo, F
+        BTFSC     STATUS, Z
+        GOTO      wait_phase_counter_zero
+        BCF       porta_shadow, 1 ; release PTT
+        BSF       tone_state, 7 ; suppress tone waveform
 
 ; Non-fox S2 modes C/D/E optionally add 0..31 seconds of LFSR jitter to the
 ; silent phase. Other modes proceed directly to the common phase wait.
 maybe_add_silent_jitter:
-        SWAPF     switch_state, W     ; 0x0F9
-        ADDLW     0xB0                ; 0x0FA
-        BTFSS     STATUS, C           ; 0x0FB
-        GOTO      wait_phase_counter_zero ; 0x0FC
-        MOVF      switch_state, W     ; 0x0FD
-        ADDLW     0x90                ; 0x0FE
-        ANDLW     0x70                ; 0x0FF
-        ADDLW     0xB0                ; 0x100
-        BTFSS     STATUS, C           ; 0x101
-        GOTO      wait_phase_counter_zero ; 0x102
-        CALL      wait_for_tmr0_interrupt ; 0x103
-        MOVLW     0x1F                ; 0x104
-        ANDWF     lfsr_state, W       ; 0x105
-        ADDWF     phase_counter_lo, F ; 0x106
-        CALL      advance_lfsr_3      ; 0x107
-        GOTO      wait_phase_counter_zero ; 0x108
+        SWAPF     switch_state, W
+        ADDLW     0xB0
+        BTFSS     STATUS, C
+        GOTO      wait_phase_counter_zero
+        MOVF      switch_state, W
+        ADDLW     0x90
+        ANDLW     0x70
+        ADDLW     0xB0
+        BTFSS     STATUS, C
+        GOTO      wait_phase_counter_zero
+        CALL      wait_for_tmr0_interrupt
+        MOVLW     0x1F
+        ANDWF     lfsr_state, W
+        ADDWF     phase_counter_lo, F
+        CALL      advance_lfsr_3
+        GOTO      wait_phase_counter_zero
 
 send_callsign_n0puf:
-        MOVLW     0x31                ; 0x109: faster Morse timing
-        MOVWF     morse_unit_ticks    ; 0x10A
-        CALL      send_character_space ; 0x10B
-        CALL      send_morse_n        ; 0x10C
-        CALL      send_morse_0          ; 0x10D
-        CALL      send_morse_p        ; 0x10E
-        CALL      send_morse_u        ; 0x10F
-        CALL      send_morse_f          ; 0x110
-        RETURN                        ; 0x111
+        MOVLW     0x31 ; faster Morse timing
+        MOVWF     morse_unit_ticks
+        CALL      send_character_space
+        CALL      send_morse_n
+        CALL      send_morse_0
+        CALL      send_morse_p
+        CALL      send_morse_u
+        CALL      send_morse_f
+        RETURN
 
 ; Wait for the next TMR0 interrupt. The ISR sets interrupt_flag bit 0 on every
 ; overflow; clearing it first prevents a stale event from satisfying the wait.
 wait_for_tmr0_interrupt:
-        BCF       interrupt_flag, 0        ; 0x112
+        BCF       interrupt_flag, 0
 wait_for_tmr0_interrupt_loop:
-        BTFSS     interrupt_flag, 0        ; 0x113
-        GOTO      wait_for_tmr0_interrupt_loop ; 0x114
-        RETURN                            ; 0x115
+        BTFSS     interrupt_flag, 0
+        GOTO      wait_for_tmr0_interrupt_loop
+        RETURN
 
 ; Read the EEPROM byte whose address arrives in W and return its value in W.
 ; RP0 transitions are kept explicit because EEADR/EEDATA and EECON1 share file
 ; addresses across banks on the PIC16F84A.
 eeprom_read:
-        BCF       STATUS, RP0        ; 0x116: bank 0
-        MOVWF     EEADR              ; 0x117
-        BSF       STATUS, RP0        ; 0x118: bank 1
-        BSF       EECON1_FILE, RD    ; 0x119: initiate read
-        BCF       STATUS, RP0        ; 0x11A: bank 0
-        MOVF      EEDATA, W          ; 0x11B
-        RETURN                       ; 0x11C
+        BCF       STATUS, RP0 ; bank 0
+        MOVWF     EEADR
+        BSF       STATUS, RP0 ; bank 1
+        BSF       EECON1_FILE, RD ; initiate read
+        BCF       STATUS, RP0 ; bank 0
+        MOVF      EEDATA, W
+        RETURN
 
 ; Write the byte in W to the EEPROM address already loaded into EEADR. This is
 ; the standard PIC16F84A unlock sequence. The recovered code restores GIE
 ; unconditionally after starting the write, then polls EEIF for completion.
 eeprom_write:
-        BCF       STATUS, RP0         ; 0x11D: bank 0
-        MOVWF     EEDATA              ; 0x11E
-        BSF       STATUS, RP0         ; 0x11F: bank 1
-        BCF       INTCON, GIE         ; 0x120: protect unlock sequence
-        BSF       EECON1_FILE, WREN   ; 0x121
-        MOVLW     0x55                ; 0x122
-        MOVWF     EECON2_FILE         ; 0x123
-        MOVLW     0xAA                ; 0x124
-        MOVWF     EECON2_FILE         ; 0x125
-        BSF       EECON1_FILE, WR     ; 0x126: begin write
-        BSF       INTCON, GIE         ; 0x127
+        BCF       STATUS, RP0 ; bank 0
+        MOVWF     EEDATA
+        BSF       STATUS, RP0 ; bank 1
+        BCF       INTCON, GIE ; protect unlock sequence
+        BSF       EECON1_FILE, WREN
+        MOVLW     0x55
+        MOVWF     EECON2_FILE
+        MOVLW     0xAA
+        MOVWF     EECON2_FILE
+        BSF       EECON1_FILE, WR ; begin write
+        BSF       INTCON, GIE
 wait_for_eeprom_write:
-        BTFSS     EECON1_FILE, EEIF   ; 0x128
-        GOTO      wait_for_eeprom_write ; 0x129
-        BCF       EECON1_FILE, EEIF   ; 0x12A
-        BCF       EECON1_FILE, WREN   ; 0x12B
-        BCF       STATUS, RP0         ; 0x12C: bank 0
-        RETURN                        ; 0x12D
+        BTFSS     EECON1_FILE, EEIF
+        GOTO      wait_for_eeprom_write
+        BCF       EECON1_FILE, EEIF
+        BCF       EECON1_FILE, WREN
+        BCF       STATUS, RP0 ; bank 0
+        RETURN
 
 ; Advance the seven-bit pseudo-random state three times.
 advance_lfsr_3:
-        MOVLW     0x03                ; 0x12E
-        MOVWF     lfsr_steps          ; 0x12F
+        MOVLW     0x03
+        MOVWF     lfsr_steps
 advance_lfsr_3_loop:
-        CALL      advance_lfsr_1      ; 0x130
-        DECFSZ    lfsr_steps, F       ; 0x131
-        GOTO      advance_lfsr_3_loop ; 0x132
-        RETURN                        ; 0x133
+        CALL      advance_lfsr_1
+        DECFSZ    lfsr_steps, F
+        GOTO      advance_lfsr_3_loop
+        RETURN
 
 ; Advance the seven-bit LFSR in bits 6:0 of lfsr_state. Carry is loaded with
 ; bit0 XOR bit6, then rotated into bit0 while the old bit6 rotates into bit7.
 advance_lfsr_1:
-        BCF       STATUS, C           ; 0x134: default feedback = 0
-        BTFSC     lfsr_state, 0       ; 0x135
-        GOTO      lfsr_bit0_set       ; 0x136
-        BTFSC     lfsr_state, 6       ; 0x137: bit0=0 -> feedback=bit6
-        BSF       STATUS, C           ; 0x138
-        GOTO      lfsr_rotate         ; 0x139
+        BCF       STATUS, C ; default feedback = 0
+        BTFSC     lfsr_state, 0
+        GOTO      lfsr_bit0_set
+        BTFSC     lfsr_state, 6 ; bit0=0 -> feedback=bit6
+        BSF       STATUS, C
+        GOTO      lfsr_rotate
 lfsr_bit0_set:
-        BTFSS     lfsr_state, 6       ; 0x13A: bit0=1 -> feedback=!bit6
-        BSF       STATUS, C           ; 0x13B
+        BTFSS     lfsr_state, 6 ; bit0=1 -> feedback=!bit6
+        BSF       STATUS, C
 lfsr_rotate:
-        RLF       lfsr_state, F       ; 0x13C
-        RETURN                        ; 0x13D
+        RLF       lfsr_state, F
+        RETURN
 
 ; Read the two active-low hexadecimal switches on PORTB. The pins are inputs
 ; only for the sample; afterwards they return to outputs for the tone sequencer.
 read_switches:
-        BSF       STATUS, RP0         ; 0x13E: bank 1
-        MOVLW     0xFF                ; 0x13F
-        MOVWF     TRISB_FILE          ; 0x140: all PORTB pins inputs
-        BCF       STATUS, RP0         ; 0x141: bank 0
-        COMF      PORTB, W            ; 0x142: sample and invert active-low bits
-        MOVWF     switch_state        ; 0x143: S2 in high nibble, S1 in low
-        BSF       STATUS, RP0         ; 0x144: bank 1
-        CLRF      TRISB_FILE          ; 0x145: restore PORTB outputs
-        BCF       STATUS, RP0         ; 0x146: bank 0
-        RETURN                        ; 0x147
+        BSF       STATUS, RP0 ; bank 1
+        MOVLW     0xFF
+        MOVWF     TRISB_FILE ; all PORTB pins inputs
+        BCF       STATUS, RP0 ; bank 0
+        COMF      PORTB, W ; sample and invert active-low bits
+        MOVWF     switch_state ; S2 in high nibble, S1 in low
+        BSF       STATUS, RP0 ; bank 1
+        CLRF      TRISB_FILE ; restore PORTB outputs
+        BCF       STATUS, RP0 ; bank 0
+        RETURN
 
 ; Send W as two hexadecimal Morse digits, high nibble first, and preserve the
 ; original byte in W on return.
 send_hex_byte:
-        MOVWF     hex_byte            ; 0x148
-        SWAPF     hex_byte, W         ; 0x149
-        ANDLW     0x0F                ; 0x14A
-        CALL      hex_digit_dispatch  ; 0x14B
-        MOVF      hex_byte, W         ; 0x14C
-        ANDLW     0x0F                ; 0x14D
-        CALL      hex_digit_dispatch  ; 0x14E
-        MOVF      hex_byte, W         ; 0x14F
-        RETURN                        ; 0x150
+        MOVWF     hex_byte
+        SWAPF     hex_byte, W
+        ANDLW     0x0F
+        CALL      hex_digit_dispatch
+        MOVF      hex_byte, W
+        ANDLW     0x0F
+        CALL      hex_digit_dispatch
+        MOVF      hex_byte, W
+        RETURN
 
 ; Calibration/service mode entered when RA2 is held low during startup.
 service_mode:
 service_wait_release_restart:
-        CLRF      service_delay_lo    ; 0x151
-        MOVLW     0x7F                ; 0x152
-        MOVWF     service_delay_hi    ; 0x153
+        CLRF      service_delay_lo
+        MOVLW     0x7F
+        MOVWF     service_delay_hi
 service_wait_release:
-        BTFSS     PORTA, 2            ; 0x154: restart until RA2 is released
-        GOTO      service_wait_release_restart ; 0x155
-        DECFSZ    service_delay_lo, F ; 0x156
-        GOTO      service_wait_release ; 0x157
-        DECFSZ    service_delay_hi, F ; 0x158
-        GOTO      service_wait_release ; 0x159
+        BTFSS     PORTA, 2 ; restart until RA2 is released
+        GOTO      service_wait_release_restart
+        DECFSZ    service_delay_lo, F
+        GOTO      service_wait_release
+        DECFSZ    service_delay_hi, F
+        GOTO      service_wait_release
 
-        BSF       STATUS, RP0         ; 0x15A: bank 1
-        MOVLW     0xE8                ; 0x15B
-        MOVWF     TRISA_FILE          ; 0x15C: RA2 output, RA3 input
-        BCF       STATUS, RP0         ; 0x15D: bank 0
-        CALL      read_switches       ; 0x15E
-        MOVF      switch_state, F     ; 0x15F
-        BTFSC     STATUS, Z           ; 0x160
-        GOTO      halt_blink          ; 0x161: both switches zero
+        BSF       STATUS, RP0 ; bank 1
+        MOVLW     0xE8
+        MOVWF     TRISA_FILE ; RA2 output, RA3 input
+        BCF       STATUS, RP0 ; bank 0
+        CALL      read_switches
+        MOVF      switch_state, F
+        BTFSC     STATUS, Z
+        GOTO      halt_blink ; both switches zero
 
-        BSF       porta_shadow, 1     ; 0x162: assert PTT
-        CLRF      TMR0                ; 0x163
-        BSF       INTCON, T0IE        ; 0x164
-        BSF       INTCON, GIE         ; 0x165
+        BSF       porta_shadow, 1 ; assert PTT
+        CLRF      TMR0
+        BSF       INTCON, T0IE
+        BSF       INTCON, GIE
 
 service_announce:
-        CLRF      service_delay_lo    ; 0x166
-        MOVLW     0x7F                ; 0x167
-        MOVWF     service_delay_hi    ; 0x168
+        CLRF      service_delay_lo
+        MOVLW     0x7F
+        MOVWF     service_delay_hi
 service_announce_delay:
-        DECFSZ    service_delay_lo, F ; 0x169
-        GOTO      service_announce_delay ; 0x16A
-        DECFSZ    service_delay_hi, F ; 0x16B
-        GOTO      service_announce_delay ; 0x16C
-        CALL      send_three_space_units ; 0x16D
-        MOVF      timing_trim, W      ; 0x16E
-        CALL      send_hex_byte       ; 0x16F
-        MOVLW     0x05                ; 0x170
-        MOVWF     message_seconds     ; 0x171
+        DECFSZ    service_delay_lo, F
+        GOTO      service_announce_delay
+        DECFSZ    service_delay_hi, F
+        GOTO      service_announce_delay
+        CALL      send_three_space_units
+        MOVF      timing_trim, W
+        CALL      send_hex_byte
+        MOVLW     0x05
+        MOVWF     message_seconds
 
 service_poll_switch:
-        CALL      read_switches       ; 0x172
-        MOVF      switch_state, W     ; 0x173
-        ANDLW     0xF0                ; 0x174: inspect S2 only
-        BTFSS     STATUS, Z           ; 0x175
-        GOTO      service_apply_switch ; 0x176
-        MOVF      message_seconds, F  ; 0x177
-        BTFSS     STATUS, Z           ; 0x178
-        GOTO      service_apply_switch ; 0x179
-        CALL      send_three_space_units ; 0x17A
-        MOVLW     0x28                ; 0x17B
-        CALL      eeprom_read         ; 0x17C
-        CALL      send_hex_byte       ; 0x17D
-        GOTO      startup             ; 0x17E
+        CALL      read_switches
+        MOVF      switch_state, W
+        ANDLW     0xF0 ; inspect S2 only
+        BTFSS     STATUS, Z
+        GOTO      service_apply_switch
+        MOVF      message_seconds, F
+        BTFSS     STATUS, Z
+        GOTO      service_apply_switch
+        CALL      send_three_space_units
+        MOVLW     0x28
+        CALL      eeprom_read
+        CALL      send_hex_byte
+        GOTO      startup
 
 service_apply_switch:
-        BTFSS     switch_state, 7     ; 0x17F: S2 8-F decrements
-        GOTO      service_test_increment ; 0x180
-        DECF      timing_trim, F      ; 0x181
-        GOTO      service_save_trim   ; 0x182
+        BTFSS     switch_state, 7 ; S2 8-F decrements
+        GOTO      service_test_increment
+        DECF      timing_trim, F
+        GOTO      service_save_trim
 service_test_increment:
-        BTFSS     switch_state, 4     ; 0x183: odd S2 1,3,5,7 increments
-        GOTO      service_poll_switch ; 0x184
-        INCF      timing_trim, F      ; 0x185
+        BTFSS     switch_state, 4 ; odd S2 1,3,5,7 increments
+        GOTO      service_poll_switch
+        INCF      timing_trim, F
 service_save_trim:
-        MOVLW     0x28                ; 0x186
-        MOVWF     EEADR              ; 0x187
-        MOVF      timing_trim, W      ; 0x188
-        CALL      eeprom_write        ; 0x189
-        GOTO      service_announce    ; 0x18A
+        MOVLW     0x28
+        MOVWF     EEADR
+        MOVF      timing_trim, W
+        CALL      eeprom_write
+        GOTO      service_announce
 
 halt_blink:
-        BSF       PORTA, 2            ; 0x18B
-        BCF       INTCON, GIE         ; 0x18C
-        NOP                            ; 0x18D
-        BCF       PORTA, 2            ; 0x18E
-        GOTO      halt_blink          ; 0x18F
+        BSF       PORTA, 2
+        BCF       INTCON, GIE
+        NOP
+        BCF       PORTA, 2
+        GOTO      halt_blink
 
 ; Emit tone for one Morse time unit. W is preserved because these helpers are
 ; chained through nested letter routines. Clearing tone_state bit 7 enables the
 ; ISR's waveform path; the polarity is therefore opposite the old placeholder
 ; label inherited from the raw disassembly.
 morse_tone_unit:
-        MOVWF     saved_w             ; 0x190
-        MOVF      morse_unit_ticks, W ; 0x191
-        MOVWF     tmr0_wait_count     ; 0x192
-        BCF       tone_state, 7       ; 0x193: enable ISR tone waveform
+        MOVWF     saved_w
+        MOVF      morse_unit_ticks, W
+        MOVWF     tmr0_wait_count
+        BCF       tone_state, 7 ; enable ISR tone waveform
 morse_tone_wait:
-        MOVF      tmr0_wait_count, F  ; 0x194: ISR decrements this counter
-        BTFSS     STATUS, Z           ; 0x195
-        GOTO      morse_tone_wait     ; 0x196
-        MOVF      saved_w, W          ; 0x197
-        RETURN                        ; 0x198
+        MOVF      tmr0_wait_count, F ; ISR decrements this counter
+        BTFSS     STATUS, Z
+        GOTO      morse_tone_wait
+        MOVF      saved_w, W
+        RETURN
 
 ; Emit silence for one Morse time unit, preserving W.
 morse_silence_unit:
-        MOVWF     saved_w             ; 0x199
-        MOVF      morse_unit_ticks, W ; 0x19A
-        MOVWF     tmr0_wait_count     ; 0x19B
-        BSF       tone_state, 7       ; 0x19C: suppress ISR tone waveform
+        MOVWF     saved_w
+        MOVF      morse_unit_ticks, W
+        MOVWF     tmr0_wait_count
+        BSF       tone_state, 7 ; suppress ISR tone waveform
 morse_silence_wait:
-        MOVF      tmr0_wait_count, F  ; 0x19D
-        BTFSS     STATUS, Z           ; 0x19E
-        GOTO      morse_silence_wait  ; 0x19F
-        MOVF      saved_w, W          ; 0x1A0
-        RETURN                        ; 0x1A1
+        MOVF      tmr0_wait_count, F
+        BTFSS     STATUS, Z
+        GOTO      morse_silence_wait
+        MOVF      saved_w, W
+        RETURN
 
 morse_s_sequence:
-        CALL      send_dot                ; 0x1A2
-        GOTO      morse_i_sequence        ; 0x1A3
+        CALL      send_dot
+        GOTO      morse_i_sequence
 
 morse_d_sequence:
-        CALL      send_dash               ; 0x1A4
+        CALL      send_dash
 
 morse_i_sequence:
-        CALL      send_dot                ; 0x1A5
+        CALL      send_dot
 
 morse_e_sequence:
-        CALL      send_dot                ; 0x1A6
-        RETURN                            ; 0x1A7
+        CALL      send_dot
+        RETURN
 
 morse_w_sequence:
-        CALL      send_dot                ; 0x1A8
-        GOTO      morse_m_sequence        ; 0x1A9
+        CALL      send_dot
+        GOTO      morse_m_sequence
 
 morse_o_sequence:
-        CALL      send_dash               ; 0x1AA
+        CALL      send_dash
 
 morse_m_sequence:
-        CALL      send_dash               ; 0x1AB
+        CALL      send_dash
 morse_t_sequence:
-        CALL      send_dash               ; 0x1AC
-        RETURN                            ; 0x1AD
+        CALL      send_dash
+        RETURN
 
 morse_r_sequence:
-        CALL      send_dot                ; 0x1AE
-        GOTO      morse_n_sequence        ; 0x1AF
+        CALL      send_dot
+        GOTO      morse_n_sequence
 
 morse_g_sequence:
-        CALL      send_dash               ; 0x1B0
+        CALL      send_dash
 
 morse_n_sequence:
-        CALL      send_dash               ; 0x1B1
-        CALL      send_dot                ; 0x1B2
-        RETURN                            ; 0x1B3
+        CALL      send_dash
+        CALL      send_dot
+        RETURN
 
 morse_u_sequence:
-        CALL      send_dot                ; 0x1B4
-        GOTO      morse_u_tail            ; 0x1B5
+        CALL      send_dot
+        GOTO      morse_u_tail
 
 morse_k_sequence:
-        CALL      send_dash               ; 0x1B6
+        CALL      send_dash
 morse_u_tail:
-        CALL      send_dot                ; 0x1B7
-        CALL      send_dash               ; 0x1B8
-        RETURN                            ; 0x1B9
+        CALL      send_dot
+        CALL      send_dash
+        RETURN
 
 ; Element builders. A dot is one tone unit plus one silence unit; a dash is
 ; three tone units plus one silence unit.
 send_dot:
-        CALL      morse_tone_unit     ; 0x1BA
-        CALL      morse_silence_unit  ; 0x1BB
-        RETURN                        ; 0x1BC
+        CALL      morse_tone_unit
+        CALL      morse_silence_unit
+        RETURN
 
 send_dash:
-        CALL      morse_tone_unit     ; 0x1BD
-        CALL      morse_tone_unit     ; 0x1BE
-        CALL      morse_tone_unit     ; 0x1BF
-        CALL      morse_silence_unit  ; 0x1C0
-        RETURN                        ; 0x1C1
+        CALL      morse_tone_unit
+        CALL      morse_tone_unit
+        CALL      morse_tone_unit
+        CALL      morse_silence_unit
+        RETURN
 
 send_character_space:
-        CALL      morse_silence_unit  ; 0x1C2
+        CALL      morse_silence_unit
 send_three_space_units:
-        CALL      morse_silence_unit  ; 0x1C3
+        CALL      morse_silence_unit
 finish_character_space:
-        CALL      morse_silence_unit  ; 0x1C4
-        CALL      morse_silence_unit  ; 0x1C5
-        RETURN                        ; 0x1C6
+        CALL      morse_silence_unit
+        CALL      morse_silence_unit
+        RETURN
 
 send_morse_g:
-        CALL      morse_g_sequence        ; 0x1C7
-        GOTO      finish_character_space  ; 0x1C8
+        CALL      morse_g_sequence
+        GOTO      finish_character_space
 
 send_morse_h:
-        CALL      morse_s_sequence        ; 0x1C9
-        CALL      morse_e_sequence        ; 0x1CA
-        GOTO      finish_character_space  ; 0x1CB
+        CALL      morse_s_sequence
+        CALL      morse_e_sequence
+        GOTO      finish_character_space
 
 send_morse_i:
-        CALL      morse_i_sequence        ; 0x1CC
-        GOTO      finish_character_space  ; 0x1CD
+        CALL      morse_i_sequence
+        GOTO      finish_character_space
 
 send_morse_j:
-        CALL      morse_w_sequence        ; 0x1CE
-        CALL      morse_t_sequence        ; 0x1CF
-        GOTO      finish_character_space  ; 0x1D0
+        CALL      morse_w_sequence
+        CALL      morse_t_sequence
+        GOTO      finish_character_space
 
 send_morse_k:
-        CALL      morse_k_sequence        ; 0x1D1
-        GOTO      finish_character_space  ; 0x1D2
+        CALL      morse_k_sequence
+        GOTO      finish_character_space
 
 send_morse_l:
-        CALL      morse_r_sequence        ; 0x1D3
-        CALL      morse_e_sequence        ; 0x1D4
-        GOTO      finish_character_space  ; 0x1D5
+        CALL      morse_r_sequence
+        CALL      morse_e_sequence
+        GOTO      finish_character_space
 
 send_morse_m:
-        CALL      morse_m_sequence        ; 0x1D6
-        GOTO      finish_character_space  ; 0x1D7
+        CALL      morse_m_sequence
+        GOTO      finish_character_space
 
 send_morse_n:
-        CALL      morse_n_sequence        ; 0x1D8
-        GOTO      finish_character_space  ; 0x1D9
+        CALL      morse_n_sequence
+        GOTO      finish_character_space
 
 send_morse_o:
-        CALL      morse_o_sequence        ; 0x1DA
-        GOTO      finish_character_space  ; 0x1DB
+        CALL      morse_o_sequence
+        GOTO      finish_character_space
 
 send_morse_p:
-        CALL      morse_w_sequence        ; 0x1DC
-        CALL      morse_e_sequence        ; 0x1DD
-        GOTO      finish_character_space  ; 0x1DE
+        CALL      morse_w_sequence
+        CALL      morse_e_sequence
+        GOTO      finish_character_space
 
 send_morse_q:
-        CALL      morse_g_sequence        ; 0x1DF
-        CALL      morse_t_sequence        ; 0x1E0
-        GOTO      finish_character_space  ; 0x1E1
+        CALL      morse_g_sequence
+        CALL      morse_t_sequence
+        GOTO      finish_character_space
 
 send_morse_r:
-        CALL      morse_r_sequence        ; 0x1E2
-        GOTO      finish_character_space  ; 0x1E3
+        CALL      morse_r_sequence
+        GOTO      finish_character_space
 
 send_morse_s:
-        CALL      morse_s_sequence        ; 0x1E4
-        GOTO      finish_character_space  ; 0x1E5
+        CALL      morse_s_sequence
+        GOTO      finish_character_space
 
 send_morse_t:
-        CALL      morse_t_sequence        ; 0x1E6
-        GOTO      finish_character_space  ; 0x1E7
+        CALL      morse_t_sequence
+        GOTO      finish_character_space
 
 send_morse_u:
-        CALL      morse_u_sequence        ; 0x1E8
-        GOTO      finish_character_space  ; 0x1E9
+        CALL      morse_u_sequence
+        GOTO      finish_character_space
 
 send_morse_v:
-        CALL      morse_s_sequence        ; 0x1EA
-        CALL      morse_t_sequence        ; 0x1EB
-        GOTO      finish_character_space  ; 0x1EC
+        CALL      morse_s_sequence
+        CALL      morse_t_sequence
+        GOTO      finish_character_space
 
 send_morse_w:
-        CALL      morse_w_sequence        ; 0x1ED
-        GOTO      finish_character_space  ; 0x1EE
+        CALL      morse_w_sequence
+        GOTO      finish_character_space
 
 send_morse_x:
-        CALL      morse_d_sequence        ; 0x1EF
-        CALL      morse_t_sequence        ; 0x1F0
-        GOTO      finish_character_space  ; 0x1F1
+        CALL      morse_d_sequence
+        CALL      morse_t_sequence
+        GOTO      finish_character_space
 
 send_morse_y:
-        CALL      morse_k_sequence        ; 0x1F2
-        CALL      morse_t_sequence        ; 0x1F3
-        GOTO      finish_character_space  ; 0x1F4
+        CALL      morse_k_sequence
+        CALL      morse_t_sequence
+        GOTO      finish_character_space
 
 send_morse_z:
-        CALL      morse_g_sequence        ; 0x1F5
-        CALL      morse_e_sequence        ; 0x1F6
-        GOTO      finish_character_space  ; 0x1F7
+        CALL      morse_g_sequence
+        CALL      morse_e_sequence
+        GOTO      finish_character_space
 
 message_moe:
-        MOVLW     0x71                     ; 0x1F8
-        MOVWF     morse_unit_ticks         ; 0x1F9
-        MOVLW     0x83                     ; 0x1FA
-        MOVWF     tone_state               ; 0x1FB
-        CALL      send_three_space_units   ; 0x1FC
-        CALL      send_morse_m             ; 0x1FD
-        CALL      send_morse_o             ; 0x1FE
-        CALL      send_morse_e               ; 0x1FF
-        RETURN                             ; 0x200
+        MOVLW     0x71
+        MOVWF     morse_unit_ticks
+        MOVLW     0x83
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_m
+        CALL      send_morse_o
+        CALL      send_morse_e
+        RETURN
 
 message_moi:
-        MOVLW     0x69                     ; 0x201
-        MOVWF     morse_unit_ticks         ; 0x202
-        MOVLW     0x83                     ; 0x203
-        MOVWF     tone_state               ; 0x204
-        CALL      send_three_space_units   ; 0x205
-        CALL      send_morse_m             ; 0x206
-        CALL      send_morse_o             ; 0x207
-        CALL      send_morse_i             ; 0x208
-        RETURN                             ; 0x209
+        MOVLW     0x69
+        MOVWF     morse_unit_ticks
+        MOVLW     0x83
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_m
+        CALL      send_morse_o
+        CALL      send_morse_i
+        RETURN
 
 message_mos:
-        MOVLW     0x63                     ; 0x20A
-        MOVWF     morse_unit_ticks         ; 0x20B
-        MOVLW     0x83                     ; 0x20C
-        MOVWF     tone_state               ; 0x20D
-        CALL      send_three_space_units   ; 0x20E
-        CALL      send_morse_m             ; 0x20F
-        CALL      send_morse_o             ; 0x210
-        CALL      send_morse_s             ; 0x211
-        RETURN                             ; 0x212
+        MOVLW     0x63
+        MOVWF     morse_unit_ticks
+        MOVLW     0x83
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_m
+        CALL      send_morse_o
+        CALL      send_morse_s
+        RETURN
 
 message_moh:
-        MOVLW     0x5E                     ; 0x213
-        MOVWF     morse_unit_ticks         ; 0x214
-        MOVLW     0x83                     ; 0x215
-        MOVWF     tone_state               ; 0x216
-        CALL      send_three_space_units   ; 0x217
-        CALL      send_morse_m             ; 0x218
-        CALL      send_morse_o             ; 0x219
-        CALL      send_morse_h             ; 0x21A
-        RETURN                             ; 0x21B
+        MOVLW     0x5E
+        MOVWF     morse_unit_ticks
+        MOVLW     0x83
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_m
+        CALL      send_morse_o
+        CALL      send_morse_h
+        RETURN
 
 message_mo5:
-        MOVLW     0x59                     ; 0x21C
-        MOVWF     morse_unit_ticks         ; 0x21D
-        MOVLW     0x83                     ; 0x21E
-        MOVWF     tone_state               ; 0x21F
-        CALL      send_three_space_units   ; 0x220
-        CALL      send_morse_m             ; 0x221
-        CALL      send_morse_o             ; 0x222
-        CALL      send_morse_5               ; 0x223
-        RETURN                             ; 0x224
+        MOVLW     0x59
+        MOVWF     morse_unit_ticks
+        MOVLW     0x83
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_m
+        CALL      send_morse_o
+        CALL      send_morse_5
+        RETURN
 
 message_mo:
-        MOVLW     0x81                     ; 0x225
-        MOVWF     morse_unit_ticks         ; 0x226
-        MOVLW     0x83                     ; 0x227
-        MOVWF     tone_state               ; 0x228
-        CALL      send_three_space_units   ; 0x229
-        CALL      send_morse_m             ; 0x22A
-        CALL      send_morse_o             ; 0x22B
-        RETURN                             ; 0x22C
+        MOVLW     0x81
+        MOVWF     morse_unit_ticks
+        MOVLW     0x83
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_m
+        CALL      send_morse_o
+        RETURN
 
 message_a:
-        MOVLW     0x74                     ; 0x22D
-        MOVWF     morse_unit_ticks         ; 0x22E
-        MOVLW     0x80                     ; 0x22F
-        MOVWF     tone_state               ; 0x230
-        CALL      finish_character_space   ; 0x231
-        CALL      send_morse_a               ; 0x232
-        CALL      finish_character_space   ; 0x233
-        CALL      send_morse_a               ; 0x234
-        CALL      finish_character_space   ; 0x235
-        CALL      send_morse_a               ; 0x236
-        RETURN                             ; 0x237
+        MOVLW     0x74
+        MOVWF     morse_unit_ticks
+        MOVLW     0x80
+        MOVWF     tone_state
+        CALL      finish_character_space
+        CALL      send_morse_a
+        CALL      finish_character_space
+        CALL      send_morse_a
+        CALL      finish_character_space
+        CALL      send_morse_a
+        RETURN
 
 message_b:
-        MOVLW     0x74                     ; 0x238
-        MOVWF     morse_unit_ticks         ; 0x239
-        MOVLW     0x81                     ; 0x23A
-        MOVWF     tone_state               ; 0x23B
-        CALL      send_three_space_units   ; 0x23C
-        CALL      send_morse_b               ; 0x23D
-        CALL      send_three_space_units   ; 0x23E
-        CALL      send_morse_b               ; 0x23F
-        RETURN                             ; 0x240
+        MOVLW     0x74
+        MOVWF     morse_unit_ticks
+        MOVLW     0x81
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_b
+        CALL      send_three_space_units
+        CALL      send_morse_b
+        RETURN
 
 message_f:
-        MOVLW     0x74                     ; 0x241
-        MOVWF     morse_unit_ticks         ; 0x242
-        MOVLW     0x82                     ; 0x243
-        MOVWF     tone_state               ; 0x244
-        CALL      send_three_space_units   ; 0x245
-        CALL      send_morse_f               ; 0x246
-        CALL      send_three_space_units   ; 0x247
-        CALL      send_morse_f               ; 0x248
-        RETURN                             ; 0x249
+        MOVLW     0x74
+        MOVWF     morse_unit_ticks
+        MOVLW     0x82
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_f
+        CALL      send_three_space_units
+        CALL      send_morse_f
+        RETURN
 
 message_l:
-        MOVLW     0x74                     ; 0x24A
-        MOVWF     morse_unit_ticks         ; 0x24B
-        MOVLW     0x84                     ; 0x24C
-        MOVWF     tone_state               ; 0x24D
-        CALL      send_three_space_units   ; 0x24E
-        CALL      send_morse_l             ; 0x24F
-        CALL      send_three_space_units   ; 0x250
-        CALL      send_morse_l             ; 0x251
-        RETURN                             ; 0x252
+        MOVLW     0x74
+        MOVWF     morse_unit_ticks
+        MOVLW     0x84
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_l
+        CALL      send_three_space_units
+        CALL      send_morse_l
+        RETURN
 
 message_n:
-        MOVLW     0x74                     ; 0x253
-        MOVWF     morse_unit_ticks         ; 0x254
-        MOVLW     0x85                     ; 0x255
-        MOVWF     tone_state               ; 0x256
-        CALL      finish_character_space   ; 0x257
-        CALL      send_morse_n             ; 0x258
-        CALL      finish_character_space   ; 0x259
-        CALL      send_morse_n             ; 0x25A
-        CALL      finish_character_space   ; 0x25B
-        CALL      send_morse_n             ; 0x25C
-        RETURN                             ; 0x25D
+        MOVLW     0x74
+        MOVWF     morse_unit_ticks
+        MOVLW     0x85
+        MOVWF     tone_state
+        CALL      finish_character_space
+        CALL      send_morse_n
+        CALL      finish_character_space
+        CALL      send_morse_n
+        CALL      finish_character_space
+        CALL      send_morse_n
+        RETURN
 
 message_p:
-        MOVLW     0x66                     ; 0x25E
-        MOVWF     morse_unit_ticks         ; 0x25F
-        MOVLW     0x86                     ; 0x260
-        MOVWF     tone_state               ; 0x261
-        CALL      send_three_space_units   ; 0x262
-        CALL      send_morse_p             ; 0x263
-        CALL      send_three_space_units   ; 0x264
-        CALL      send_morse_p             ; 0x265
-        RETURN                             ; 0x266
+        MOVLW     0x66
+        MOVWF     morse_unit_ticks
+        MOVLW     0x86
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_p
+        CALL      send_three_space_units
+        CALL      send_morse_p
+        RETURN
 
 message_v:
-        MOVLW     0x74                     ; 0x267
-        MOVWF     morse_unit_ticks         ; 0x268
-        MOVLW     0x87                     ; 0x269
-        MOVWF     tone_state               ; 0x26A
-        CALL      send_three_space_units   ; 0x26B
-        CALL      send_morse_v             ; 0x26C
-        CALL      send_three_space_units   ; 0x26D
-        CALL      send_morse_v             ; 0x26E
-        RETURN                             ; 0x26F
+        MOVLW     0x74
+        MOVWF     morse_unit_ticks
+        MOVLW     0x87
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_v
+        CALL      send_three_space_units
+        CALL      send_morse_v
+        RETURN
 
 message_x:
-        MOVLW     0x66                     ; 0x270
-        MOVWF     morse_unit_ticks         ; 0x271
-        MOVLW     0x80                     ; 0x272
-        MOVWF     tone_state               ; 0x273
-        CALL      send_three_space_units   ; 0x274
-        CALL      send_morse_x             ; 0x275
-        CALL      send_three_space_units   ; 0x276
-        CALL      send_morse_x             ; 0x277
-        RETURN                             ; 0x278
+        MOVLW     0x66
+        MOVWF     morse_unit_ticks
+        MOVLW     0x80
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_x
+        CALL      send_three_space_units
+        CALL      send_morse_x
+        RETURN
 
 message_z:
-        MOVLW     0x66                     ; 0x279
-        MOVWF     morse_unit_ticks         ; 0x27A
-        MOVLW     0x81                     ; 0x27B
-        MOVWF     tone_state               ; 0x27C
-        CALL      send_three_space_units   ; 0x27D
-        CALL      send_morse_z             ; 0x27E
-        CALL      send_three_space_units   ; 0x27F
-        CALL      send_morse_z             ; 0x280
-        RETURN                             ; 0x281
+        MOVLW     0x66
+        MOVWF     morse_unit_ticks
+        MOVLW     0x81
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_z
+        CALL      send_three_space_units
+        CALL      send_morse_z
+        RETURN
 
 message_fox:
-        MOVLW     0x52                     ; 0x282
-        MOVWF     morse_unit_ticks         ; 0x283
-        MOVLW     0x83                     ; 0x284
-        MOVWF     tone_state               ; 0x285
-        CALL      send_three_space_units   ; 0x286
-        CALL      send_morse_f               ; 0x287
-        CALL      send_morse_o             ; 0x288
-        CALL      send_morse_x             ; 0x289
-        RETURN                             ; 0x28A
-        DW        0x3FFF    ; 0x28B: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x28C: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x28D: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x28E: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x28F: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x290: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x291: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x292: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x293: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x294: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x295: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x296: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x297: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x298: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x299: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x29A: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x29B: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x29C: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x29D: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x29E: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x29F: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A0: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A1: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A2: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A3: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A4: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A5: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A6: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A7: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A8: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2A9: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2AA: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2AB: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2AC: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2AD: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2AE: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2AF: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B0: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B1: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B2: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B3: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B4: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B5: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B6: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B7: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B8: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2B9: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2BA: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2BB: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2BC: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2BD: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2BE: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2BF: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C0: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C1: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C2: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C3: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C4: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C5: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C6: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C7: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C8: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2C9: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2CA: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2CB: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2CC: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2CD: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2CE: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2CF: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D0: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D1: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D2: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D3: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D4: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D5: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D6: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D7: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D8: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2D9: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2DA: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2DB: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2DC: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2DD: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2DE: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2DF: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E0: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E1: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E2: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E3: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E4: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E5: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E6: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E7: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E8: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2E9: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2EA: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2EB: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2EC: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2ED: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2EE: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2EF: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F0: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F1: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F2: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F3: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F4: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F5: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F6: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F7: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F8: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2F9: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2FA: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2FB: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2FC: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2FD: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2FE: erased (instruction encoding: addlw 0xFF)
-        DW        0x3FFF    ; 0x2FF: erased (instruction encoding: addlw 0xFF)
+        MOVLW     0x52
+        MOVWF     morse_unit_ticks
+        MOVLW     0x83
+        MOVWF     tone_state
+        CALL      send_three_space_units
+        CALL      send_morse_f
+        CALL      send_morse_o
+        CALL      send_morse_x
+        RETURN
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
+        DW        0x3FFF ; erased (instruction encoding: addlw 0xFF)
 
 ; Send the low nibble of W as a hexadecimal Morse character. Every table entry
 ; occupies three words so 3*n can index it directly; NOP pads short A/D/E forms.
 hex_digit_dispatch:
-        ANDLW     0x0F                ; 0x300
-        MOVWF     hex_digit_index     ; 0x301
-        ADDWF     hex_digit_index, W  ; 0x302: 2*n
-        ADDWF     hex_digit_index, W  ; 0x303: 3*n
-        ADDWF     PCL, F              ; 0x304
+        ANDLW     0x0F
+        MOVWF     hex_digit_index
+        ADDWF     hex_digit_index, W ; 2*n
+        ADDWF     hex_digit_index, W ; 3*n
+        ADDWF     PCL, F
 send_morse_0:
-        CALL      morse_o_sequence    ; 0x305: ---
-        CALL      morse_m_sequence    ; 0x306: --
-        GOTO      finish_character_space ; 0x307
+        CALL      morse_o_sequence ; ---
+        CALL      morse_m_sequence ; --
+        GOTO      finish_character_space
 send_morse_1:
-        CALL      morse_w_sequence    ; 0x308: .--
-        CALL      morse_m_sequence    ; 0x309: --
-        GOTO      finish_character_space ; 0x30A
+        CALL      morse_w_sequence ; .--
+        CALL      morse_m_sequence ; --
+        GOTO      finish_character_space
 send_morse_2:
-        CALL      morse_u_sequence    ; 0x30B: ..-
-        CALL      morse_m_sequence    ; 0x30C: --
-        GOTO      finish_character_space ; 0x30D
+        CALL      morse_u_sequence ; ..-
+        CALL      morse_m_sequence ; --
+        GOTO      finish_character_space
 send_morse_3:
-        CALL      morse_s_sequence    ; 0x30E: ...
-        CALL      morse_m_sequence    ; 0x30F: --
-        GOTO      finish_character_space ; 0x310
+        CALL      morse_s_sequence ; ...
+        CALL      morse_m_sequence ; --
+        GOTO      finish_character_space
 send_morse_4:
-        CALL      morse_s_sequence    ; 0x311: ...
-        CALL      morse_u_tail        ; 0x312: .-
-        GOTO      finish_character_space ; 0x313
+        CALL      morse_s_sequence ; ...
+        CALL      morse_u_tail ; .-
+        GOTO      finish_character_space
 send_morse_5:
-        CALL      morse_s_sequence    ; 0x314: ...
-        CALL      morse_i_sequence    ; 0x315: ..
-        GOTO      finish_character_space ; 0x316
+        CALL      morse_s_sequence ; ...
+        CALL      morse_i_sequence ; ..
+        GOTO      finish_character_space
 send_morse_6:
-        CALL      morse_d_sequence    ; 0x317: -..
-        CALL      morse_i_sequence    ; 0x318: ..
-        GOTO      finish_character_space ; 0x319
+        CALL      morse_d_sequence ; -..
+        CALL      morse_i_sequence ; ..
+        GOTO      finish_character_space
 send_morse_7:
-        CALL      morse_g_sequence    ; 0x31A: --.
-        CALL      morse_i_sequence    ; 0x31B: ..
-        GOTO      finish_character_space ; 0x31C
+        CALL      morse_g_sequence ; --.
+        CALL      morse_i_sequence ; ..
+        GOTO      finish_character_space
 send_morse_8:
-        CALL      morse_o_sequence    ; 0x31D: ---
-        CALL      morse_i_sequence    ; 0x31E: ..
-        GOTO      finish_character_space ; 0x31F
+        CALL      morse_o_sequence ; ---
+        CALL      morse_i_sequence ; ..
+        GOTO      finish_character_space
 send_morse_9:
-        CALL      morse_o_sequence    ; 0x320: ---
-        CALL      morse_n_sequence    ; 0x321: -.
-        GOTO      finish_character_space ; 0x322
+        CALL      morse_o_sequence ; ---
+        CALL      morse_n_sequence ; -.
+        GOTO      finish_character_space
 send_morse_a:
-        CALL      morse_u_tail        ; 0x323: .-
-        GOTO      finish_character_space ; 0x324
-        NOP                             ; 0x325: table padding
+        CALL      morse_u_tail ; .-
+        GOTO      finish_character_space
+        NOP ; table padding
 send_morse_b:
-        CALL      morse_d_sequence    ; 0x326: -..
-        CALL      morse_e_sequence    ; 0x327: .
-        GOTO      finish_character_space ; 0x328
+        CALL      morse_d_sequence ; -..
+        CALL      morse_e_sequence ; .
+        GOTO      finish_character_space
 send_morse_c:
-        CALL      morse_n_sequence    ; 0x329: -.
-        CALL      morse_n_sequence    ; 0x32A: -.
-        GOTO      finish_character_space ; 0x32B
+        CALL      morse_n_sequence ; -.
+        CALL      morse_n_sequence ; -.
+        GOTO      finish_character_space
 send_morse_d:
-        CALL      morse_d_sequence    ; 0x32C: -..
-        GOTO      finish_character_space ; 0x32D
-        NOP                             ; 0x32E: table padding
+        CALL      morse_d_sequence ; -..
+        GOTO      finish_character_space
+        NOP ; table padding
 send_morse_e:
-        CALL      morse_e_sequence    ; 0x32F: .
-        GOTO      finish_character_space ; 0x330
-        NOP                             ; 0x331: table padding
+        CALL      morse_e_sequence ; .
+        GOTO      finish_character_space
+        NOP ; table padding
 send_morse_f:
-        CALL      morse_u_sequence    ; 0x332: ..-
-        CALL      morse_e_sequence    ; 0x333: .
-        GOTO      finish_character_space ; 0x334
+        CALL      morse_u_sequence ; ..-
+        CALL      morse_e_sequence ; .
+        GOTO      finish_character_space
 
 ; Convert tone_state bits 2:0 into the corresponding PORTB bit mask.
 bit_mask_lookup:
-        MOVF      tone_state, W       ; 0x335
-        ANDLW     0x07                ; 0x336
-        ADDWF     PCL, F              ; 0x337
-        RETLW     0x10                ; 0x338
-        RETLW     0x40                ; 0x339
-        RETLW     0x01                ; 0x33A
-        RETLW     0x20                ; 0x33B
-        RETLW     0x08                ; 0x33C
-        RETLW     0x02                ; 0x33D
-        RETLW     0x80                ; 0x33E
-        RETLW     0x04                ; 0x33F
+        MOVF      tone_state, W
+        ANDLW     0x07
+        ADDWF     PCL, F
+        RETLW     0x10
+        RETLW     0x40
+        RETLW     0x01
+        RETLW     0x20
+        RETLW     0x08
+        RETLW     0x02
+        RETLW     0x80
+        RETLW     0x04
 
 ; Key the transmitter, resample S1, and tail-dispatch its low nibble to one of
 ; the sixteen message routines. PCLATH was initialized to page 3 at startup.
 message_dispatch:
-        BSF       porta_shadow, 1     ; 0x340: assert PTT through RA1
-        CALL      read_switches       ; 0x341
-        MOVF      switch_state, W     ; 0x342
-        ANDLW     0x0F                ; 0x343: S1 only
-        MOVWF     message_index       ; 0x344
-        ADDWF     PCL, F              ; 0x345
-        GOTO      message_moe         ; 0x346: S1=0
-        GOTO      message_moi         ; 0x347: S1=1
-        GOTO      message_mos         ; 0x348: S1=2
-        GOTO      message_moh         ; 0x349: S1=3
-        GOTO      message_mo5         ; 0x34A: S1=4
-        GOTO      message_mo          ; 0x34B: S1=5
-        GOTO      message_a           ; 0x34C: S1=6
-        GOTO      message_b           ; 0x34D: S1=7
-        GOTO      message_f           ; 0x34E: S1=8
-        GOTO      message_l           ; 0x34F: S1=9
-        GOTO      message_n           ; 0x350: S1=A
-        GOTO      message_p           ; 0x351: S1=B
-        GOTO      message_v           ; 0x352: S1=C
-        GOTO      message_x           ; 0x353: S1=D
-        GOTO      message_z           ; 0x354: S1=E
-        GOTO      message_fox         ; 0x355: S1=F
+        BSF       porta_shadow, 1 ; assert PTT through RA1
+        CALL      read_switches
+        MOVF      switch_state, W
+        ANDLW     0x0F ; S1 only
+        MOVWF     message_index
+        ADDWF     PCL, F
+        GOTO      message_moe ; S1=0
+        GOTO      message_moi ; S1=1
+        GOTO      message_mos ; S1=2
+        GOTO      message_moh ; S1=3
+        GOTO      message_mo5 ; S1=4
+        GOTO      message_mo ; S1=5
+        GOTO      message_a ; S1=6
+        GOTO      message_b ; S1=7
+        GOTO      message_f ; S1=8
+        GOTO      message_l ; S1=9
+        GOTO      message_n ; S1=A
+        GOTO      message_p ; S1=B
+        GOTO      message_v ; S1=C
+        GOTO      message_x ; S1=D
+        GOTO      message_z ; S1=E
+        GOTO      message_fox ; S1=F
 
 ; Map the low-nibble switch index in W to a nonzero pseudo-random seed.
 ; Callers prove W is in the range 0..15 and PCLATH selects this code page.
 lfsr_seed_lookup:
-        ADDWF     PCL, F              ; 0x356
-        RETLW     0xFE                ; 0x357: S1=0
-        RETLW     0xCE                ; 0x358: S1=1
-        RETLW     0x5B                ; 0x359: S1=2
-        RETLW     0x34                ; 0x35A: S1=3
-        RETLW     0x4F                ; 0x35B: S1=4
-        RETLW     0x40                ; 0x35C: S1=5
-        RETLW     0x54                ; 0x35D: S1=6
-        RETLW     0x70                ; 0x35E: S1=7
-        RETLW     0x7B                ; 0x35F: S1=8
-        RETLW     0x30                ; 0x360: S1=9
-        RETLW     0xE9                ; 0x361: S1=A
-        RETLW     0xBE                ; 0x362: S1=B
-        RETLW     0x14                ; 0x363: S1=C
-        RETLW     0x63                ; 0x364: S1=D
-        RETLW     0x57                ; 0x365: S1=E
-        RETLW     0x24                ; 0x366: S1=F
+        ADDWF     PCL, F
+        RETLW     0xFE ; S1=0
+        RETLW     0xCE ; S1=1
+        RETLW     0x5B ; S1=2
+        RETLW     0x34 ; S1=3
+        RETLW     0x4F ; S1=4
+        RETLW     0x40 ; S1=5
+        RETLW     0x54 ; S1=6
+        RETLW     0x70 ; S1=7
+        RETLW     0x7B ; S1=8
+        RETLW     0x30 ; S1=9
+        RETLW     0xE9 ; S1=A
+        RETLW     0xBE ; S1=B
+        RETLW     0x14 ; S1=C
+        RETLW     0x63 ; S1=D
+        RETLW     0x57 ; S1=E
+        RETLW     0x24 ; S1=F
 
 tone_pattern_lookup:
-        ADDWF     PCL, F                   ; 0x367
-        RETLW     0xFF                     ; 0x368
-        RETLW     0x3B                     ; 0x369
-        RETLW     0x8D                     ; 0x36A
-        RETLW     0x43                     ; 0x36B
-        RETLW     0xA0                     ; 0x36C
-        RETLW     0x34                     ; 0x36D
-        RETLW     0xDA                     ; 0x36E
-        RETLW     0x0E                     ; 0x36F
-        RETLW     0xA9                     ; 0x370
-        RETLW     0x63                     ; 0x371
-        RETLW     0x95                     ; 0x372
-        RETLW     0x11                     ; 0x373
-        RETLW     0xEE                     ; 0x374
-        RETLW     0x2A                     ; 0x375
-        RETLW     0x88                     ; 0x376
-        RETLW     0x56                     ; 0x377
-        RETLW     0xB1                     ; 0x378
-        RETLW     0x25                     ; 0x379
-        RETLW     0xCB                     ; 0x37A
-        RETLW     0x0B                     ; 0x37B
-        RETLW     0xBC                     ; 0x37C
-        RETLW     0x72                     ; 0x37D
-        RETLW     0x84                     ; 0x37E
-        RETLW     0x00                     ; 0x37F
-        RETLW     0xEB                     ; 0x380
-        RETLW     0x3F                     ; 0x381
-        RETLW     0x99                     ; 0x382
-        RETLW     0x47                     ; 0x383
-        RETLW     0xA0                     ; 0x384
-        RETLW     0x20                     ; 0x385
-        RETLW     0xDE                     ; 0x386
-        RETLW     0x1A                     ; 0x387
-        RETLW     0xAD                     ; 0x388
-        RETLW     0x63                     ; 0x389
-        RETLW     0x81                     ; 0x38A
-        RETLW     0x15                     ; 0x38B
-        RETLW     0xFA                     ; 0x38C
-        RETLW     0x2E                     ; 0x38D
-        RETLW     0x88                     ; 0x38E
-        RETLW     0x42                     ; 0x38F
-        RETLW     0xB5                     ; 0x390
-        RETLW     0x31                     ; 0x391
-        RETLW     0xCF                     ; 0x392
-        RETLW     0x0B                     ; 0x393
-        RETLW     0xA8                     ; 0x394
-        RETLW     0x76                     ; 0x395
-        RETLW     0x90                     ; 0x396
-        RETLW     0x04                     ; 0x397
-        RETLW     0xEB                     ; 0x398
-        RETLW     0x2B                     ; 0x399
-        RETLW     0x9D                     ; 0x39A
-        RETLW     0x53                     ; 0x39B
-        RETLW     0xA4                     ; 0x39C
-        RETLW     0x20                     ; 0x39D
-        RETLW     0xCA                     ; 0x39E
-        RETLW     0x1E                     ; 0x39F
-        RETLW     0xB9                     ; 0x3A0
-        RETLW     0x67                     ; 0x3A1
-        RETLW     0x81                     ; 0x3A2
-        RETLW     0x01                     ; 0x3A3
-        RETLW     0xFE                     ; 0x3A4
-        RETLW     0x3A                     ; 0x3A5
-        RETLW     0x8C                     ; 0x3A6
-        RETLW     0x42                     ; 0x3A7
-        RETLW     0xA1                     ; 0x3A8
-        RETLW     0x35                     ; 0x3A9
-        RETLW     0xDB                     ; 0x3AA
-        RETLW     0x0F                     ; 0x3AB
-        RETLW     0xA8                     ; 0x3AC
-        RETLW     0x62                     ; 0x3AD
-        RETLW     0x94                     ; 0x3AE
-        RETLW     0x10                     ; 0x3AF
-        RETLW     0xEF                     ; 0x3B0
-        RETLW     0x2B                     ; 0x3B1
-        RETLW     0x89                     ; 0x3B2
-        RETLW     0x57                     ; 0x3B3
-        RETLW     0xB0                     ; 0x3B4
-        RETLW     0x24                     ; 0x3B5
-        RETLW     0xCA                     ; 0x3B6
-        RETLW     0x0A                     ; 0x3B7
-        RETLW     0xBD                     ; 0x3B8
-        RETLW     0x73                     ; 0x3B9
-        RETLW     0x85                     ; 0x3BA
-        RETLW     0x01                     ; 0x3BB
-        RETLW     0xEA                     ; 0x3BC
-        RETLW     0x3E                     ; 0x3BD
-        RETLW     0x98                     ; 0x3BE
-        RETLW     0x46                     ; 0x3BF
-        RETLW     0xA1                     ; 0x3C0
-        RETLW     0x21                     ; 0x3C1
-        RETLW     0xDF                     ; 0x3C2
-        RETLW     0x1B                     ; 0x3C3
-        RETLW     0xAC                     ; 0x3C4
-        RETLW     0x62                     ; 0x3C5
-        RETLW     0x80                     ; 0x3C6
-        RETLW     0x14                     ; 0x3C7
-        RETLW     0xFB                     ; 0x3C8
-        RETLW     0x2F                     ; 0x3C9
-        RETLW     0x89                     ; 0x3CA
-        RETLW     0x43                     ; 0x3CB
-        RETLW     0xB4                     ; 0x3CC
-        RETLW     0x30                     ; 0x3CD
-        RETLW     0xCE                     ; 0x3CE
-        RETLW     0x0A                     ; 0x3CF
-        RETLW     0xA9                     ; 0x3D0
-        RETLW     0x77                     ; 0x3D1
-        RETLW     0x91                     ; 0x3D2
-        RETLW     0x05                     ; 0x3D3
-        RETLW     0xEA                     ; 0x3D4
-        RETLW     0x2A                     ; 0x3D5
-        RETLW     0x9C                     ; 0x3D6
-        RETLW     0x52                     ; 0x3D7
-        RETLW     0xA5                     ; 0x3D8
-        RETLW     0x21                     ; 0x3D9
-        RETLW     0xCB                     ; 0x3DA
-        RETLW     0x1F                     ; 0x3DB
-        RETLW     0xB8                     ; 0x3DC
-        RETLW     0x66                     ; 0x3DD
-        RETLW     0x80                     ; 0x3DE
-        RETLW     0x00                     ; 0x3DF
-        RETLW     0xA1                     ; 0x3E0
-        RETLW     0x21                     ; 0x3E1
-        RETLW     0xDF                     ; 0x3E2
-        RETLW     0x1B                     ; 0x3E3
-        RETLW     0xAC                     ; 0x3E4
-        RETLW     0x62                     ; 0x3E5
-        RETLW     0x80                     ; 0x3E6
-        RETLW     0x14                     ; 0x3E7
-        RETLW     0xFB                     ; 0x3E8
-        RETLW     0x2F                     ; 0x3E9
-        RETLW     0x89                     ; 0x3EA
-        RETLW     0x43                     ; 0x3EB
-        RETLW     0xB4                     ; 0x3EC
-        RETLW     0x30                     ; 0x3ED
-        RETLW     0xCE                     ; 0x3EE
-        RETLW     0x0A                     ; 0x3EF
-        RETLW     0xA9                     ; 0x3F0
-        RETLW     0x77                     ; 0x3F1
-        RETLW     0x91                     ; 0x3F2
-        RETLW     0x05                     ; 0x3F3
-        RETLW     0xEA                     ; 0x3F4
-        RETLW     0x2A                     ; 0x3F5
-        RETLW     0x9C                     ; 0x3F6
-        RETLW     0x52                     ; 0x3F7
-        RETLW     0xA5                     ; 0x3F8
-        RETLW     0x21                     ; 0x3F9
-        RETLW     0xCB                     ; 0x3FA
-        RETLW     0x1F                     ; 0x3FB
-        RETLW     0xB8                     ; 0x3FC
-        RETLW     0x66                     ; 0x3FD
-        RETLW     0x80                     ; 0x3FE
-        RETLW     0x00                     ; 0x3FF
+        ADDWF     PCL, F
+        RETLW     0xFF
+        RETLW     0x3B
+        RETLW     0x8D
+        RETLW     0x43
+        RETLW     0xA0
+        RETLW     0x34
+        RETLW     0xDA
+        RETLW     0x0E
+        RETLW     0xA9
+        RETLW     0x63
+        RETLW     0x95
+        RETLW     0x11
+        RETLW     0xEE
+        RETLW     0x2A
+        RETLW     0x88
+        RETLW     0x56
+        RETLW     0xB1
+        RETLW     0x25
+        RETLW     0xCB
+        RETLW     0x0B
+        RETLW     0xBC
+        RETLW     0x72
+        RETLW     0x84
+        RETLW     0x00
+        RETLW     0xEB
+        RETLW     0x3F
+        RETLW     0x99
+        RETLW     0x47
+        RETLW     0xA0
+        RETLW     0x20
+        RETLW     0xDE
+        RETLW     0x1A
+        RETLW     0xAD
+        RETLW     0x63
+        RETLW     0x81
+        RETLW     0x15
+        RETLW     0xFA
+        RETLW     0x2E
+        RETLW     0x88
+        RETLW     0x42
+        RETLW     0xB5
+        RETLW     0x31
+        RETLW     0xCF
+        RETLW     0x0B
+        RETLW     0xA8
+        RETLW     0x76
+        RETLW     0x90
+        RETLW     0x04
+        RETLW     0xEB
+        RETLW     0x2B
+        RETLW     0x9D
+        RETLW     0x53
+        RETLW     0xA4
+        RETLW     0x20
+        RETLW     0xCA
+        RETLW     0x1E
+        RETLW     0xB9
+        RETLW     0x67
+        RETLW     0x81
+        RETLW     0x01
+        RETLW     0xFE
+        RETLW     0x3A
+        RETLW     0x8C
+        RETLW     0x42
+        RETLW     0xA1
+        RETLW     0x35
+        RETLW     0xDB
+        RETLW     0x0F
+        RETLW     0xA8
+        RETLW     0x62
+        RETLW     0x94
+        RETLW     0x10
+        RETLW     0xEF
+        RETLW     0x2B
+        RETLW     0x89
+        RETLW     0x57
+        RETLW     0xB0
+        RETLW     0x24
+        RETLW     0xCA
+        RETLW     0x0A
+        RETLW     0xBD
+        RETLW     0x73
+        RETLW     0x85
+        RETLW     0x01
+        RETLW     0xEA
+        RETLW     0x3E
+        RETLW     0x98
+        RETLW     0x46
+        RETLW     0xA1
+        RETLW     0x21
+        RETLW     0xDF
+        RETLW     0x1B
+        RETLW     0xAC
+        RETLW     0x62
+        RETLW     0x80
+        RETLW     0x14
+        RETLW     0xFB
+        RETLW     0x2F
+        RETLW     0x89
+        RETLW     0x43
+        RETLW     0xB4
+        RETLW     0x30
+        RETLW     0xCE
+        RETLW     0x0A
+        RETLW     0xA9
+        RETLW     0x77
+        RETLW     0x91
+        RETLW     0x05
+        RETLW     0xEA
+        RETLW     0x2A
+        RETLW     0x9C
+        RETLW     0x52
+        RETLW     0xA5
+        RETLW     0x21
+        RETLW     0xCB
+        RETLW     0x1F
+        RETLW     0xB8
+        RETLW     0x66
+        RETLW     0x80
+        RETLW     0x00
+        RETLW     0xA1
+        RETLW     0x21
+        RETLW     0xDF
+        RETLW     0x1B
+        RETLW     0xAC
+        RETLW     0x62
+        RETLW     0x80
+        RETLW     0x14
+        RETLW     0xFB
+        RETLW     0x2F
+        RETLW     0x89
+        RETLW     0x43
+        RETLW     0xB4
+        RETLW     0x30
+        RETLW     0xCE
+        RETLW     0x0A
+        RETLW     0xA9
+        RETLW     0x77
+        RETLW     0x91
+        RETLW     0x05
+        RETLW     0xEA
+        RETLW     0x2A
+        RETLW     0x9C
+        RETLW     0x52
+        RETLW     0xA5
+        RETLW     0x21
+        RETLW     0xCB
+        RETLW     0x1F
+        RETLW     0xB8
+        RETLW     0x66
+        RETLW     0x80
+        RETLW     0x00
 
 ; The four user-ID words are erased (low nibble F in each word).
         __IDLOCS  0xFFFF
