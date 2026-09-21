@@ -9,13 +9,13 @@ A KiCad reproduction of Larry Benko **W0QE**'s _Low Power FoxMOX Controller
 V.2.6_ (Dec 2004), a non-programmable amateur radio foxhunt/ARDF beacon
 controller. Transcribed by Chris Keller, **K0SWE**.
 
-| File                                    | Role                                       |
-| --------------------------------------- | ------------------------------------------ |
-| `W0QE FoxMox scanned.pdf`               | **Source of truth.** Scan of the original. |
-| `foxmox.kicad_sch` / `foxmox.kicad_pcb` | The reproduction.                          |
-| `foxmox.pdf`                            | KiCad PDF export of the schematic.         |
-| `Firmware/foxmox-v2.6.hex`              | Recovered, hardware-tested PIC image.      |
-| `Firmware/reverse-engineering/`         | Reproducible firmware analysis.            |
+| File                                                      | Role                                       |
+| --------------------------------------------------------- | ------------------------------------------ |
+| `Hardware/W0QE FoxMox scanned.pdf`                        | **Source of truth.** Scan of the original. |
+| `Hardware/foxmox.kicad_sch` / `Hardware/foxmox.kicad_pcb` | The reproduction.                          |
+| `Hardware/foxmox.pdf`                                     | KiCad PDF export of the schematic.         |
+| `Firmware/foxmox-v2.6.hex`                                | Recovered, hardware-tested PIC image.      |
+| `Firmware/reverse-engineering/`                           | Reproducible firmware analysis.            |
 
 Behavior is set entirely by the two hex switches (S1, S2). Program the PIC with
 **version 2.6** from `Firmware/foxmox-v2.6.hex`; setup, recovery, and
@@ -42,7 +42,7 @@ lives in the headset, not in the radio. That is why the radio has no VOX menu.
 
 ### The two paths, as built
 
-Verified against the resolved netlist in `foxmox.kicad_pcb`:
+Verified against the resolved netlist in `Hardware/foxmox.kicad_pcb`:
 
 **Audio — PIC RA0 (pin 17):**
 
@@ -102,8 +102,9 @@ sits well above the ~3V operating point.
 
 `R5` (10k) is strapped between **RA2 (pin 1) and RA3 (pin 2)**. `RA4/TOCKI`
 (pin 3) is **unconnected**, with an explicit `no_connect` at `(97.79 105.41)` in
-`foxmox.kicad_sch` — which computes to exactly U1 pin 3 given U1's placement at
-`(80.01, 110.49)`. The PCB agrees: `unconnected-(U1-TOCKI{slash}RA4-Pad3)`.
+`Hardware/foxmox.kicad_sch` — which computes to exactly U1 pin 3 given U1's
+placement at `(80.01, 110.49)`. The PCB agrees:
+`unconnected-(U1-TOCKI{slash}RA4-Pad3)`.
 
 **This has been investigated and the transcription is correct.** It was
 previously suspected to be a transcription error, on the reasoning that RA4 is
@@ -141,15 +142,15 @@ break the boot test. Exact instruction addresses and bank-state proof are in
 
 The scan is lossy and geometry is easy to misread. Two techniques that worked:
 
-- **Get connectivity from `foxmox.kicad_pcb`, not by tracing wires.** The PCB
-  file carries resolved net names per pad. Parse footprint blocks for
+- **Get connectivity from `Hardware/foxmox.kicad_pcb`, not by tracing wires.**
+  The PCB file carries resolved net names per pad. Parse footprint blocks for
   `(property "Reference" ...)` and each `(pad ... (net "..."))` to build a full
   pad-to-net map in one pass. Far more reliable than following wire segments in
   `.kicad_sch`.
 - **`kicad-cli` is not installed on this machine**, so netlist export is
   unavailable. Parse the files directly.
 - For the scan, render high-DPI and inspect regions:
-  `pdftoppm -r 300 -png "W0QE FoxMox scanned.pdf" out`
+  `pdftoppm -r 300 -png "Hardware/W0QE FoxMox scanned.pdf" out`
 
 ## Bench checks against a real DJ-S11
 
@@ -165,10 +166,11 @@ Assumptions worth confirming on hardware before trusting a rebuild:
 
 ## Repo conventions
 
-- `.history/` is KiCad's local snapshot directory and is **gitignored**. Don't
-  commit it or mine it as history.
-- `Datasheets/` holds vendor PDFs for chosen parts (PIC16F84A, Raltron crystals,
-  Same Sky rotary switches).
-- `Libraries/` holds footprints/symbols for parts not in stock KiCad libs.
+- `Hardware/.history/` is KiCad's local snapshot directory and is
+  **gitignored**. Don't commit it or mine it as history.
+- `Hardware/Datasheets/` holds vendor PDFs for chosen parts (PIC16F84A, Raltron
+  crystals, Same Sky rotary switches).
+- `Hardware/Libraries/` holds footprints/symbols for parts not in stock KiCad
+  libs.
 - The working tree is often dirty with in-progress footprint/PCB work. **Check
   `git status` before committing and stage only your own files.**
