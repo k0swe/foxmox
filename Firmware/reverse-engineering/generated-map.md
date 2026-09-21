@@ -95,6 +95,6 @@ These four records are big-endian 16-bit startup delays.
 
 - EEPROM `0x28` = `0xFF` (255).
 - Nominal counter tick at setting `0x00`: 0.999528152 s.
-- Counter tick at recovered setting `0xFF`: 1.072475971 s.
+- Average counter tick at recovered setting `0xFF`: 1.000667962 s.
 - Verified callsign routine at ROM `0x109-0x110`: `N0PUF`.
 - All checked machine-code anchors matched.

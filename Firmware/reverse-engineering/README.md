@@ -239,8 +239,8 @@ for that phase to expire. Thus each normal record is simply:
 
 For S1=`0..4`, S2=`0`/`8` selects `14 28`: nominally 20 seconds transmitting
 and 40 seconds silent, a one-minute cycle. Other profiles range from 20/100 to
-60/240 seconds. EEPROM setting `0xFF` lengthens every nominal second by about
-7.3%; the service mode exists to calibrate that base.
+60/240 seconds. EEPROM setting `0xFF` lengthens the average nominal second by
+about 0.067%; the service mode exists to calibrate that base.
 
 ## Callsign insertion
 
@@ -264,12 +264,17 @@ shift by the duration of in-progress Morse output; this qualification is
 ## EEPROM 0x28 runtime setting
 
 At reset, ROM `0x076-0x078` reads EEPROM `0x28` into RAM `0x3F`.
-At each nominal one-second event, ROM `0x034-0x038` adds it to the
-`0x0E:0x0F` software-divider preload. The effective number of TMR0 overflows is
-`3494 + EEPROM[0x28]`, continuously across the low-byte carry. Therefore:
+The ISR normally reloads the `0x0E:0x0F` software divider for 3494 TMR0
+overflows. Every 64th nominal second, detected at `0x02F-0x034`, ROM
+`0x035-0x038` adds EEPROM `0x28` to that one interval. The long-term average is
+therefore `3494 + EEPROM[0x28]/64` TMR0 overflows per counter tick—not
+`3494 + EEPROM[0x28]` on every tick. Consequently:
 
 - `0x00` gives about `0.999528152 s` per counter tick.
-- recovered `0xFF` gives about `1.072475971 s` per counter tick.
+- recovered `0xFF` gives about `1.000667962 s` averaged over 64 ticks.
+
+The full 64-tick epoch at `0xFF` is about 64.043 seconds, making this a fine
+clock calibration adjustment rather than a 7.3% timing change.
 
 The service path displays this byte as two hexadecimal Morse digits through ROM
 `0x148-0x150`. S2 high-nibble bit tests at `0x17F-0x185` decrement it for

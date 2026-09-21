@@ -14,7 +14,7 @@ isr_w_save      EQU       0x0C
 isr_status_save EQU       0x0D
 second_div_hi   EQU       0x0E
 second_div_lo   EQU       0x0F
-subsecond_phase EQU       0x10
+seconds_mod64   EQU       0x10
 tmr0_wait_count EQU       0x11
 message_seconds EQU       0x12
 phase_counter_hi EQU      0x13
@@ -34,6 +34,7 @@ lfsr_steps      EQU       0x23
 saved_w         EQU       0x25
 interrupt_flag  EQU       0x27
 hex_byte        EQU       0x28
+tone_pattern    EQU       0x29
 message_index   EQU       0x2B
 timing_record_addr EQU    0x2C
 timing_trim     EQU       0x3F
@@ -56,90 +57,107 @@ reset_vector:
         DW        0x3FFF    ; 0x003: erased (instruction encoding: addlw 0xFF)
 
 interrupt_vector:
-        DW        0x2805    ; 0x004: goto 0x005
-        DW        0x008C    ; 0x005: movwf 0x0C
-        DW        0x0803    ; 0x006: movf STATUS,W
-        DW        0x008D    ; 0x007: movwf 0x0D
-        DW        0x110B    ; 0x008: bcf INTCON,2
-        DW        0x1283    ; 0x009: bcf STATUS,5
-        DW        0x081A    ; 0x00A: movf 0x1A,W
-        DW        0x0085    ; 0x00B: movwf PORTA[b0]/TRISA[b1]
-        DW        0x0B8F    ; 0x00C: decfsz 0x0F,F
-        DW        0x2839    ; 0x00D: goto 0x039
-        DW        0x0B8E    ; 0x00E: decfsz 0x0E,F
-        DW        0x2839    ; 0x00F: goto 0x039
-        DW        0x30A6    ; 0x010: movlw 0xA6
-        DW        0x008F    ; 0x011: movwf 0x0F
-        DW        0x300E    ; 0x012: movlw 0x0E
-        DW        0x008E    ; 0x013: movwf 0x0E
-        DW        0x0892    ; 0x014: movf 0x12,F
-        DW        0x1D03    ; 0x015: btfss STATUS,2
-        DW        0x0392    ; 0x016: decf 0x12,F
-        DW        0x0893    ; 0x017: movf 0x13,F
-        DW        0x1D03    ; 0x018: btfss STATUS,2
-        DW        0x281D    ; 0x019: goto 0x01D
-        DW        0x0894    ; 0x01A: movf 0x14,F
-        DW        0x1903    ; 0x01B: btfsc STATUS,2
-        DW        0x2823    ; 0x01C: goto 0x023
-        DW        0x3001    ; 0x01D: movlw 0x01
-        DW        0x0294    ; 0x01E: subwf 0x14,F
-        DW        0x3000    ; 0x01F: movlw 0x00
-        DW        0x1C03    ; 0x020: btfss STATUS,0
-        DW        0x3001    ; 0x021: movlw 0x01
-        DW        0x0293    ; 0x022: subwf 0x13,F
-        DW        0x0895    ; 0x023: movf 0x15,F
-        DW        0x1D03    ; 0x024: btfss STATUS,2
-        DW        0x2829    ; 0x025: goto 0x029
-        DW        0x0896    ; 0x026: movf 0x16,F
-        DW        0x1903    ; 0x027: btfsc STATUS,2
-        DW        0x282F    ; 0x028: goto 0x02F
-        DW        0x3001    ; 0x029: movlw 0x01
-        DW        0x0296    ; 0x02A: subwf 0x16,F
-        DW        0x3000    ; 0x02B: movlw 0x00
-        DW        0x1C03    ; 0x02C: btfss STATUS,0
-        DW        0x3001    ; 0x02D: movlw 0x01
-        DW        0x0295    ; 0x02E: subwf 0x15,F
-        DW        0x0A90    ; 0x02F: incf 0x10,F
-        DW        0x0810    ; 0x030: movf 0x10,W
-        DW        0x393F    ; 0x031: andlw 0x3F
-        DW        0x1D03    ; 0x032: btfss STATUS,2
-        DW        0x2839    ; 0x033: goto 0x039
-        DW        0x14A7    ; 0x034: bsf 0x27,1
-        DW        0x083F    ; 0x035: movf 0x3F,W
-        DW        0x078F    ; 0x036: addwf 0x0F,F
-        DW        0x1803    ; 0x037: btfsc STATUS,0
-        DW        0x0A8E    ; 0x038: incf 0x0E,F
-        DW        0x0A9C    ; 0x039: incf 0x1C,F
-        DW        0x3088    ; 0x03A: movlw 0x88
-        DW        0x071C    ; 0x03B: addwf 0x1C,W
-        DW        0x1803    ; 0x03C: btfsc STATUS,0
-        DW        0x019C    ; 0x03D: clrf 0x1C
-        DW        0x101A    ; 0x03E: bcf 0x1A,0
-        DW        0x1B9D    ; 0x03F: btfsc 0x1D,7
-        DW        0x2848    ; 0x040: goto 0x048
-        DW        0x081C    ; 0x041: movf 0x1C,W
-        DW        0x2367    ; 0x042: call 0x367
-        DW        0x00A9    ; 0x043: movwf 0x29
-        DW        0x2335    ; 0x044: call 0x335
-        DW        0x05A9    ; 0x045: andwf 0x29,F
-        DW        0x1903    ; 0x046: btfsc STATUS,2
-        DW        0x141A    ; 0x047: bsf 0x1A,0
-        DW        0x111A    ; 0x048: bcf 0x1A,2
-        DW        0x1F9D    ; 0x049: btfss 0x1D,7
-        DW        0x151A    ; 0x04A: bsf 0x1A,2
-        DW        0x1C1C    ; 0x04B: btfss 0x1C,0
-        DW        0x2852    ; 0x04C: goto 0x052
-        DW        0x1C9C    ; 0x04D: btfss 0x1C,1
-        DW        0x2852    ; 0x04E: goto 0x052
-        DW        0x0891    ; 0x04F: movf 0x11,F
-        DW        0x1D03    ; 0x050: btfss STATUS,2
-        DW        0x0391    ; 0x051: decf 0x11,F
-        DW        0x1427    ; 0x052: bsf 0x27,0
-        DW        0x080D    ; 0x053: movf 0x0D,W
-        DW        0x0083    ; 0x054: movwf STATUS
-        DW        0x0E8C    ; 0x055: swapf 0x0C,F
-        DW        0x0E0C    ; 0x056: swapf 0x0C,W
-        DW        0x0009    ; 0x057: retfie
+        GOTO      tmr0_isr             ; 0x004
+
+tmr0_isr:
+        MOVWF     isr_w_save           ; 0x005
+        MOVF      STATUS, W            ; 0x006
+        MOVWF     isr_status_save      ; 0x007
+        BCF       INTCON, T0IF         ; 0x008
+        BCF       STATUS, RP0          ; 0x009: bank 0
+        MOVF      porta_shadow, W      ; 0x00A
+        MOVWF     PORTA                ; 0x00B
+
+        DECFSZ    second_div_lo, F     ; 0x00C
+        GOTO      isr_tone_update      ; 0x00D
+        DECFSZ    second_div_hi, F     ; 0x00E
+        GOTO      isr_tone_update      ; 0x00F
+        MOVLW     0xA6                 ; 0x010
+        MOVWF     second_div_lo        ; 0x011
+        MOVLW     0x0E                 ; 0x012
+        MOVWF     second_div_hi        ; 0x013
+
+        MOVF      message_seconds, F   ; 0x014
+        BTFSS     STATUS, Z            ; 0x015
+        DECF      message_seconds, F   ; 0x016
+
+        MOVF      phase_counter_hi, F  ; 0x017
+        BTFSS     STATUS, Z            ; 0x018
+        GOTO      isr_decrement_phase  ; 0x019
+        MOVF      phase_counter_lo, F  ; 0x01A
+        BTFSC     STATUS, Z            ; 0x01B
+        GOTO      isr_update_cooldown  ; 0x01C
+isr_decrement_phase:
+        MOVLW     0x01                 ; 0x01D
+        SUBWF     phase_counter_lo, F  ; 0x01E
+        MOVLW     0x00                 ; 0x01F
+        BTFSS     STATUS, C            ; 0x020: borrow from high byte
+        MOVLW     0x01                 ; 0x021
+        SUBWF     phase_counter_hi, F  ; 0x022
+
+isr_update_cooldown:
+        MOVF      callsign_cooldown_hi, F ; 0x023
+        BTFSS     STATUS, Z            ; 0x024
+        GOTO      isr_decrement_cooldown ; 0x025
+        MOVF      callsign_cooldown_lo, F ; 0x026
+        BTFSC     STATUS, Z            ; 0x027
+        GOTO      isr_second_epoch_update ; 0x028
+isr_decrement_cooldown:
+        MOVLW     0x01                 ; 0x029
+        SUBWF     callsign_cooldown_lo, F ; 0x02A
+        MOVLW     0x00                 ; 0x02B
+        BTFSS     STATUS, C            ; 0x02C
+        MOVLW     0x01                 ; 0x02D
+        SUBWF     callsign_cooldown_hi, F ; 0x02E
+
+isr_second_epoch_update:
+        INCF      seconds_mod64, F     ; 0x02F
+        MOVF      seconds_mod64, W     ; 0x030
+        ANDLW     0x3F                 ; 0x031
+        BTFSS     STATUS, Z            ; 0x032
+        GOTO      isr_tone_update      ; 0x033
+        BSF       interrupt_flag, 1    ; 0x034: 64-second epoch marker
+        MOVF      timing_trim, W       ; 0x035
+        ADDWF     second_div_lo, F     ; 0x036: lengthen one interval per epoch
+        BTFSC     STATUS, C            ; 0x037
+        INCF      second_div_hi, F     ; 0x038
+
+isr_tone_update:
+        INCF      tone_phase, F        ; 0x039
+        MOVLW     0x88                 ; 0x03A
+        ADDWF     tone_phase, W        ; 0x03B: carry when phase reaches 0x78
+        BTFSC     STATUS, C            ; 0x03C
+        CLRF      tone_phase           ; 0x03D: 120-entry waveform period
+        BCF       porta_shadow, 0      ; 0x03E
+        BTFSC     tone_state, 7        ; 0x03F: silence suppresses waveform
+        GOTO      isr_aux_output       ; 0x040
+        MOVF      tone_phase, W        ; 0x041
+        CALL      tone_pattern_lookup  ; 0x042
+        MOVWF     tone_pattern         ; 0x043
+        CALL      bit_mask_lookup      ; 0x044
+        ANDWF     tone_pattern, F      ; 0x045
+        BTFSC     STATUS, Z            ; 0x046
+        BSF       porta_shadow, 0      ; 0x047
+
+isr_aux_output:
+        BCF       porta_shadow, 2      ; 0x048
+        BTFSS     tone_state, 7        ; 0x049
+        BSF       porta_shadow, 2      ; 0x04A
+        BTFSS     tone_phase, 0        ; 0x04B
+        GOTO      isr_signal_event     ; 0x04C
+        BTFSS     tone_phase, 1        ; 0x04D
+        GOTO      isr_signal_event     ; 0x04E
+        MOVF      tmr0_wait_count, F   ; 0x04F
+        BTFSS     STATUS, Z            ; 0x050
+        DECF      tmr0_wait_count, F   ; 0x051: every fourth overflow
+
+isr_signal_event:
+        BSF       interrupt_flag, 0    ; 0x052
+        MOVF      isr_status_save, W   ; 0x053
+        MOVWF     STATUS               ; 0x054
+        SWAPF     isr_w_save, F        ; 0x055
+        SWAPF     isr_w_save, W        ; 0x056
+        RETFIE                         ; 0x057
 
 startup:
         CLRF      INTCON              ; 0x058: interrupts off

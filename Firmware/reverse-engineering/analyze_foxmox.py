@@ -67,8 +67,9 @@ def cadence_pair_address(s1: int, s2: int) -> int:
 def counter_tick_seconds(setting: int) -> float:
     # OPTION_REG=0x08 assigns the prescaler to WDT, so TMR0 advances at Fosc/4.
     # The 0x0E:0xA6 nested countdown fires after 0x0D*256+0xA6 = 3494
-    # overflows. ROM 0x034-0x038 adds EEPROM[0x28] to that preload.
-    return (3494 + setting) * 256 * 4 / FOSC_HZ
+    # overflows. Once every 64 ticks, ROM 0x034-0x038 adds EEPROM[0x28] to
+    # that interval's preload, so the long-term average adds setting/64.
+    return (3494 + setting / 64) * 256 * 4 / FOSC_HZ
 
 
 def be16(data: bytes, address: int) -> int:
@@ -157,7 +158,7 @@ def produce_map(firmware_path: Path) -> str:
         "", "## Runtime timing trim", "",
         f"- EEPROM `0x28` = `0x{current:02X}` ({current}).",
         f"- Nominal counter tick at setting `0x00`: {tick0:.9f} s.",
-        f"- Counter tick at recovered setting `0x{current:02X}`: {counter_tick_seconds(current):.9f} s.",
+        f"- Average counter tick at recovered setting `0x{current:02X}`: {counter_tick_seconds(current):.9f} s.",
         "- Verified callsign routine at ROM `0x109-0x110`: `N0PUF`.",
         "- All checked machine-code anchors matched.", "",
     ]
