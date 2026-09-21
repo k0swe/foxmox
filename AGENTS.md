@@ -14,9 +14,12 @@ controller. Transcribed by Chris Keller, **K0SWE**.
 | `W0QE FoxMox scanned.pdf`               | **Source of truth.** Scan of the original. |
 | `foxmox.kicad_sch` / `foxmox.kicad_pcb` | The reproduction.                          |
 | `foxmox.pdf`                            | KiCad PDF export of the schematic.         |
+| `Firmware/foxmox-v2.6.hex`              | Recovered, hardware-tested PIC image.      |
+| `Firmware/reverse-engineering/`         | Reproducible firmware analysis.            |
 
 Behavior is set entirely by the two hex switches (S1, S2). Program the PIC with
-**version 2.6** of the W0QE code (not available at this time).
+**version 2.6** from `Firmware/foxmox-v2.6.hex`; setup, recovery, and
+verification commands are documented in `Firmware/README.md`.
 
 Target radio in this build: **Alinco DJ-S11**, via the 2.5mm mic jack.
 
@@ -127,11 +130,12 @@ Two traps caused the false alarm:
    | Printed text                    | 89        |
    | Pencil handwriting (top margin) | 140       |
 
-**Open question:** what the RA2–RA3 strap is actually _for_ remains unexplained.
-A 10k between two bidirectional pins is electrically odd. The plausible reading
-is a hardware strap read in software — config, revision, or option detect. **The
-V.2.6 firmware would settle it.** Until then, the original unambiguously draws
-it RA2–RA3 and the reproduction should keep it.
+The recovered V2.6 firmware settles its purpose: **R5 is a boot/service-mode
+strap.** At reset RA3 is driven high while RA2 is an input, so R5 pulls RA2 high
+for normal operation. Holding RA2 low at boot enters the calibration path; that
+path waits for RA2 to return high before continuing. Moving R5 to RA4 would
+break the boot test. Exact instruction addresses and bank-state proof are in
+`Firmware/reverse-engineering/README.md`.
 
 ## Verifying schematic claims
 
