@@ -1100,159 +1100,159 @@ lfsr_seed_lookup:
         RETLW     0x24                ; 0x366: S1=F
 
 tone_pattern_lookup:
-        DW        0x0782    ; 0x367: addwf PCL,F
-        DW        0x34FF    ; 0x368: retlw 0xFF
-        DW        0x343B    ; 0x369: retlw 0x3B
-        DW        0x348D    ; 0x36A: retlw 0x8D
-        DW        0x3443    ; 0x36B: retlw 0x43
-        DW        0x34A0    ; 0x36C: retlw 0xA0
-        DW        0x3434    ; 0x36D: retlw 0x34
-        DW        0x34DA    ; 0x36E: retlw 0xDA
-        DW        0x340E    ; 0x36F: retlw 0x0E
-        DW        0x34A9    ; 0x370: retlw 0xA9
-        DW        0x3463    ; 0x371: retlw 0x63
-        DW        0x3495    ; 0x372: retlw 0x95
-        DW        0x3411    ; 0x373: retlw 0x11
-        DW        0x34EE    ; 0x374: retlw 0xEE
-        DW        0x342A    ; 0x375: retlw 0x2A
-        DW        0x3488    ; 0x376: retlw 0x88
-        DW        0x3456    ; 0x377: retlw 0x56
-        DW        0x34B1    ; 0x378: retlw 0xB1
-        DW        0x3425    ; 0x379: retlw 0x25
-        DW        0x34CB    ; 0x37A: retlw 0xCB
-        DW        0x340B    ; 0x37B: retlw 0x0B
-        DW        0x34BC    ; 0x37C: retlw 0xBC
-        DW        0x3472    ; 0x37D: retlw 0x72
-        DW        0x3484    ; 0x37E: retlw 0x84
-        DW        0x3400    ; 0x37F: retlw 0x00
-        DW        0x34EB    ; 0x380: retlw 0xEB
-        DW        0x343F    ; 0x381: retlw 0x3F
-        DW        0x3499    ; 0x382: retlw 0x99
-        DW        0x3447    ; 0x383: retlw 0x47
-        DW        0x34A0    ; 0x384: retlw 0xA0
-        DW        0x3420    ; 0x385: retlw 0x20
-        DW        0x34DE    ; 0x386: retlw 0xDE
-        DW        0x341A    ; 0x387: retlw 0x1A
-        DW        0x34AD    ; 0x388: retlw 0xAD
-        DW        0x3463    ; 0x389: retlw 0x63
-        DW        0x3481    ; 0x38A: retlw 0x81
-        DW        0x3415    ; 0x38B: retlw 0x15
-        DW        0x34FA    ; 0x38C: retlw 0xFA
-        DW        0x342E    ; 0x38D: retlw 0x2E
-        DW        0x3488    ; 0x38E: retlw 0x88
-        DW        0x3442    ; 0x38F: retlw 0x42
-        DW        0x34B5    ; 0x390: retlw 0xB5
-        DW        0x3431    ; 0x391: retlw 0x31
-        DW        0x34CF    ; 0x392: retlw 0xCF
-        DW        0x340B    ; 0x393: retlw 0x0B
-        DW        0x34A8    ; 0x394: retlw 0xA8
-        DW        0x3476    ; 0x395: retlw 0x76
-        DW        0x3490    ; 0x396: retlw 0x90
-        DW        0x3404    ; 0x397: retlw 0x04
-        DW        0x34EB    ; 0x398: retlw 0xEB
-        DW        0x342B    ; 0x399: retlw 0x2B
-        DW        0x349D    ; 0x39A: retlw 0x9D
-        DW        0x3453    ; 0x39B: retlw 0x53
-        DW        0x34A4    ; 0x39C: retlw 0xA4
-        DW        0x3420    ; 0x39D: retlw 0x20
-        DW        0x34CA    ; 0x39E: retlw 0xCA
-        DW        0x341E    ; 0x39F: retlw 0x1E
-        DW        0x34B9    ; 0x3A0: retlw 0xB9
-        DW        0x3467    ; 0x3A1: retlw 0x67
-        DW        0x3481    ; 0x3A2: retlw 0x81
-        DW        0x3401    ; 0x3A3: retlw 0x01
-        DW        0x34FE    ; 0x3A4: retlw 0xFE
-        DW        0x343A    ; 0x3A5: retlw 0x3A
-        DW        0x348C    ; 0x3A6: retlw 0x8C
-        DW        0x3442    ; 0x3A7: retlw 0x42
-        DW        0x34A1    ; 0x3A8: retlw 0xA1
-        DW        0x3435    ; 0x3A9: retlw 0x35
-        DW        0x34DB    ; 0x3AA: retlw 0xDB
-        DW        0x340F    ; 0x3AB: retlw 0x0F
-        DW        0x34A8    ; 0x3AC: retlw 0xA8
-        DW        0x3462    ; 0x3AD: retlw 0x62
-        DW        0x3494    ; 0x3AE: retlw 0x94
-        DW        0x3410    ; 0x3AF: retlw 0x10
-        DW        0x34EF    ; 0x3B0: retlw 0xEF
-        DW        0x342B    ; 0x3B1: retlw 0x2B
-        DW        0x3489    ; 0x3B2: retlw 0x89
-        DW        0x3457    ; 0x3B3: retlw 0x57
-        DW        0x34B0    ; 0x3B4: retlw 0xB0
-        DW        0x3424    ; 0x3B5: retlw 0x24
-        DW        0x34CA    ; 0x3B6: retlw 0xCA
-        DW        0x340A    ; 0x3B7: retlw 0x0A
-        DW        0x34BD    ; 0x3B8: retlw 0xBD
-        DW        0x3473    ; 0x3B9: retlw 0x73
-        DW        0x3485    ; 0x3BA: retlw 0x85
-        DW        0x3401    ; 0x3BB: retlw 0x01
-        DW        0x34EA    ; 0x3BC: retlw 0xEA
-        DW        0x343E    ; 0x3BD: retlw 0x3E
-        DW        0x3498    ; 0x3BE: retlw 0x98
-        DW        0x3446    ; 0x3BF: retlw 0x46
-        DW        0x34A1    ; 0x3C0: retlw 0xA1
-        DW        0x3421    ; 0x3C1: retlw 0x21
-        DW        0x34DF    ; 0x3C2: retlw 0xDF
-        DW        0x341B    ; 0x3C3: retlw 0x1B
-        DW        0x34AC    ; 0x3C4: retlw 0xAC
-        DW        0x3462    ; 0x3C5: retlw 0x62
-        DW        0x3480    ; 0x3C6: retlw 0x80
-        DW        0x3414    ; 0x3C7: retlw 0x14
-        DW        0x34FB    ; 0x3C8: retlw 0xFB
-        DW        0x342F    ; 0x3C9: retlw 0x2F
-        DW        0x3489    ; 0x3CA: retlw 0x89
-        DW        0x3443    ; 0x3CB: retlw 0x43
-        DW        0x34B4    ; 0x3CC: retlw 0xB4
-        DW        0x3430    ; 0x3CD: retlw 0x30
-        DW        0x34CE    ; 0x3CE: retlw 0xCE
-        DW        0x340A    ; 0x3CF: retlw 0x0A
-        DW        0x34A9    ; 0x3D0: retlw 0xA9
-        DW        0x3477    ; 0x3D1: retlw 0x77
-        DW        0x3491    ; 0x3D2: retlw 0x91
-        DW        0x3405    ; 0x3D3: retlw 0x05
-        DW        0x34EA    ; 0x3D4: retlw 0xEA
-        DW        0x342A    ; 0x3D5: retlw 0x2A
-        DW        0x349C    ; 0x3D6: retlw 0x9C
-        DW        0x3452    ; 0x3D7: retlw 0x52
-        DW        0x34A5    ; 0x3D8: retlw 0xA5
-        DW        0x3421    ; 0x3D9: retlw 0x21
-        DW        0x34CB    ; 0x3DA: retlw 0xCB
-        DW        0x341F    ; 0x3DB: retlw 0x1F
-        DW        0x34B8    ; 0x3DC: retlw 0xB8
-        DW        0x3466    ; 0x3DD: retlw 0x66
-        DW        0x3480    ; 0x3DE: retlw 0x80
-        DW        0x3400    ; 0x3DF: retlw 0x00
-        DW        0x34A1    ; 0x3E0: retlw 0xA1
-        DW        0x3421    ; 0x3E1: retlw 0x21
-        DW        0x34DF    ; 0x3E2: retlw 0xDF
-        DW        0x341B    ; 0x3E3: retlw 0x1B
-        DW        0x34AC    ; 0x3E4: retlw 0xAC
-        DW        0x3462    ; 0x3E5: retlw 0x62
-        DW        0x3480    ; 0x3E6: retlw 0x80
-        DW        0x3414    ; 0x3E7: retlw 0x14
-        DW        0x34FB    ; 0x3E8: retlw 0xFB
-        DW        0x342F    ; 0x3E9: retlw 0x2F
-        DW        0x3489    ; 0x3EA: retlw 0x89
-        DW        0x3443    ; 0x3EB: retlw 0x43
-        DW        0x34B4    ; 0x3EC: retlw 0xB4
-        DW        0x3430    ; 0x3ED: retlw 0x30
-        DW        0x34CE    ; 0x3EE: retlw 0xCE
-        DW        0x340A    ; 0x3EF: retlw 0x0A
-        DW        0x34A9    ; 0x3F0: retlw 0xA9
-        DW        0x3477    ; 0x3F1: retlw 0x77
-        DW        0x3491    ; 0x3F2: retlw 0x91
-        DW        0x3405    ; 0x3F3: retlw 0x05
-        DW        0x34EA    ; 0x3F4: retlw 0xEA
-        DW        0x342A    ; 0x3F5: retlw 0x2A
-        DW        0x349C    ; 0x3F6: retlw 0x9C
-        DW        0x3452    ; 0x3F7: retlw 0x52
-        DW        0x34A5    ; 0x3F8: retlw 0xA5
-        DW        0x3421    ; 0x3F9: retlw 0x21
-        DW        0x34CB    ; 0x3FA: retlw 0xCB
-        DW        0x341F    ; 0x3FB: retlw 0x1F
-        DW        0x34B8    ; 0x3FC: retlw 0xB8
-        DW        0x3466    ; 0x3FD: retlw 0x66
-        DW        0x3480    ; 0x3FE: retlw 0x80
-        DW        0x3400    ; 0x3FF: retlw 0x00
+        ADDWF     PCL, F                   ; 0x367
+        RETLW     0xFF                     ; 0x368
+        RETLW     0x3B                     ; 0x369
+        RETLW     0x8D                     ; 0x36A
+        RETLW     0x43                     ; 0x36B
+        RETLW     0xA0                     ; 0x36C
+        RETLW     0x34                     ; 0x36D
+        RETLW     0xDA                     ; 0x36E
+        RETLW     0x0E                     ; 0x36F
+        RETLW     0xA9                     ; 0x370
+        RETLW     0x63                     ; 0x371
+        RETLW     0x95                     ; 0x372
+        RETLW     0x11                     ; 0x373
+        RETLW     0xEE                     ; 0x374
+        RETLW     0x2A                     ; 0x375
+        RETLW     0x88                     ; 0x376
+        RETLW     0x56                     ; 0x377
+        RETLW     0xB1                     ; 0x378
+        RETLW     0x25                     ; 0x379
+        RETLW     0xCB                     ; 0x37A
+        RETLW     0x0B                     ; 0x37B
+        RETLW     0xBC                     ; 0x37C
+        RETLW     0x72                     ; 0x37D
+        RETLW     0x84                     ; 0x37E
+        RETLW     0x00                     ; 0x37F
+        RETLW     0xEB                     ; 0x380
+        RETLW     0x3F                     ; 0x381
+        RETLW     0x99                     ; 0x382
+        RETLW     0x47                     ; 0x383
+        RETLW     0xA0                     ; 0x384
+        RETLW     0x20                     ; 0x385
+        RETLW     0xDE                     ; 0x386
+        RETLW     0x1A                     ; 0x387
+        RETLW     0xAD                     ; 0x388
+        RETLW     0x63                     ; 0x389
+        RETLW     0x81                     ; 0x38A
+        RETLW     0x15                     ; 0x38B
+        RETLW     0xFA                     ; 0x38C
+        RETLW     0x2E                     ; 0x38D
+        RETLW     0x88                     ; 0x38E
+        RETLW     0x42                     ; 0x38F
+        RETLW     0xB5                     ; 0x390
+        RETLW     0x31                     ; 0x391
+        RETLW     0xCF                     ; 0x392
+        RETLW     0x0B                     ; 0x393
+        RETLW     0xA8                     ; 0x394
+        RETLW     0x76                     ; 0x395
+        RETLW     0x90                     ; 0x396
+        RETLW     0x04                     ; 0x397
+        RETLW     0xEB                     ; 0x398
+        RETLW     0x2B                     ; 0x399
+        RETLW     0x9D                     ; 0x39A
+        RETLW     0x53                     ; 0x39B
+        RETLW     0xA4                     ; 0x39C
+        RETLW     0x20                     ; 0x39D
+        RETLW     0xCA                     ; 0x39E
+        RETLW     0x1E                     ; 0x39F
+        RETLW     0xB9                     ; 0x3A0
+        RETLW     0x67                     ; 0x3A1
+        RETLW     0x81                     ; 0x3A2
+        RETLW     0x01                     ; 0x3A3
+        RETLW     0xFE                     ; 0x3A4
+        RETLW     0x3A                     ; 0x3A5
+        RETLW     0x8C                     ; 0x3A6
+        RETLW     0x42                     ; 0x3A7
+        RETLW     0xA1                     ; 0x3A8
+        RETLW     0x35                     ; 0x3A9
+        RETLW     0xDB                     ; 0x3AA
+        RETLW     0x0F                     ; 0x3AB
+        RETLW     0xA8                     ; 0x3AC
+        RETLW     0x62                     ; 0x3AD
+        RETLW     0x94                     ; 0x3AE
+        RETLW     0x10                     ; 0x3AF
+        RETLW     0xEF                     ; 0x3B0
+        RETLW     0x2B                     ; 0x3B1
+        RETLW     0x89                     ; 0x3B2
+        RETLW     0x57                     ; 0x3B3
+        RETLW     0xB0                     ; 0x3B4
+        RETLW     0x24                     ; 0x3B5
+        RETLW     0xCA                     ; 0x3B6
+        RETLW     0x0A                     ; 0x3B7
+        RETLW     0xBD                     ; 0x3B8
+        RETLW     0x73                     ; 0x3B9
+        RETLW     0x85                     ; 0x3BA
+        RETLW     0x01                     ; 0x3BB
+        RETLW     0xEA                     ; 0x3BC
+        RETLW     0x3E                     ; 0x3BD
+        RETLW     0x98                     ; 0x3BE
+        RETLW     0x46                     ; 0x3BF
+        RETLW     0xA1                     ; 0x3C0
+        RETLW     0x21                     ; 0x3C1
+        RETLW     0xDF                     ; 0x3C2
+        RETLW     0x1B                     ; 0x3C3
+        RETLW     0xAC                     ; 0x3C4
+        RETLW     0x62                     ; 0x3C5
+        RETLW     0x80                     ; 0x3C6
+        RETLW     0x14                     ; 0x3C7
+        RETLW     0xFB                     ; 0x3C8
+        RETLW     0x2F                     ; 0x3C9
+        RETLW     0x89                     ; 0x3CA
+        RETLW     0x43                     ; 0x3CB
+        RETLW     0xB4                     ; 0x3CC
+        RETLW     0x30                     ; 0x3CD
+        RETLW     0xCE                     ; 0x3CE
+        RETLW     0x0A                     ; 0x3CF
+        RETLW     0xA9                     ; 0x3D0
+        RETLW     0x77                     ; 0x3D1
+        RETLW     0x91                     ; 0x3D2
+        RETLW     0x05                     ; 0x3D3
+        RETLW     0xEA                     ; 0x3D4
+        RETLW     0x2A                     ; 0x3D5
+        RETLW     0x9C                     ; 0x3D6
+        RETLW     0x52                     ; 0x3D7
+        RETLW     0xA5                     ; 0x3D8
+        RETLW     0x21                     ; 0x3D9
+        RETLW     0xCB                     ; 0x3DA
+        RETLW     0x1F                     ; 0x3DB
+        RETLW     0xB8                     ; 0x3DC
+        RETLW     0x66                     ; 0x3DD
+        RETLW     0x80                     ; 0x3DE
+        RETLW     0x00                     ; 0x3DF
+        RETLW     0xA1                     ; 0x3E0
+        RETLW     0x21                     ; 0x3E1
+        RETLW     0xDF                     ; 0x3E2
+        RETLW     0x1B                     ; 0x3E3
+        RETLW     0xAC                     ; 0x3E4
+        RETLW     0x62                     ; 0x3E5
+        RETLW     0x80                     ; 0x3E6
+        RETLW     0x14                     ; 0x3E7
+        RETLW     0xFB                     ; 0x3E8
+        RETLW     0x2F                     ; 0x3E9
+        RETLW     0x89                     ; 0x3EA
+        RETLW     0x43                     ; 0x3EB
+        RETLW     0xB4                     ; 0x3EC
+        RETLW     0x30                     ; 0x3ED
+        RETLW     0xCE                     ; 0x3EE
+        RETLW     0x0A                     ; 0x3EF
+        RETLW     0xA9                     ; 0x3F0
+        RETLW     0x77                     ; 0x3F1
+        RETLW     0x91                     ; 0x3F2
+        RETLW     0x05                     ; 0x3F3
+        RETLW     0xEA                     ; 0x3F4
+        RETLW     0x2A                     ; 0x3F5
+        RETLW     0x9C                     ; 0x3F6
+        RETLW     0x52                     ; 0x3F7
+        RETLW     0xA5                     ; 0x3F8
+        RETLW     0x21                     ; 0x3F9
+        RETLW     0xCB                     ; 0x3FA
+        RETLW     0x1F                     ; 0x3FB
+        RETLW     0xB8                     ; 0x3FC
+        RETLW     0x66                     ; 0x3FD
+        RETLW     0x80                     ; 0x3FE
+        RETLW     0x00                     ; 0x3FF
 
 ; The four user-ID words are erased (low nibble F in each word).
         __IDLOCS  0xFFFF
