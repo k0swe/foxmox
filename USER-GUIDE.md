@@ -2,7 +2,9 @@
 
 This guide covers ordinary field setup of a FoxMox controller running the
 reconstructed V2.6 firmware. For programmer wiring, chip recovery, and exact
-build verification, see [`Firmware/README.md`](Firmware/README.md).
+build verification, see [`Firmware/README.md`](Firmware/README.md). For a
+lamination-friendly front/back switch card, open and print
+[`FoxMox-Quick-Reference.html`](FoxMox-Quick-Reference.html) at actual size.
 
 ## Callsign: programmed into the PIC
 

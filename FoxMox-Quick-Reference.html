@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FoxMox V2.6 — Switch Quick Reference</title>
+<style>
+  @page { size: 4.25in 5.5in; margin: 0; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #ddd; color: #000; font-family: Arial, Helvetica, sans-serif; }
+  .card { width: 4.25in; min-height: 5.5in; padding: .15in; background: #fff; page-break-after: always; }
+  .card:last-child { page-break-after: auto; }
+  h1 { margin: 0 0 .03in; font-size: 15pt; line-height: 1; letter-spacing: .02em; }
+  h2 { margin: .07in 0 .025in; padding-bottom: .012in; border-bottom: 1px solid #000; font-size: 8.5pt; line-height: 1; text-transform: uppercase; letter-spacing: .04em; }
+  p, li { margin: 0; font-size: 7pt; line-height: 1.18; }
+  .sub { margin-bottom: .05in; font-size: 7.5pt; font-weight: bold; }
+  .box { margin: .045in 0; padding: .04in; border: 1px solid #000; }
+  .warning { font-weight: bold; }
+  table { width: 100%; border-collapse: collapse; font-size: 6.7pt; line-height: 1.13; }
+  th, td { padding: .012in .018in; border-bottom: .35pt solid #777; text-align: right; white-space: nowrap; }
+  th:first-child, td:first-child, .left { text-align: left; }
+  th { font-size: 6.1pt; text-transform: uppercase; letter-spacing: .035em; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: .07in; }
+  .compact td, .compact th { padding-top: .008in; padding-bottom: .008in; }
+  ol { margin: .025in 0 0; padding-left: .18in; }
+  .footer { margin-top: .055in; font-size: 5.8pt; line-height: 1.1; text-align: center; }
+  @media screen { body { padding: .25in; display: flex; gap: .25in; flex-wrap: wrap; } .card { box-shadow: 0 1px 5px #777; } }
+  @media print { body { background: none; } }
+</style>
+</head>
+<body>
+<section class="card" aria-label="Front">
+  <h1>FoxMox V2.6</h1>
+  <p class="sub">STANDARD FOX QUICK REFERENCE · S1 = 0–4</p>
+  <div class="box">
+    <p><strong>Set S1/S2 with power OFF.</strong> The unit sends one startup message, then waits through any selected startup delay. The radio callsign is programmed into the PIC; S1 does not change it.</p>
+  </div>
+
+  <h2>S1 — fox identity</h2>
+  <table class="compact">
+    <tr><th>S1</th><th class="left">Message</th><th>S1</th><th class="left">Message</th></tr>
+    <tr><td>0</td><td class="left">MOE</td><td>3</td><td class="left">MOH</td></tr>
+    <tr><td>1</td><td class="left">MOI</td><td>4</td><td class="left">MO5</td></tr>
+    <tr><td>2</td><td class="left">MOS</td><td></td><td></td></tr>
+  </table>
+
+  <h2>S2 — cadence and startup delay</h2>
+  <table>
+    <tr><th>S2</th><th>TX</th><th>Silent</th><th>Cycle</th><th>Start delay</th></tr>
+    <tr><td>0</td><td>20 s</td><td>40 s</td><td>1 min</td><td>none</td></tr>
+    <tr><td>1</td><td>20 s</td><td>100 s</td><td>2 min</td><td>none</td></tr>
+    <tr><td>2</td><td>24 s</td><td>96 s</td><td>2 min</td><td>none</td></tr>
+    <tr><td>3</td><td>36 s</td><td>144 s</td><td>3 min</td><td>none</td></tr>
+    <tr><td>4</td><td>40 s</td><td>80 s</td><td>2 min</td><td>none</td></tr>
+    <tr><td>5</td><td>48 s</td><td>192 s</td><td>4 min</td><td>none</td></tr>
+    <tr><td>6</td><td>60 s</td><td>240 s</td><td>5 min</td><td>none</td></tr>
+    <tr><td>7</td><td>60 s</td><td>240 s</td><td>5 min</td><td>30 min</td></tr>
+    <tr><td>8</td><td>20 s</td><td>40 s</td><td>1 min</td><td>30 min</td></tr>
+    <tr><td>9</td><td>20 s</td><td>100 s</td><td>2 min</td><td>60 min</td></tr>
+    <tr><td>A</td><td>24 s</td><td>96 s</td><td>2 min</td><td>60 min</td></tr>
+    <tr><td>B</td><td>36 s</td><td>144 s</td><td>3 min</td><td>60 min</td></tr>
+    <tr><td>C</td><td>40 s</td><td>80 s</td><td>2 min</td><td>60 min</td></tr>
+    <tr><td>D</td><td>48 s</td><td>192 s</td><td>4 min</td><td>60 min</td></tr>
+    <tr><td>E</td><td>60 s</td><td>240 s</td><td>5 min</td><td>60 min</td></tr>
+    <tr><td>F</td><td>60 s</td><td>240 s</td><td>5 min</td><td>120 min</td></tr>
+  </table>
+  <div class="box"><p><strong>Remember:</strong> S2=6 is the five-minute fox cycle with <strong>no</strong> delay. S2=7 has the same cadence but a <strong>30-minute</strong> delay.</p></div>
+  <p class="footer">Print actual size · 4.25 × 5.5 in · Front</p>
+</section>
+
+<section class="card" aria-label="Back">
+  <h1>FoxMox V2.6</h1>
+  <p class="sub">ROUND ROBIN · ALTERNATE MESSAGES · DEPLOYMENT</p>
+
+  <h2>Five-fox round robin</h2>
+  <table class="compact">
+    <tr><th>Fox</th><th>S1</th><th>Message</th><th>S2</th><th>Power on</th></tr>
+    <tr><td>1</td><td>0</td><td>MOE</td><td>6</td><td>T+0:00</td></tr>
+    <tr><td>2</td><td>1</td><td>MOI</td><td>6</td><td>T+1:00</td></tr>
+    <tr><td>3</td><td>2</td><td>MOS</td><td>6</td><td>T+2:00</td></tr>
+    <tr><td>4</td><td>3</td><td>MOH</td><td>6</td><td>T+3:00</td></tr>
+    <tr><td>5</td><td>4</td><td>MO5</td><td>6</td><td>T+4:00</td></tr>
+  </table>
+  <div class="box"><p><strong>Result:</strong> one 60-second transmitter each minute; each fox is silent for 240 seconds. Confirm one full five-minute cycle before deployment. If a unit loses power, re-power it at its intended minute slot.</p></div>
+
+  <h2>Alternate / practice messages — S1</h2>
+  <div class="two-col">
+    <table class="compact"><tr><th>S1</th><th class="left">Message</th></tr><tr><td>5</td><td class="left">MO</td></tr><tr><td>6</td><td class="left">A</td></tr><tr><td>7</td><td class="left">B</td></tr><tr><td>8</td><td class="left">F</td></tr><tr><td>9</td><td class="left">L</td></tr><tr><td>A</td><td class="left">N</td></tr></table>
+    <table class="compact"><tr><th>S1</th><th class="left">Message</th></tr><tr><td>B</td><td class="left">P</td></tr><tr><td>C</td><td class="left">V</td></tr><tr><td>D</td><td class="left">X</td></tr><tr><td>E</td><td class="left">Z</td></tr><tr><td>F</td><td class="left">FOX</td></tr><tr><td></td><td></td></tr></table>
+  </div>
+
+  <h2>Alternate / practice S2</h2>
+  <p>For S1=5–F: S2 0–7 selects TX/silent: <strong>12/24, 20/20, 20/40, 20/100, 12/36, 16/48, 16/64, 60/0 seconds</strong>. S2 8–F repeats those cadences with a 60-minute startup delay. S2 C/D/E add 0–31 seconds of silent-phase jitter.</p>
+
+  <h2>Field cautions</h2>
+  <ol>
+    <li>Startup announcements may overlap during staggered setup; judge timing after all units are running.</li>
+    <li>Independent crystal clocks drift. Check the order before participants begin.</li>
+    <li>Use the intended operating frequency only when startup transmissions are acceptable.</li>
+  </ol>
+  <p class="footer">Full instructions: USER-GUIDE.md · Print actual size · 4.25 × 5.5 in · Back</p>
+</section>
+</body>
+</html>

@@ -16,7 +16,8 @@ field operating instructions.
 
 | Path                                                                     | Purpose                                                                                                |
 | ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| [`USER-GUIDE.md`](USER-GUIDE.md)                                         | Field switch settings, timing profiles, and staggered five-fox startup.                                |
+| [`USER-GUIDE.md`](USER-GUIDE.md)                                         | Full field switch settings, timing profiles, and staggered five-fox startup.                           |
+| [`FoxMox-Quick-Reference.html`](FoxMox-Quick-Reference.html)             | Print-ready 4.25 × 5.5 inch front/back switch and deployment card.                                    |
 | [`Hardware/README.md`](Hardware/README.md)                               | Circuit behavior, radio interface, power constraints, R5 service strap, and bench checks.              |
 | [`Hardware/W0QE FoxMox scanned.pdf`](<Hardware/W0QE FoxMox scanned.pdf>) | Scan of the original W0QE schematic and source of truth for the hardware transcription.                |
 | `Hardware/foxmox.kicad_sch` / `Hardware/foxmox.kicad_pcb`                | Reconstructed KiCad schematic and PCB.                                                                 |
